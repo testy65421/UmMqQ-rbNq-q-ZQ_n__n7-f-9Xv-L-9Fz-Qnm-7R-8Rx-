@@ -472,7 +472,7 @@ async def on_message(message):
                     dele = "del" + temp + r"\output.txt"
                     os.popen(dele)
                 else:
-                    await message.channel.send("Command successfully executed : " + result)
+                    await message.channel.send("Command successfully executed : ```{result}``` ")
             else:
                 await message.channel.send("Unrecognized command or no output was obtained :(")
                 status = None

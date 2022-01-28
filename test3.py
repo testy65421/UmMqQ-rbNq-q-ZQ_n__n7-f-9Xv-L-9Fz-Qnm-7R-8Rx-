@@ -423,11 +423,6 @@ async def on_message(message):
             spam_messagebox()
 
 
-        if message.content == "!mail":
-            config(labelBTC)
-            await message.channel.send("Successfully changed mail on message box")
-
-
         if message.content == "!help":
             await message.channel.send("https://pastebin.com/GaJbwS3Y **Key for pastebin is** ```3xcst-ZbtU$AMMz8rW}bDk3&e```")
 

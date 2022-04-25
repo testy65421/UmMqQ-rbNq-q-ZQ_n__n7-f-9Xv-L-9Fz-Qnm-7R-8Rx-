@@ -1,0 +1,13 @@
+requests
+psutil
+pypiwin32
+pycryptodome
+pyinstaller
+pyautogui
+numpy
+pillow
+beautifulsoup4
+selenium
+lxml
+httpx
+colorama

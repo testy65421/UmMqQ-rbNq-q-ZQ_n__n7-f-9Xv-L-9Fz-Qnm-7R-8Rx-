@@ -21,6 +21,7 @@ import socket, threading, time
 
 from urllib.request import urlopen
 from time import sleep
+from Crypto.Cipher import AES
 
 from discord_components import *
 from discord.ext import commands

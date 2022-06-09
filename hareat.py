@@ -63,7 +63,8 @@ def encrypt_file(file_name, key):
         print(e)
 
 
-key = b'\xe0\xce"\xa0E\xbbg\xf1\xe3P\x15\xa2\'&ax'
+
+key = b'KEY_HERE'
 # encrypt_file('one.txt', key)
 ############? NEW ENCRYPTION METHOD ############
 

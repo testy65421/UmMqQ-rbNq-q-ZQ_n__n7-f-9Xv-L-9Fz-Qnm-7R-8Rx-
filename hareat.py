@@ -64,7 +64,7 @@ def encrypt_file(file_name, key):
 
 
 
-key = b'KEY_HERE'
+key = KEY_HERE
 # encrypt_file('one.txt', key)
 ############? NEW ENCRYPTION METHOD ############
 

@@ -45,7 +45,7 @@ from discord_slash.model import ButtonStyle
 from discord_slash.utils.manage_components import create_button, create_actionrow
 
 from tokens import g, token , webhook
-from auto import *
+#from auto import *
 
 
 ## Auto Commands

